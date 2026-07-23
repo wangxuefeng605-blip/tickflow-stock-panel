@@ -1,0 +1,17 @@
+class AcceptanceContext:
+
+    version
+
+    commit
+
+    start_time
+
+    universe
+
+    validation_result
+
+    benchmark
+
+    regression
+
+    report_dir

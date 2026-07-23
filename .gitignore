@@ -105,3 +105,41 @@ packaging/installed_run.log
 TickFlowStockPanel.app/
 TickFlowStockPanel-macos*.dmg
 TickFlowStockPanel-macos*.zip
+# Python
+__pycache__/
+*.pyc
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache
+cache/
+data/cache/
+*.cache
+
+# Generated reports
+AI_*.csv
+*_result.csv
+top10_result.csv
+
+# Archives
+*.zip
+
+# Environment
+.env
+.venv/
+
+# IDE
+.vscode/
+.idea/
+# ===== ai_selector runtime =====
+backend/ai_selector/data/**
+!backend/ai_selector/data/.gitkeep
+
+backend/ai_selector/*.db
+backend/ai_selector/*.zip
+
+backend/ai_selector/AI_*.csv
+backend/ai_selector/*_result.csv
