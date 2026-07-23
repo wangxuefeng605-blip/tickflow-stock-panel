@@ -130,20 +130,42 @@ def run_fast_scan(stocks=None):
         max_workers=MAX_WORKERS
     ) as executor:
 
-         futures = {
-            executor.submit(
-                scan_one,
-                code
-            ): code
+        futures = {
+            executor.submit(scan_one, code): code
             for code in todo
         }
 
-
-       with tqdm(
-            as_completed(futures),
+        with tqdm(
             total=len(futures),
-            desc="扫描中"
+            desc="扫描中",
+            unit="stock"
         ) as pbar:
+
+            for future in as_completed(futures):
+
+                code = futures[future]
+
+                try:
+                    result = future.result()
+
+                    append_result(result)
+
+                    checkpoint.mark_completed(code)
+
+                    success += 1
+
+                except Exception as e:
+
+                    checkpoint.mark_failed(code)
+
+                    retry_mgr.add_failed(
+                        code,
+                        str(e)
+                    )
+
+                    failed += 1
+
+                pbar.update(1)
 
 
             for future in pbar:
@@ -230,7 +252,7 @@ def run_fast_scan(stocks=None):
 
                     break
 
-                 except Exception as e:
+                except Exception as e:
 
                     print(
                         f"\nSCAN FAILED {code}: {e}"
