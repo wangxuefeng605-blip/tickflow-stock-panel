@@ -7,6 +7,8 @@ from datetime import datetime
 import platform
 import sys
 
+from tests.acceptance.stages.benchmark import run_benchmark
+
 
 def print_header():
     print("=" * 60)
@@ -28,10 +30,28 @@ def print_footer():
     print("=" * 60)
 
 
+def run_benchmark_stage():
+    print()
+    print("Benchmark")
+    print("-" * 60)
+
+    result = run_benchmark()
+
+    for name, data in result.items():
+        print(
+            f"{name:12} : {data['status']} "
+            f"{data['ms']} ms"
+        )
+
+    print("-" * 60)
+
+
 def main():
     print_header()
 
     stage("Acceptance Framework Initialized")
+
+    run_benchmark_stage()
 
     print_footer()
 
@@ -40,16 +60,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-from tests.acceptance.stages.benchmark import run_benchmark
-
-
-print("\nBenchmark")
-print("-" * 60)
-
-result = run_benchmark()
-
-for name, data in result.items():
-    print(
-        f"{name:12} : {data['status']} "
-        f"{data['ms']} ms"
-    )
