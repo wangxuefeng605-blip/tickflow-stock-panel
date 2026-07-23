@@ -1,4 +1,5 @@
 import time
+import traceback
 
 
 def run_scanner_benchmark(limit=10):
@@ -8,17 +9,22 @@ def run_scanner_benchmark(limit=10):
     start = time.perf_counter()
 
     try:
+
         from fast_scanner import run_fast_scan
         from stock_pool import get_stock_pool
 
+
         stocks = get_stock_pool()
+
 
         if limit:
             stocks = stocks[:limit]
 
+
         data = run_fast_scan(
             stocks
         )
+
 
         elapsed = time.perf_counter() - start
 
@@ -40,8 +46,10 @@ def run_scanner_benchmark(limit=10):
 
         result["scanner"] = {
             "status": "FAIL",
-            "error": str(e)
+            "error": str(e),
+            "traceback": traceback.format_exc()
         }
 
 
     return result
+ 
