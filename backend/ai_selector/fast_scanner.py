@@ -13,30 +13,26 @@ from retry_manager import RetryManager
 
 from history_cache import load_history
 
+
 def run_fast_scan(
     limit=None
 ):
 
     stocks = get_stock_pool()
 
-
     if limit:
         stocks = stocks[:limit]
-
 
     print(
         f"Stock Pool Size: {len(stocks)}"
     )
-
 
     engine = ScannerEngine(
         stocks,
         workers=8
     )
 
-
     return engine.run()
-
 
 
 if __name__ == "__main__":
@@ -49,6 +45,7 @@ MAX_RETRY = 3
 MAX_WORKERS = 8
 
 lock = Lock()
+
 
 def init_result_file():
     os.makedirs(os.path.dirname(RESULT_FILE), exist_ok=True)
@@ -68,11 +65,13 @@ def init_result_file():
                 "growth"
             ])
 
+
 def append_result(row):
     with lock:
         with open(RESULT_FILE, "a", encoding="utf-8-sig", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=row.keys())
             writer.writerow(row)
+
 
 def scan_one(code):
 
@@ -98,6 +97,7 @@ def scan_one(code):
         "alpha_score": score,
         **factor
     }
+
 
 def run_fast_scan(stocks=None):
     init_result_file()
@@ -125,47 +125,88 @@ def run_fast_scan(stocks=None):
     failed = 0
 
     success_results = []
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        futures = {executor.submit(scan_one, code): code for code in todo}
+    
+    with ThreadPoolExecutor(
+        max_workers=MAX_WORKERS
+    ) as executor:
 
-        pbar = tqdm(as_completed(futures), total=len(futures), desc="扫描中", unit="stock")
+         futures = {
+            executor.submit(
+                scan_one,
+                code
+            ): code
+            for code in todo
+        }
 
-        for future in pbar:
-            code = futures[future]
 
-            try:
+       with tqdm(
+            as_completed(futures),
+            total=len(futures),
+            desc="扫描中"
+        ) as pbar:
 
-     result = future.result()
 
-     append_result(result)
+            for future in pbar:
 
-      success_results.append(result)
+                code = futures[future]
 
-     checkpoint.mark_completed(code)
+                try:
 
-     success += 1
+                    result = future.result()
 
-            except Exception as e:
-                checkpoint.mark_failed(code)
-                retry_mgr.add_failed(code, str(e))
-                failed += 1
+                    append_result(result)
+
+                    checkpoint.mark_completed(code)
+
+                    success += 1
+
+
+                except Exception as e:
+
+                    checkpoint.mark_failed(code)
+
+                    retry_mgr.add_failed(
+                        code,
+                        str(e)
+                    )
+
+                    failed += 1      
+
 
             if (success + failed) % 50 == 0:
+
                 checkpoint.save()
 
+
             elapsed = time.time() - start
-            speed = (success + failed) / elapsed if elapsed > 0 else 0
-            remain = len(todo) - (success + failed)
-            eta = remain / speed if speed > 0 else 0
 
-            pbar.set_postfix({
-                "success": success,
-                "failed": failed,
-                "speed": f"{speed:.1f}/s",
-                "ETA": f"{int(eta)}s"
-            })
+            speed = (
+                success + failed
+            ) / elapsed if elapsed > 0 else 0
 
-    checkpoint.save()
+
+            remain = (
+                len(todo)
+                -
+                (success + failed)
+            )
+
+
+            eta = (
+                remain / speed
+                if speed > 0
+                else 0
+            )
+
+
+            pbar.set_postfix(
+                {
+                    "success": success,
+                    "failed": failed,
+                    "speed": f"{speed:.1f}/s",
+                    "ETA": f"{int(eta)}s"
+                }
+            )
 
     # 第二轮重试
     retry_codes = retry_mgr.get_failed_codes()
@@ -189,7 +230,7 @@ def run_fast_scan(stocks=None):
 
                     break
 
-                except Exception as e:
+                 except Exception as e:
 
                     print(
                         f"\nSCAN FAILED {code}: {e}"
