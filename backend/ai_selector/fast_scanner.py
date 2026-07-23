@@ -8,6 +8,10 @@ from tqdm import tqdm
 from core.stock_pool import get_stock_pool
 from core.scanner.engine import ScannerEngine
 
+from checkpoint import CheckpointManager
+from retry_manager import RetryManager
+
+from history_cache import load_history
 
 def run_fast_scan(
     limit=None
@@ -40,7 +44,9 @@ if __name__ == "__main__":
     run_fast_scan(
         limit=100
     )
+RESULT_FILE = "tests/acceptance/reports/scanner_result.csv"
 MAX_RETRY = 3
+MAX_WORKERS = 8
 
 lock = Lock()
 
@@ -69,9 +75,10 @@ def append_result(row):
             writer.writerow(row)
 
 def scan_one(code):
+
     code = str(code)
 
-    history = get_history(code)
+    history = load_history(code)
     if history is None or len(history) < 30:
         raise Exception("历史行情不足")
 
@@ -117,6 +124,7 @@ def run_fast_scan(stocks=None):
     success = 0
     failed = 0
 
+    success_results = []
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         futures = {executor.submit(scan_one, code): code for code in todo}
 
@@ -126,10 +134,16 @@ def run_fast_scan(stocks=None):
             code = futures[future]
 
             try:
-                result = future.result()
-                append_result(result)
-                checkpoint.mark_completed(code)
-                success += 1
+
+     result = future.result()
+
+     append_result(result)
+
+      success_results.append(result)
+
+     checkpoint.mark_completed(code)
+
+     success += 1
 
             except Exception as e:
                 checkpoint.mark_failed(code)
@@ -155,20 +169,38 @@ def run_fast_scan(stocks=None):
 
     # 第二轮重试
     retry_codes = retry_mgr.get_failed_codes()
+
     if retry_codes:
         print(f"\n启动失败重试：{len(retry_codes)} 只")
 
         for code in retry_codes:
+
             for i in range(MAX_RETRY):
+
                 try:
                     result = scan_one(code)
+
                     append_result(result)
+
                     checkpoint.mark_completed(code)
+
                     success += 1
                     failed -= 1
+
                     break
+
                 except Exception as e:
-                    retry_mgr.add_failed(code, str(e), i + 1)
+
+                    print(
+                        f"\nSCAN FAILED {code}: {e}"
+                    )
+
+                    retry_mgr.add_failed(
+                        code,
+                        str(e),
+                        i + 1
+                    )
+
                     time.sleep(1)
 
     total_time = time.time() - start
@@ -184,7 +216,7 @@ def run_fast_scan(stocks=None):
     print(f"结果文件：{RESULT_FILE}")
     print("=" * 40)
 
-    return success
+    return success_results
 
 if __name__ == "__main__":
     run_fast_scan()

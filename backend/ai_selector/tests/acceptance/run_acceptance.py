@@ -8,6 +8,7 @@ import platform
 import sys
 
 from tests.acceptance.stages.benchmark import run_benchmark
+from tests.acceptance.stages.scanner_benchmark import run_scanner_benchmark
 
 
 def print_header():
@@ -31,6 +32,7 @@ def print_footer():
 
 
 def run_benchmark_stage():
+
     print()
     print("Benchmark")
     print("-" * 60)
@@ -46,12 +48,33 @@ def run_benchmark_stage():
     print("-" * 60)
 
 
+def run_scanner_stage():
+
+    print()
+    print("Scanner Benchmark")
+    print("-" * 60)
+
+    result = run_scanner_benchmark(
+        limit=50
+    )
+
+    for name, data in result.items():
+        print(
+            f"{name:12} : {data}"
+        )
+
+    print("-" * 60)
+
+
 def main():
+
     print_header()
 
     stage("Acceptance Framework Initialized")
 
     run_benchmark_stage()
+
+    run_scanner_stage()
 
     print_footer()
 

@@ -1,52 +1,47 @@
 import time
 
 
-def run_benchmark():
-    """
-    Basic acceptance benchmark.
-    """
+def run_scanner_benchmark(limit=10):
 
-    results = {}
+    result = {}
 
-    # history simulation
     start = time.perf_counter()
 
-    dummy = 0
-    for i in range(100000):
-        dummy += i
+    try:
+        from fast_scanner import run_fast_scan
+        from stock_pool import get_stock_pool
 
-    elapsed = time.perf_counter() - start
+        stocks = get_stock_pool()
 
-    results["history"] = {
-        "status": "PASS",
-        "ms": round(elapsed * 1000, 3),
-    }
+        if limit:
+            stocks = stocks[:limit]
 
+        data = run_fast_scan(
+            stocks
+        )
 
-    # factor simulation
-    start = time.perf_counter()
-
-    values = [i * 1.01 for i in range(100000)]
-
-    elapsed = time.perf_counter() - start
-
-    results["factor"] = {
-        "status": "PASS",
-        "ms": round(elapsed * 1000, 3),
-    }
+        elapsed = time.perf_counter() - start
 
 
-    # score simulation
-    start = time.perf_counter()
-
-    score = sum(values)
-
-    elapsed = time.perf_counter() - start
-
-    results["score"] = {
-        "status": "PASS",
-        "ms": round(elapsed * 1000, 3),
-    }
+        if isinstance(data, int):
+            stocks_count = data
+        else:
+            stocks_count = len(data)
 
 
-    return results
+        result["scanner"] = {
+            "status": "PASS" if stocks_count > 0 else "FAIL",
+            "stocks": stocks_count,
+            "seconds": round(elapsed, 3)
+        }
+
+
+    except Exception as e:
+
+        result["scanner"] = {
+            "status": "FAIL",
+            "error": str(e)
+        }
+
+
+    return result

@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 
+from kline_cache import load_kline
+
 
 CACHE_DIR="history_cache"
 
@@ -53,3 +55,26 @@ def save_history(code,df):
         file,
         index=False
     )
+    from kline_cache import load_kline
+
+
+def get_history(code):
+
+    data = load_history(code)
+
+
+    if data is not None:
+        return data
+
+
+    data = load_kline(code)
+
+
+    if data is not None:
+        save_history(
+            code,
+            data
+        )
+
+
+    return data
