@@ -75,3 +75,33 @@ class ScannerEngine:
             results,
             failed_items
     )
+    def scan_one(self, code):
+
+     code = str(code)
+
+    history = load_history(code)
+
+    if history is None or len(history) < 30:
+        raise Exception(
+            "历史行情不足"
+        )
+
+
+    factor = get_stock_factor(code)
+
+    if factor is None:
+        raise Exception(
+            "因子计算失败"
+        )
+
+
+    score = stock_score(
+        factor
+    )
+
+
+     return {
+        "code": code,
+        "alpha_score": score,
+        **factor,
+    }
