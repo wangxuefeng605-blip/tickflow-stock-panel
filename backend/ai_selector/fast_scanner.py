@@ -2,11 +2,7 @@ import os
 import csv
 import time
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
-
-from tqdm import tqdm
-
 
 from core.stock_pool import get_stock_pool
 
@@ -207,7 +203,7 @@ def run_fast_scan(stocks=None):
 
 
 
-                    result = engine.scan_one(code)
+                    engine.scan_batch(retry_codes)
 
 
 
