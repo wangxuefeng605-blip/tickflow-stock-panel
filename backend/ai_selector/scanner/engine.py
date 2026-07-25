@@ -62,4 +62,45 @@ class ScannerEngine:
 
         failed_items = []
 
-        ...
+
+        with ThreadPoolExecutor(
+            max_workers=8
+        ) as executor:
+
+
+            futures = {
+
+                executor.submit(
+                    self.scan_one,
+                    code
+                ): code
+
+                for code in codes
+
+            }
+
+
+            for future in as_completed(futures):
+
+                code = futures[future]
+
+                try:
+
+                    result = future.result()
+
+                    results.append(
+                        result
+                    )
+
+
+                except Exception as e:
+
+                    failed_items.append(
+                        (
+                            code,
+                            str(e)
+                        )
+                    )
+
+
+        return results, failed_items
