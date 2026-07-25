@@ -14,12 +14,6 @@ from checkpoint import CheckpointManager
 from retry_manager import RetryManager
 
 
-from history_cache import load_history
-from factor_cache import load_factor, save_factor
-
-from stock_factor import get_stock_factor
-from score import stock_score
-
 from scanner.engine import ScannerEngine
 
 RESULT_FILE = "tests/acceptance/reports/scanner_result.csv"
@@ -152,97 +146,33 @@ def run_fast_scan(stocks=None):
     success_results = []
 
 
-
-
-
     engine = ScannerEngine()
 
+    results, failed_items = engine.scan_batch(todo)
 
-    with ThreadPoolExecutor(
-        max_workers=MAX_WORKERS
-    ) as executor:
+    for result in results:
 
+        append_result(result)
 
-        futures = {
+        success_results.append(result)
 
-            executor.submit(
-                engine.scan_one,
-                code
-            ): code
+        checkpoint.mark_completed(
+            result["code"]
+        )
 
-            for code in todo
-
-        }
+        success += 1
 
 
-        engine = ScannerEngine()
+    for code, error in failed_items:
 
+        checkpoint.mark_failed(code)
 
-    with ThreadPoolExecutor(
-        max_workers=MAX_WORKERS
-    ) as executor:
+        retry_mgr.add_failed(
+            code,
+            error
+        )
 
-
-        futures = {
-
-            executor.submit(
-                engine.scan_one,
-                code
-            ): code
-
-            for code in todo
-
-        }
-
-
-        with tqdm(
-
-            as_completed(futures),
-
-            total=len(futures),
-
-            desc="扫描中",
-
-            unit="stock"
-
-        ) as pbar:
-
-
-            for future in pbar:
-
-                code = futures[future]
-
-                try:
-
-                    result = future.result()
-
-                    if result is None:
-                        raise Exception( 
-                        )
-                    append_result(result)
-
-                    success_results.append(result)
-
-                    checkpoint.mark_completed(code)
-
-                    success += 1
-
-
-                except Exception as e:
-
-                    checkpoint.mark_failed(code)
-
-                    retry_mgr.add_failed(
-                        code,
-                        str(e)
-                    )
-
-                    failed += 1
-
-
-
-    checkpoint.save()
-
+        failed += 1
 
 
 

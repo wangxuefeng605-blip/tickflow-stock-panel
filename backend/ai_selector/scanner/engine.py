@@ -22,6 +22,7 @@ from score import stock_score
 
 class ScannerEngine:
 
+
     def scan_one(self, code):
 
         code = str(code)
@@ -31,12 +32,15 @@ class ScannerEngine:
         if history is None or len(history) < 30:
             raise Exception("历史行情不足")
 
+
         factor = get_stock_factor(code)
 
         if factor is None:
             raise Exception("因子计算失败")
 
+
         score = stock_score(factor)
+
 
         return {
             "code": code,
@@ -45,18 +49,47 @@ class ScannerEngine:
         }
 
 
+
     def scan_batch(self, codes):
 
         results = []
+        failed = []
 
-        with ThreadPoolExecutor(max_workers=8) as executor:
+
+        with ThreadPoolExecutor(
+            max_workers=8
+        ) as executor:
+
 
             futures = {
-                executor.submit(self.scan_one, code): code
+                executor.submit(
+                    self.scan_one,
+                    code
+                ): code
+
                 for code in codes
             }
 
-            for future in as_completed(futures):
-                results.append(future.result())
 
-        return results
+            for future in as_completed(futures):
+
+                code = futures[future]
+
+                try:
+
+                    result = future.result()
+
+                    results.append(result)
+
+
+                except Exception as e:
+
+                    failed.append(
+                        (
+                            code,
+                            str(e)
+                        )
+                    )
+
+
+        return results, failed
