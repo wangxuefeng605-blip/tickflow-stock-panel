@@ -83,3 +83,10 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+    overall_pass = True
+
+for stage_result in results.values():
+    if stage_result.get("status") != "PASS":
+        overall_pass = False
+
+print("RESULT :", "PASS" if overall_pass else "FAIL")

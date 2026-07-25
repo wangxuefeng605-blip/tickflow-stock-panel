@@ -3,78 +3,36 @@ import pandas as pd
 
 from kline_cache import load_kline
 
-
-CACHE_DIR="history_cache"
-
-
-os.makedirs(
-    CACHE_DIR,
-    exist_ok=True
-)
-
+CACHE_DIR = "history_cache"
+os.makedirs(CACHE_DIR, exist_ok=True)
 
 
 def cache_file(code):
-
-    return os.path.join(
-        CACHE_DIR,
-        f"{code}.csv"
-    )
-
+    return os.path.join(CACHE_DIR, f"{code}.csv")
 
 
 def load_history(code):
-
-    file=cache_file(code)
+    file = cache_file(code)
 
     if os.path.exists(file):
-
         try:
+            return pd.read_csv(file)
+        except Exception:
+            pass
 
-            df=pd.read_csv(
-                file
-            )
+    # history_cache 没有，则读取 kline_cache
+    data = load_kline(code)
 
-            return df
-
-        except:
-
-            return None
-
+    if data is not None and len(data) > 0:
+        data.to_csv(file, index=False)
+        return data
 
     return None
 
 
-
-
-def save_history(code,df):
-
-    file=cache_file(code)
-
-    df.to_csv(
-        file,
-        index=False
-    )
-    from kline_cache import load_kline
+def save_history(code, df):
+    df.to_csv(cache_file(code), index=False)
 
 
 def get_history(code):
-
-    data = load_history(code)
-
-
-    if data is not None:
-        return data
-
-
-    data = load_kline(code)
-
-
-    if data is not None:
-        save_history(
-            code,
-            data
-        )
-
-
-    return data
+    return load_history(code)

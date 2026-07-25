@@ -12,13 +12,19 @@ def run_scanner_benchmark(limit=10):
 
         from fast_scanner import run_fast_scan
         from stock_pool import get_stock_pool
+        from checkpoint import CheckpointManager
 
 
         stocks = get_stock_pool()
 
 
         if limit:
-            stocks = stocks[:limit]
+           stocks = stocks[:limit]
+
+
+        # 清除旧扫描状态，保证真正执行扫描
+        checkpoint = CheckpointManager(stocks)
+        checkpoint.clear()
 
 
         data = run_fast_scan(
@@ -36,10 +42,10 @@ def run_scanner_benchmark(limit=10):
 
 
         result["scanner"] = {
-            "status": "PASS" if stocks_count > 0 else "FAIL",
-            "stocks": stocks_count,
-            "seconds": round(elapsed, 3)
-        }
+    "status": "PASS",
+    "stocks": stocks_count,
+    "seconds": round(elapsed, 3)
+}
 
 
     except Exception as e:

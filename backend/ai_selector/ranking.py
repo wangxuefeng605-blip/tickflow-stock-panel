@@ -1,5 +1,8 @@
+import pandas as pd
+
 from stock_pool import get_stock_pool
 from fast_scanner import run_fast_scan
+from stock_pool import get_stock_pool
 import pandas as pd
 
 
@@ -45,15 +48,14 @@ def run_ranking():
 
 
 
-if __name__=="__main__":
 
-    run_ranking()
+
+    
     from telegram_bot import send_message
 
 
-send_message(
+
     open(
         "AI_Top10.csv",
         encoding="utf-8"
     ).read()
-)

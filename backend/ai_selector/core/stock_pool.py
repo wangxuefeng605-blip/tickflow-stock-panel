@@ -15,6 +15,7 @@ from __future__ import annotations
 import time
 from pathlib import Path
 
+import os
 import akshare as ak
 import pandas as pd
 
