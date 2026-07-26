@@ -1,3 +1,6 @@
+# memory cache
+
+_FACTOR_MEMORY_CACHE = {}
 """
 AI_Top10 v17.0
 
@@ -135,9 +138,17 @@ def save_factor(
 
 def load_factor(code):
 
+    code = normalize_code(code)
+
+
+    # 1. memory hit
+
+    if code in _FACTOR_MEMORY_CACHE:
+
+        return _FACTOR_MEMORY_CACHE[code]
+
 
     file=get_factor_file(code)
-
 
 
     if not os.path.exists(file):
@@ -145,9 +156,7 @@ def load_factor(code):
         return None
 
 
-
     try:
-
 
         with open(
             file,
@@ -155,24 +164,24 @@ def load_factor(code):
             encoding="utf-8"
         ) as f:
 
-
             data=json.load(f)
 
+
+        # memory store
+
+        _FACTOR_MEMORY_CACHE[code]=data
 
 
         return data
 
 
-
     except Exception as e:
-
 
         print(
             "读取因子失败:",
             code,
             e
         )
-
 
         return None
 
@@ -409,4 +418,15 @@ if __name__=="__main__":
         load_factor(
             "000001"
         )
+    )
+def load_factor_values(code):
+
+    data = load_factor(code)
+
+    if data is None:
+        return None
+
+
+    return data.get(
+        "factors"
     )
