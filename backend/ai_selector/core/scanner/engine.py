@@ -6,10 +6,13 @@ from __future__ import annotations
 
 import time
 
-from concurrent.futures import (
-    ThreadPoolExecutor,
-    as_completed,
+from core.factor_cache import (
+    get_factor,
+    save_factor,
+    factor_cache_report
 )
+
+from core.history_quality import validate_history
 
 from typing import Iterable
 
