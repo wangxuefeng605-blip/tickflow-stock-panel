@@ -23,7 +23,10 @@ class ScanWorker:
 
     def scan(self):
 
-        history = load_history(self.code)
+        from core.failed_stock import record_failed
+
+
+        history = load_history(code)
 
 
         quality = validate_history(history)
@@ -32,7 +35,8 @@ class ScanWorker:
         if not quality["valid"]:
 
             record_failed(
-                self.code,
+                code,
+                "history",
                 quality["reason"],
                 quality["days"]
             )
@@ -40,13 +44,24 @@ class ScanWorker:
             return None
 
 
-        factor = get_stock_factor(history)
+                if not quality["valid"]:
+
+                    record_failed(
+                        self.code,
+                        quality["reason"],
+                        quality["days"]
+                    )
+
+                    return None
 
 
-        score = stock_score(factor)
+                factor = get_stock_factor(history)
 
 
-        return {
-            "code":self.code,
-            "score":score
-        }
+                score = stock_score(factor)
+
+
+                return {
+                    "code":self.code,
+                    "score":score
+                }

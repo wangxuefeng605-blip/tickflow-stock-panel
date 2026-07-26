@@ -1,43 +1,56 @@
-from pathlib import Path
 import csv
 from datetime import datetime
+from pathlib import Path
 
 
-FILE = Path(
+FAILED_FILE = Path(
     "data/cache/failed_stock.csv"
 )
 
 
-def record_failed_stock(code, reason):
+def record_failed(
+    code,
+    stage,
+    reason,
+    days=0,
+    retry_count=0
+):
 
-    FILE.parent.mkdir(
+    FAILED_FILE.parent.mkdir(
+        parents=True,
         exist_ok=True
     )
 
-    exists = FILE.exists()
+
+    exists = FAILED_FILE.exists()
+
 
     with open(
-        FILE,
+        FAILED_FILE,
         "a",
         newline="",
-        encoding="utf8"
+        encoding="utf-8"
     ) as f:
 
         writer = csv.writer(f)
 
-        if not exists:
-            writer.writerow(
-                [
-                    "code",
-                    "reason",
-                    "time"
-                ]
-            )
 
-        writer.writerow(
-            [
-                code,
-                reason,
-                datetime.now()
-            ]
-        )
+        if not exists:
+            writer.writerow([
+                "code",
+                "stage",
+                "reason",
+                "days",
+                "retry_count",
+                "last_time"
+            ])
+
+
+        writer.writerow([
+            code,
+            stage,
+            reason,
+            days,
+            retry_count,
+            datetime.now()
+        ])
