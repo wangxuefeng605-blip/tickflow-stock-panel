@@ -18,7 +18,8 @@ from retry_manager import RetryManager
 from history_cache import load_history
 from core.factor_cache import (
     get_factor,
-    save_factor
+    save_factor,
+    factor_cache_report
 )
 from stock_factor import get_stock_factor
 from score import stock_score
