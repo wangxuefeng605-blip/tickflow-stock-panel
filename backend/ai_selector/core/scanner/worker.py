@@ -3,72 +3,54 @@ AI Scanner V3
 Single Stock Worker
 """
 
-from __future__ import annotations
-
-import time
-
 from core.history_cache import get_history
 from core.stock_factor import calculate_factors
 from core.score import alpha_score
 
-from core.history_quality import validate_history
 from core.failed_stock import record_failed
+from core.history_quality import validate_history
 
 from core.scanner.performance import perf
 
 
 class ScanWorker:
 
-    def __init__(self, code: str):
 
-        self.code = str(code).zfill(6)
+    def __init__(self, code):
+
+        self.code=str(code).zfill(6)
 
 
     def scan(self):
 
-        t0 = time.time()
+        with perf.timer("history"):
 
-        history = get_history(self.code)
+            history = get_history(self.code)
 
-        perf.record(
-            "history",
-            time.time() - t0
-        )
 
         quality = validate_history(history)
 
+
         if not quality["valid"]:
 
-           record_failed(
-               code=self.code,
-               stage="history",
-               reason=quality["reason"],
-               days=quality.get("days", 0)
-           )
+            record_failed(
+                self.code,
+                "history",
+                quality["reason"],
+                quality.get("days",0)
+            )
 
-           return None
-
-
-           t1 = time.time(
-               
-          )
-
-        factors = calculate_factors(history)
-
-        perf.record(
-    "factor",
-    time.time() - t1
-)
+            return None
 
 
-        t2 = time.time()
+        with perf.timer("factor"):
 
-        score = alpha_score(factors)
+            factors = calculate_factors(history)
 
-        perf.record(
-            "score",
-            time.time() - t2
-        )
+
+        with perf.timer("score"):
+
+            score = alpha_score(factors)
 
 
         return {
