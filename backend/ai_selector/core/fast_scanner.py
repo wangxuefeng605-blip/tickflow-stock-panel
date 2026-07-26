@@ -2,7 +2,7 @@ from core.stock_pool import get_stock_pool
 from core.ranking import rank_stocks, print_top10
 from core.scanner.engine import ScannerEngine
 from core.report_writer import write_report
-
+from core.ranking.pipeline import RankingPipeline
 
 
 def run_fast_scan():
