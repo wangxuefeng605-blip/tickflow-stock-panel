@@ -23,44 +23,30 @@ class ScanWorker:
 
     def scan(self):
 
-        code = self.code
+        history = load_history(self.code)
 
-        try:
 
-            # -------------------------
-            # History
-            # -------------------------
+        quality = validate_history(history)
 
-            with perf.timer("history"):
 
-                history = get_history(code)
+        if not quality["valid"]:
 
-            if history is None:
-                return None
-
-            # -------------------------
-            # Factor
-            # -------------------------
-
-            with perf.timer("factor"):
-
-                factors = calculate_factors(history)
-
-            # -------------------------
-            # Score
-            # -------------------------
-
-            with perf.timer("score"):
-
-                score = alpha_score(factors)
-
-            return {
-                "code": code,
-                "score": round(float(score), 4),
-            }
-
-        except Exception as e:
-
-            print(f"{code} scan failed: {e}")
+            record_failed(
+                self.code,
+                quality["reason"],
+                quality["days"]
+            )
 
             return None
+
+
+        factor = get_stock_factor(history)
+
+
+        score = stock_score(factor)
+
+
+        return {
+            "code":self.code,
+            "score":score
+        }

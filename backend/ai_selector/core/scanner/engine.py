@@ -1,11 +1,15 @@
 """
-Scanner Engine V3
+AI Scanner v17.3 Stage 2 Quality Layer
 """
 
 from __future__ import annotations
 
 import time
 
+from concurrent.futures import (
+    ThreadPoolExecutor,
+    as_completed
+)
 from core.factor_cache import (
     get_factor,
     save_factor,
@@ -19,7 +23,6 @@ from typing import Iterable
 from core.scanner.worker import ScanWorker
 from core.scanner.performance import perf
 
-from factor_cache import factor_cache_report
 
 class ScannerEngine:
 
