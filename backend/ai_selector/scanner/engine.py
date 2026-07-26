@@ -1,6 +1,7 @@
 import os
 import csv
 import time
+from scanner.performance import PerformanceTracker
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
@@ -30,11 +31,22 @@ class ScannerEngine:
         self.max_workers = max_workers
 
 
-    def scan_one(self, code):
+        self.performance = PerformanceTracker()
 
+    def scan_one(self, code):
+     
+     
         code = str(code)
 
+
+        start = time.time()
+
         history = load_history(code)
+
+        self.performance.record(
+            "history",
+            time.time() - start
+        )     
 
         if history is None or len(history) < 30:
             raise Exception(
@@ -42,7 +54,14 @@ class ScannerEngine:
             )
 
 
+        start = time.time()
+
         factor = get_stock_factor(code)
+
+        self.performance.record(
+            "factor",
+            time.time() - start
+        )
 
         if factor is None:
             raise Exception(
@@ -50,8 +69,15 @@ class ScannerEngine:
             )
 
 
+        start = time.time()
+
         score = stock_score(
-            factor
+             factor
+        )
+
+        self.performance.record(
+            "score",
+            time.time() - start
         )
 
 
@@ -110,4 +136,6 @@ class ScannerEngine:
                     )
 
 
+        self.performance.report()
+        
         return results, failed_items
