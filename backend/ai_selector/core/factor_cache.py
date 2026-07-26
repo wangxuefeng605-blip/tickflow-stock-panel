@@ -430,3 +430,17 @@ def load_factor_values(code):
     return data.get(
         "factors"
     )
+def factor_cache_report():
+
+    print()
+
+    print("=" * 40)
+    print("Factor Cache Report")
+    print("=" * 40)
+
+    print(
+        "memory cache:",
+        len(_FACTOR_MEMORY_CACHE)
+    )
+
+    print("=" * 40)
