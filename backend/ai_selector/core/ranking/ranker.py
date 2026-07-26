@@ -6,14 +6,18 @@ class Ranker:
 
     def rank(self, results):
 
+        if not results:
+            return []
+
+
         ordered = sorted(
             results,
-            key=lambda x:x["score"],
+            key=lambda x: x["score"],
             reverse=True
         )
 
 
-        output=[]
+        ranked = []
 
 
         for idx,item in enumerate(
@@ -21,7 +25,7 @@ class Ranker:
             start=1
         ):
 
-            output.append(
+            ranked.append(
                 RankingResult(
                     code=item["code"],
                     score=item["score"],
@@ -30,4 +34,4 @@ class Ranker:
             )
 
 
-        return output
+        return ranked

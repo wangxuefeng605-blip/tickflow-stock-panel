@@ -12,6 +12,24 @@ class RankingResult:
 
     confidence: float = 0.0
 
-    signals: list[str] = None
+from dataclasses import dataclass, field
 
-    risks: list[str] = None
+
+@dataclass
+class RankingResult:
+
+    code: str
+
+    score: float
+
+    rank: int = 0
+
+    confidence: float = 0.0
+
+    signals: list[str] = field(
+        default_factory=list
+    )
+
+    risks: list[str] = field(
+        default_factory=list
+    )
