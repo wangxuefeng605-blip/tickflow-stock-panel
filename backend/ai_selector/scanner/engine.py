@@ -140,4 +140,6 @@ class ScannerEngine:
 
         self.performance.report()
 
+        factor_cache_report()
+
         return results, failed_items
