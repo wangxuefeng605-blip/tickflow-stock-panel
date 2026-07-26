@@ -1,83 +1,83 @@
-"""
-Scanner Performance Monitor V3
-"""
-
-from __future__ import annotations
-
 import time
-
 from collections import defaultdict
 
 
-class Performance:
+class PerformanceTracker:
 
     def __init__(self):
 
-        self.reset()
+        self.metrics = defaultdict(
+            lambda: {
+                "count": 0,
+                "total": 0.0
+            }
+        )
 
-    # -----------------------------
 
-    def reset(self):
+    def record(
+        self,
+        name,
+        elapsed
+    ):
 
-        self.stats = defaultdict(list)
+        item = self.metrics[name]
 
-    # -----------------------------
+        item["count"] += 1
+        item["total"] += elapsed
 
-    class Timer:
-
-        def __init__(self, owner, name):
-
-            self.owner = owner
-            self.name = name
-
-        def __enter__(self):
-
-            self.start = time.perf_counter()
-
-        def __exit__(self, exc_type, exc, tb):
-
-            cost = time.perf_counter() - self.start
-
-            self.owner.stats[self.name].append(cost)
-
-    # -----------------------------
-
-    def timer(self, name):
-
-        return self.Timer(self, name)
-
-    # -----------------------------
 
     def report(self):
 
+        print("\n")
         print("=" * 40)
         print(" Scanner Performance Report ")
         print("=" * 40)
 
-        if not self.stats:
+        for name, item in self.metrics.items():
 
-            print("No performance data.")
-            print("=" * 40)
-            return
-
-        for name, values in self.stats.items():
-
-            total = sum(values)
-
-            avg = total / len(values)
+            avg = (
+                item["total"]
+                /
+                item["count"]
+                *
+                1000
+            )
 
             print(
                 f"{name:<10}"
-                f" count={len(values):<5}"
-                f" total={total:.4f}s"
-                f" avg={avg*1000:.2f}ms"
+                f" count={item['count']:<6}"
+                f" avg={avg:.3f}ms"
             )
 
         print("=" * 40)
+        import json
 
 
-# 全局单实例
-perf = Performance()
+def save(self, path):
 
-# 兼容旧代码
-performance = perf
+    data = {}
+
+    for name,item in self.metrics.items():
+
+        data[name] = {
+            "count": item["count"],
+            "avg_ms":
+                item["total"]
+                /
+                item["count"]
+                *
+                1000
+        }
+
+
+    with open(
+        path,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            data,
+            f,
+            indent=4
+        )
