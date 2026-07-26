@@ -23,7 +23,14 @@ from score import stock_score
 class ScannerEngine:
 
 
-    def scan_one(self, code):
+    def __init__(
+        self,
+        max_workers=8
+    ):
+        self.max_workers = max_workers
+
+
+    def scan_one(self, code)
 
         code = str(code)
 
@@ -64,8 +71,8 @@ class ScannerEngine:
 
 
         with ThreadPoolExecutor(
-            max_workers=8
-        ) as executor:
+    max_workers=self.max_workers
+) as executor:
 
 
             futures = {
