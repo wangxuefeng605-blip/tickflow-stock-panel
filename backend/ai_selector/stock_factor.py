@@ -2,8 +2,8 @@ import akshare as ak
 import pandas as pd
 import numpy as np
 
-from factor_cache import (
-    load_factor,
+from core.factor_cache import (
+    get_factor,
     save_factor
 )
 
@@ -439,7 +439,7 @@ def get_stock_factor(code):
     # 缓存
     # --------------------
 
-    cache=load_factor(code)
+    cache=get_factor(code)
 
 
     if cache is not None:
