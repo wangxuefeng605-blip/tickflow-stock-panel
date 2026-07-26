@@ -30,7 +30,7 @@ class ScannerEngine:
         self.max_workers = max_workers
 
 
-    def scan_one(self, code)
+    def scan_one(self, code):
 
         code = str(code)
 
