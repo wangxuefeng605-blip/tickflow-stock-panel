@@ -16,6 +16,7 @@ from typing import Iterable
 from core.scanner.worker import ScanWorker
 from core.scanner.performance import perf
 
+from factor_cache import factor_cache_report
 
 class ScannerEngine:
 
