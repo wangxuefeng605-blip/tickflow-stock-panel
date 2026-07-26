@@ -1,83 +1,88 @@
+from __future__ import annotations
+
 import time
 from collections import defaultdict
 
 
-class PerformanceTracker:
+class Performance:
+
+    def reset(self):
+
+        self.stats = defaultdict(list)
 
     def __init__(self):
 
-        self.metrics = defaultdict(
-            lambda: {
-                "count": 0,
-                "total": 0.0
-            }
+        self.stats = defaultdict(list)
+
+
+
+    class Timer:
+
+
+        def __init__(self, owner, name):
+
+            self.owner = owner
+            self.name = name
+
+
+        def __enter__(self):
+
+            self.start = time.perf_counter()
+
+
+
+        def __exit__(self, exc_type, exc, tb):
+
+            cost = (
+                time.perf_counter()
+                -
+                self.start
+            )
+
+            self.owner.stats[self.name].append(
+                cost
+            )
+
+
+
+    def timer(self,name):
+
+        return self.Timer(
+            self,
+            name
         )
 
-
-    def record(
-        self,
-        name,
-        elapsed
-    ):
-
-        item = self.metrics[name]
-
-        item["count"] += 1
-        item["total"] += elapsed
 
 
     def report(self):
 
-        print("\n")
-        print("=" * 40)
+        print("="*40)
         print(" Scanner Performance Report ")
-        print("=" * 40)
-
-        for name, item in self.metrics.items():
-
-            avg = (
-                item["total"]
-                /
-                item["count"]
-                *
-                1000
-            )
-
-            print(
-                f"{name:<10}"
-                f" count={item['count']:<6}"
-                f" avg={avg:.3f}ms"
-            )
-
-        print("=" * 40)
-        import json
+        print("="*40)
 
 
-def save(self, path):
+        if not self.stats:
 
-    data = {}
+            print("No performance data.")
 
-    for name,item in self.metrics.items():
+        else:
 
-        data[name] = {
-            "count": item["count"],
-            "avg_ms":
-                item["total"]
-                /
-                item["count"]
-                *
-                1000
-        }
+            for name, values in self.stats.items():
+
+                total=sum(values)
+
+                avg=total/len(values)
+
+                print(
+                    f"{name:<10}"
+                    f" count={len(values)}"
+                    f" total={total:.4f}s"
+                    f" avg={avg*1000:.2f}ms"
+                )
 
 
-    with open(
-        path,
-        "w",
-        encoding="utf-8"
-    ) as f:
+        print("="*40)
 
-        json.dump(
-            data,
-            f,
-            indent=4
-        )
+
+
+perf = Performance()
