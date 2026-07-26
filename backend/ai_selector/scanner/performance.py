@@ -50,3 +50,34 @@ class PerformanceTracker:
             )
 
         print("=" * 40)
+        import json
+
+
+def save(self, path):
+
+    data = {}
+
+    for name,item in self.metrics.items():
+
+        data[name] = {
+            "count": item["count"],
+            "avg_ms":
+                item["total"]
+                /
+                item["count"]
+                *
+                1000
+        }
+
+
+    with open(
+        path,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            data,
+            f,
+            indent=4
+        )
