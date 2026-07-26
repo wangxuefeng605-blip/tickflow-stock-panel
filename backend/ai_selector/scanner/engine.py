@@ -16,8 +16,10 @@ from retry_manager import RetryManager
 
 
 from history_cache import load_history
-from factor_cache import load_factor, save_factor
-
+from core.factor_cache import (
+    get_factor,
+    save_factor
+)
 from stock_factor import get_stock_factor
 from score import stock_score
 
@@ -137,5 +139,5 @@ class ScannerEngine:
 
 
         self.performance.report()
-        
+
         return results, failed_items
