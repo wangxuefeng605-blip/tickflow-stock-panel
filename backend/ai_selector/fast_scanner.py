@@ -11,6 +11,7 @@ from retry_manager import RetryManager
 
 
 from scanner.engine import ScannerEngine
+from scanner.factor_warmup import warmup_factors
 
 RESULT_FILE = "tests/acceptance/reports/scanner_result.csv"
 
@@ -142,6 +143,9 @@ def run_fast_scan(stocks=None):
     success_results = []
 
 
+    warmup_factors(todo)
+
+
     engine = ScannerEngine()
 
     results, failed_items = engine.scan_batch(todo)
@@ -176,57 +180,51 @@ def run_fast_scan(stocks=None):
     # 第二轮失败重试
     # ==========================
 
-
     retry_codes = retry_mgr.get_current_failed_codes()
-
 
 
     if retry_codes:
 
-
-
         print(
-            f"\n启动失败重试：{len(retry_codes)} 只"
+            f"\n启动失败重试: {len(retry_codes)} 只"
         )
-
 
 
         for code in retry_codes:
 
 
-
-            for i in range(MAX_RETRY):
-
+            for retry_count in range(MAX_RETRY):
 
 
                 try:
 
-
-
-                    engine.scan_batch(retry_codes)
-
-
-
-                    append_result(
-                        result
+                    retry_results, retry_failed = engine.scan_batch(
+                        [code]
                     )
 
 
-                    success_results.append(
-                        result
-                    )
+                    if retry_results:
 
 
+                        for result in retry_results:
 
-                    checkpoint.mark_completed(
-                        code
-                    )
+                            append_result(
+                                result
+                            )
 
 
+                            success_results.append(
+                                result
+                            )
 
-                    success += 1
 
-                    failed -= 1
+                            checkpoint.mark_completed(
+                                result["code"]
+                            )
+
+
+                            success += 1
+                            failed -= 1
 
 
 
@@ -237,23 +235,16 @@ def run_fast_scan(stocks=None):
                 except Exception as e:
 
 
-
                     print(
                         f"\nSCAN FAILED {code}: {e}"
                     )
 
 
-
                     retry_mgr.add_failed(
-
                         code,
-
                         str(e),
-
-                        i + 1
-
+                        retry_count + 1
                     )
-
 
 
                     time.sleep(1)
