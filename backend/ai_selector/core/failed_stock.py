@@ -1,54 +1,43 @@
-import csv
 from pathlib import Path
+import csv
 from datetime import datetime
 
 
-FAILED_FILE = Path(
+FILE = Path(
     "data/cache/failed_stock.csv"
 )
 
 
-def save_failed_stock(
-        code,
-        reason,
-        days
-):
+def record_failed_stock(code, reason):
 
-    FAILED_FILE.parent.mkdir(
-        parents=True,
+    FILE.parent.mkdir(
         exist_ok=True
     )
 
-
-    exists = FAILED_FILE.exists()
-
+    exists = FILE.exists()
 
     with open(
-        FAILED_FILE,
+        FILE,
         "a",
         newline="",
-        encoding="utf-8"
+        encoding="utf8"
     ) as f:
 
         writer = csv.writer(f)
 
-
         if not exists:
             writer.writerow(
                 [
-                    "date",
                     "code",
                     "reason",
-                    "days"
+                    "time"
                 ]
             )
 
-
         writer.writerow(
             [
-                datetime.now().date(),
                 code,
                 reason,
-                days
+                datetime.now()
             ]
         )
