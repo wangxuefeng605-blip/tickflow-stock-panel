@@ -15,17 +15,16 @@ from core.intelligence.context import AIContext
 
 class ScanWorker:
 
+
     def __init__(
         self,
-        ...,
+        code,
         context=None
     ):
-        self.context=context
 
+        self.code = str(code).zfill(6)
 
-    def __init__(self, code):
-
-        self.code=str(code).zfill(6)
+        self.context = context
 
 
     def scan(self):
