@@ -13,3 +13,12 @@ class AIScoreEngine:
             *
             confidence
         )
+    if weights is None:
+
+    weights = {
+        "momentum":0.25,
+        "trend":0.25,
+        "quality":0.20,
+        "liquidity":0.15,
+        "risk":0.15
+    }
