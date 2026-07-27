@@ -12,7 +12,7 @@ class Ranker:
 
         ordered = sorted(
             results,
-            key=lambda x: x["score"],
+            key=lambda x: x.get("score",0),
             reverse=True
         )
 
@@ -25,11 +25,24 @@ class Ranker:
             start=1
         ):
 
+            if "code" not in item:
+                continue
+
+
             ranked.append(
                 RankingResult(
                     code=item["code"],
-                    score=item["score"],
-                    rank=idx
+                    score=item.get("score",0),
+                    rank=idx,
+                    confidence=0.0,
+                    signals=item.get(
+                        "signals",
+                        []
+                    ),
+                    risks=item.get(
+                        "risks",
+                        []
+                    )
                 )
             )
 
