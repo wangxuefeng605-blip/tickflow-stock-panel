@@ -1,24 +1,50 @@
 """
 AI Scanner Report Writer
-v17.3.1
-
-Output:
-    data/reports/top10.json
-    data/reports/top10.csv
-    data/reports/scan.log
-
-Features:
-    - Top10 JSON
-    - Top10 CSV
-    - Scan statistics
-    - Human readable log
+v17.4
 """
-
 
 import os
 import json
 import csv
 from datetime import datetime
+from dataclasses import asdict, is_dataclass
+
+
+class JSONEncoder(json.JSONEncoder):
+
+    def default(self, obj):
+
+        if is_dataclass(obj):
+            return asdict(obj)
+
+        if hasattr(obj, "__dict__"):
+            return obj.__dict__
+
+        return super().default(obj)
+
+
+
+def normalize_results(results):
+
+    output = []
+
+    for item in results:
+
+        if is_dataclass(item):
+            output.append(
+                asdict(item)
+            )
+
+        elif hasattr(item, "__dict__"):
+            output.append(
+                item.__dict__
+            )
+
+        else:
+            output.append(item)
+
+    return output
+
 
 
 BASE_DIR = os.path.dirname(
@@ -34,7 +60,6 @@ REPORT_DIR = os.path.join(
     "reports"
 )
 
-
 os.makedirs(
     REPORT_DIR,
     exist_ok=True
@@ -46,12 +71,10 @@ JSON_FILE = os.path.join(
     "top10.json"
 )
 
-
 CSV_FILE = os.path.join(
     REPORT_DIR,
     "top10.csv"
 )
-
 
 LOG_FILE = os.path.join(
     REPORT_DIR,
@@ -60,14 +83,11 @@ LOG_FILE = os.path.join(
 
 
 
-def save_json(
-        top10,
-        stats=None
-):
+def save_json(top10, stats=None):
 
     data = {
 
-        "version": "v17.3.1",
+        "version": "v17.4",
 
         "market": "A-share",
 
@@ -76,14 +96,11 @@ def save_json(
                 "%Y-%m-%d %H:%M:%S"
             ),
 
-        "scan":
-            stats or {},
+        "scan": stats or {},
 
-        "count":
-            len(top10),
+        "count": len(top10),
 
-        "data":
-            top10
+        "data": top10
     }
 
 
@@ -97,7 +114,8 @@ def save_json(
             data,
             f,
             ensure_ascii=False,
-            indent=4
+            indent=4,
+            cls=JSONEncoder
         )
 
 
@@ -116,8 +134,11 @@ def save_csv(top10):
             fieldnames=[
                 "rank",
                 "code",
-                "score"
-            ]
+                "score",
+                "confidence",
+                "signals"
+            ],
+            extrasaction="ignore"
         )
 
 
@@ -127,79 +148,33 @@ def save_csv(top10):
 
 
 
-def save_log(
-        top10,
-        stats=None
-):
+def save_log(top10, stats=None):
 
-    now = datetime.now().strftime(
-        "%Y-%m-%d %H:%M:%S"
-    )
+    lines = []
 
-
-    lines=[]
-
+    lines.append("=" * 40)
+    lines.append("AI Scanner v17.4")
+    lines.append("=" * 40)
 
     lines.append(
-        "="*40
-    )
-
-    lines.append(
-        "AI Scanner v17.3.1"
-    )
-
-    lines.append(
-        "="*40
-    )
-
-
-    lines.append(
-        f"Time: {now}"
-    )
-
-
-    if stats:
-
-        lines.append("")
-
-        lines.append(
-            "Scan Statistics"
+        datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S"
         )
-
-        lines.append(
-            "-"*40
-        )
-
-        for k,v in stats.items():
-
-            lines.append(
-                f"{k}: {v}"
-            )
+    )
 
 
     lines.append("")
-
-    lines.append(
-        "TOP10"
-    )
-
-    lines.append(
-        "-"*40
-    )
+    lines.append("TOP10")
+    lines.append("-" * 40)
 
 
     for item in top10:
 
         lines.append(
-            f"{item['rank']:>2}. "
-            f"{item['code']} "
-            f"score={item['score']:.4f}"
+            f"{item.get('rank',0):>2}. "
+            f"{item.get('code')} "
+            f"score={item.get('score',0):.4f}"
         )
-
-
-    lines.append(
-        "="*40
-    )
 
 
     with open(
@@ -214,10 +189,10 @@ def save_log(
 
 
 
-def write_report(
-        top10,
-        stats=None
-):
+def write_report(top10, stats=None):
+
+    top10 = normalize_results(top10)
+
 
     save_json(
         top10,
@@ -236,18 +211,7 @@ def write_report(
     )
 
 
-    print(
-        "Report generated:"
-    )
-
-    print(
-        JSON_FILE
-    )
-
-    print(
-        CSV_FILE
-    )
-
-    print(
-        LOG_FILE
-    )
+    print("Report generated:")
+    print(JSON_FILE)
+    print(CSV_FILE)
+    print(LOG_FILE)
