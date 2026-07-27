@@ -1,47 +1,28 @@
 from .types import RankingResult
 
 
-def explain(result: RankingResult):
-
-    reasons = []
-
-    risks = []
+def explain(item):
 
 
-    for signal in result.signals or []:
+    reasons=[]
 
-        if signal == "strong_momentum":
-
-            reasons.append(
-                "20日價格動能強"
-            )
+    risks=[]
 
 
-        elif signal == "trend_up":
-
-            reasons.append(
-                "短中期趨勢向上"
-            )
+    factors=item.factors
 
 
-        elif signal == "volume_breakout":
+    momentum = factors.get(
+        "momentum",
+        0
+    )
 
-            reasons.append(
-                "成交量明顯放大"
-            )
+    volume_factor = factors.get(
+        "volume_factor",
+        0
+    )
 
-
-    if result.score < 0.5:
-
-        risks.append(
-            "綜合評分偏低"
-        )
-
-
-    return {
-
-        "reasons": reasons,
-
-        "risks": risks
-
-    }
+    volatility = factors.get(
+        "volatility",
+        0
+    )

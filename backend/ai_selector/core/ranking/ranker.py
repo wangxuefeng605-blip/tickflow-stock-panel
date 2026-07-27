@@ -32,16 +32,11 @@ class Ranker:
             ranked.append(
                 RankingResult(
                     code=item["code"],
-                    score=item.get("score",0),
+                    score=item["score"],
                     rank=idx,
-                    confidence=0.0,
-                    signals=item.get(
-                        "signals",
-                        []
-                    ),
-                    risks=item.get(
-                        "risks",
-                        []
+                    factors=item.get(
+                        "factors",
+                        {}
                     )
                 )
             )

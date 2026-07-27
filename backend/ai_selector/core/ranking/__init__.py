@@ -3,7 +3,10 @@ from .pipeline import RankingPipeline
 from .types import RankingResult
 
 
-def rank_stocks(results):
+def rank_stocks(
+    results,
+    top_n=10
+):
 
     return RankingPipeline().run(results)
 
