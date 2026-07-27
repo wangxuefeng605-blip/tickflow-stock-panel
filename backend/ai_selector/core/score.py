@@ -11,52 +11,50 @@ Alpha Score Engine
 from __future__ import annotations
 
 
-def alpha_score(factors):
+DEFAULT_WEIGHTS = {
 
-    momentum = factors.get(
-        "momentum",
-        0
-    )
+    "momentum":0.25,
 
-    trend = factors.get(
-        "trend",
-        0
-    )
+    "trend":0.25,
 
-    volume = factors.get(
-        "volume_factor",
-        0
-    )
+    "quality":0.20,
 
-    volatility = factors.get(
-        "volatility",
-        0
-    )
+    "liquidity":0.15,
+
+    "risk":0.15
+}
 
 
-    score = (
 
-        0.4 * momentum
+def alpha_score(
+    factors,
+    weights=None
+):
 
-        +
+    if weights is None:
 
-        0.2 * trend
-
-        +
-
-        0.2 * volume
-
-        -
-
-        0.2 * volatility
-
-    )
+        weights = DEFAULT_WEIGHTS
 
 
-    return round(
-        score,
-        4
-    )
+    score = 0
+
+
+    for name, weight in weights.items():
+
+        value = factors.get(
+            name,
+            0
+        )
+
+
+        score += (
+            value
+            *
+            weight
+        )
+
+
+    return score
 
 
 

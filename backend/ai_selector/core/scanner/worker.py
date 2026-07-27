@@ -56,7 +56,10 @@ class ScanWorker:
 
         with perf.timer("score"):
 
-            score = alpha_score(factors)
+            score = alpha_score(
+                factors,
+                self.context.weights
+            )
 
 
         return {

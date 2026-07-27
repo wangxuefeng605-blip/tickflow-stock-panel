@@ -1,20 +1,44 @@
 from core.intelligence.context import AIContext
+from core.scanner.worker import ScanWorker
 
 
-def test_ai_context():
+def test_scanner_worker_accept_ai_context():
 
-    ctx = AIContext(
+    context = AIContext(
         market_state="BULL",
         weights={
-            "momentum":0.35
-        }
+            "momentum": 0.35,
+            "trend": 0.30
+        },
+        confidence=0.9
     )
 
 
-    assert ctx.market_state=="BULL"
+    worker = ScanWorker(
+        "000001",
+        context=context
+    )
+
+
+    assert worker.context is not None
+
 
     assert (
-        ctx.weights["momentum"]
+        worker.context.market_state
+        ==
+        "BULL"
+    )
+
+
+    assert (
+        worker.context.weights["momentum"]
         ==
         0.35
+    )
+
+
+    assert (
+        worker.context.confidence
+        ==
+        0.9
     )
