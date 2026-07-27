@@ -11,9 +11,16 @@ from core.failed_stock import record_failed
 from core.history_quality import validate_history
 
 from core.scanner.performance import perf
-
+from core.intelligence.context import AIContext
 
 class ScanWorker:
+
+    def __init__(
+        self,
+        ...,
+        context=None
+    ):
+        self.context=context
 
 
     def __init__(self, code):
