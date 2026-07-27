@@ -13,6 +13,8 @@ from core.history_quality import validate_history
 from core.scanner.performance import perf
 from core.intelligence.context import AIContext
 
+from core.intelligence.explainer import AIExplainer
+
 class ScanWorker:
 
 
@@ -22,9 +24,14 @@ class ScanWorker:
         context=None
     ):
 
-        self.code = str(code).zfill(6)
+        self.code=str(code).zfill(6)
 
-        self.context = context
+        self.context=context
+
+        self.explainer = AIExplainer()
+
+
+    
 
 
     def scan(self):
@@ -71,8 +78,26 @@ class ScanWorker:
             )
 
 
+        explanation = (
+            self.explainer.explain(
+                factors,
+                self.context,
+                score
+            )
+       )
+
         return {
-            "code": self.code,
-            "score": score,
-            "factors": factors
-        }
+
+
+        "code":self.code,
+
+
+        "score":score,
+
+
+        "factors":factors,
+
+
+        "ai":explanation
+
+    }
