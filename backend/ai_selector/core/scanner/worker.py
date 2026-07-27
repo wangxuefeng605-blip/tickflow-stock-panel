@@ -40,7 +40,7 @@ class ScanWorker:
         if not quality["valid"]:
 
             record_failed(
-                self.code,
+               self.code,
                 "history",
                 quality["reason"],
                 quality.get("days",0)
@@ -54,15 +54,25 @@ class ScanWorker:
             factors = calculate_factors(history)
 
 
+        if self.context:
+
+            weights = self.context.weights
+
+        else:
+
+            weights = None
+
+
         with perf.timer("score"):
 
             score = alpha_score(
                 factors,
-                self.context.weights
+                context=self.context
             )
 
 
         return {
             "code": self.code,
-            "score": score
+            "score": score,
+            "factors": factors
         }
