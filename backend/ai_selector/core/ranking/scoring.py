@@ -169,25 +169,100 @@ def calculate_rank_score(
     )
 
 
+    signals = item.get(
+        "signals",
+        []
+    )
+
+
+    signal_bonus = (
+        len(signals)
+        *
+        0.03
+    )
+
+
+    ai_confidence = item.get(
+        "confidence",
+        0
+    )
+
+
+    ai_bonus = (
+        ai_confidence
+        *
+        0.15
+    )
+
+
     final = (
 
-        base_score * 0.65
+        base_score * 0.55
 
         +
 
-        ai_score * 0.35
+        ai_score * 0.30
+
+        +
+
+        ai_bonus
+
+        +
+
+        signal_bonus
 
     )
 
 
     final *= market
 
-    final *= confidence
-
     final *= penalty
 
 
-    return round(
-        clamp(final),
-        6
+def build_ranking_reason(item):
+
+    reasons = []
+
+
+    confidence = item.get(
+        "confidence",
+        0
     )
+
+
+    if confidence >= 0.8:
+        reasons.append(
+            "High AI confidence"
+        )
+
+
+    signals = item.get(
+        "signals",
+        []
+    )
+
+
+    if "Positive momentum" in signals:
+        reasons.append(
+            "Positive momentum"
+        )
+
+
+    if "Trend confirmed" in signals:
+        reasons.append(
+            "Trend confirmed"
+        )
+
+
+    market = item.get(
+        "market_state"
+    )
+
+
+    if market == "BULL":
+        reasons.append(
+            "Bull market environment"
+        )
+
+
+    return reasons
