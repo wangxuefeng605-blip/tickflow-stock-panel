@@ -17,7 +17,9 @@ class RankingPipeline:
 
         for item in ranked:
 
-            item.explanation = explain(item)
+            if not item.explanation:
+
+                item.explanation = explain(item)
 
             output.append(item)
 
