@@ -3,10 +3,11 @@ from .pipeline import RankingPipeline
 from .types import RankingResult
 
 
-def rank_stocks(
-    results,
-    top_n=10
-):
+def rank_stocks(results, top_n=10):
+
+    ranked = RankingPipeline().run(results)
+
+    return ranked[:top_n]
 
     return RankingPipeline().run(results)
 
@@ -21,6 +22,15 @@ def print_top10(results):
 
     for item in results[:10]:
 
+        print(
+            "DEBUG RESULT:",
+            item
+        )
+        
+        print(
+             "DEBUG EXPLANATION:",
+             item.explanation
+      )
         print()
 
         print(
@@ -43,15 +53,42 @@ def print_top10(results):
             )
 
 
-        if hasattr(item, "explanation"):
+            if item.explanation:
 
-            print(
-                "Explanation:"
-            )
+                print()
 
-            print(
-                item.explanation
-            )
+                print(
+                    "Market:",
+                    item.explanation.get(
+                        "market_state",
+                        "UNKNOWN"
+                    )
+                )
+
+
+                print(
+                    "Confidence:",
+                    item.explanation.get(
+                        "confidence",
+                        0
+                    )
+                )
+
+
+                print(
+                    "Reason:"
+                )
+
+
+                summary = item.explanation.get(
+                    "summary",
+                    ""
+                )
+
+
+                print(
+                    summary.strip()
+                )
 
 
     print("=" * 50)

@@ -28,9 +28,12 @@ class ScannerEngine:
 
     def __init__(
         self,
-        stocks: Iterable[str],
-        workers: int = 8,
+        stocks,
+        workers=8,
+        context=None
     ):
+
+        self.context = context
 
         self.stocks = list(stocks)
 
@@ -75,8 +78,13 @@ class ScannerEngine:
 
             futures = {
 
-                executor.submit(
-                    ScanWorker(code).scan
+                 executor.submit(
+
+                    ScanWorker(
+                       code,
+                        context=self.context
+                    ).scan
+
                 ): code
 
                 for code in self.stocks
@@ -87,11 +95,16 @@ class ScannerEngine:
 
                 try:
 
-                    result = future.result()
+                  result = future.result()
 
-                    if result is not None:
+                  if result is not None:
 
-                        results.append(result)
+                      print(
+                          "ENGINE RESULT:",
+                          result
+                        )
+
+                      results.append(result)
 
                 except Exception as e:
 
@@ -105,9 +118,14 @@ class ScannerEngine:
 
         print("Results:")
 
-        for item in results:
+        for item in results[:3]:
 
             print(item)
+
+            print(
+                "AI FIELD:",
+                item.get("ai")
+            )
 
         print()
 
