@@ -22,15 +22,6 @@ def print_top10(results):
 
     for item in results[:10]:
 
-        print(
-            "DEBUG RESULT:",
-            item
-        )
-        
-        print(
-             "DEBUG EXPLANATION:",
-             item.explanation
-      )
         print()
 
         print(
@@ -42,53 +33,72 @@ def print_top10(results):
         )
 
 
-        print(
-            "Signals:"
+        print()
+        print("Market:")
+
+        market = (
+            item.explanation.get(
+                "market_state",
+                "UNKNOWN"
+            )
+            if item.explanation
+            else "UNKNOWN"
         )
 
-        for s in item.signals:
+        print(
+            market
+        )
+
+
+        print()
+
+        print("Confidence:")
+
+        confidence = (
+            item.explanation.get(
+                "confidence",
+                0
+            )
+            if item.explanation
+            else 0
+        )
+
+        print(
+            confidence
+        )
+
+
+        print()
+
+        print("Signals:")
+
+        for signal in item.signals:
 
             print(
-                f" - {s}"
+                f" - {signal}"
             )
 
 
-            if item.explanation:
+        print()
 
-                print()
+        print("Reason:")
 
-                print(
-                    "Market:",
-                    item.explanation.get(
-                        "market_state",
-                        "UNKNOWN"
-                    )
-                )
+        if item.explanation:
 
+            summary = item.explanation.get(
+                "summary",
+                ""
+            )
 
-                print(
-                    "Confidence:",
-                    item.explanation.get(
-                        "confidence",
-                        0
-                    )
-                )
+            print(
+                summary.strip()
+            )
 
+        else:
 
-                print(
-                    "Reason:"
-                )
-
-
-                summary = item.explanation.get(
-                    "summary",
-                    ""
-                )
-
-
-                print(
-                    summary.strip()
-                )
+            print(
+                "None"
+            )
 
 
     print("=" * 50)
