@@ -1,67 +1,193 @@
 """
-AI Ranking Score Engine
-v18.6
+AI Ranking Scoring Engine
+v18.7
+
+Responsible for:
+- weighted score
+- AI confidence boost
+- market adjustment
+- risk penalty
 """
 
 
-def ranking_score(item):
+def clamp(
+    value,
+    low=0,
+    high=1
+):
+    return max(
+        low,
+        min(
+            high,
+            value
+        )
+    )
 
-    score = item.score
 
 
-    # AI confidence boost
+def factor_quality(
+    factors
+):
 
-    confidence = getattr(
-        item,
-        "confidence",
+    if not factors:
+        return 0
+
+
+    values = []
+
+
+    for key in [
+        "momentum",
+        "trend",
+        "quality",
+        "growth",
+        "volume_factor"
+    ]:
+
+        if key in factors:
+
+            values.append(
+                factors[key]
+            )
+
+
+    if not values:
+        return 0
+
+
+    return sum(values) / len(values)
+
+
+
+def market_bonus(
+    market_state
+):
+
+    mapping = {
+
+        "BULL": 1.10,
+
+        "SIDEWAYS": 1.00,
+
+        "BEAR": 0.90,
+
+        "UNKNOWN": 1.00
+
+    }
+
+
+    return mapping.get(
+        market_state,
+        1.0
+    )
+
+
+
+def confidence_bonus(
+    confidence
+):
+
+    return (
+        1
+        +
+        confidence * 0.1
+    )
+
+
+
+def risk_penalty(
+    risks
+):
+
+    if not risks:
+        return 1
+
+
+    return max(
+        0.8,
+        1 - len(risks)*0.05
+    )
+
+
+
+def calculate_rank_score(
+    item
+):
+
+    """
+    item:
+
+    {
+        score,
+        factors,
+        market_state,
+        confidence,
+        risks
+    }
+
+    """
+
+
+    base_score = item.get(
+        "score",
         0
     )
 
 
-    score += confidence * 0.05
-
-
-
-    # signal bonus
-
-    signals = getattr(
-        item,
-        "signals",
-        []
-    )
-
-
-    score += len(signals) * 0.01
-
-
-
-    # market adjustment
-
-    explanation = getattr(
-        item,
-        "explanation",
+    factors = item.get(
+        "factors",
         {}
     )
 
 
-    if isinstance(explanation, dict):
+    ai_score = factor_quality(
+        factors
+    )
 
-        state = explanation.get(
+
+    market = market_bonus(
+        item.get(
             "market_state",
-            ""
+            "UNKNOWN"
         )
+    )
 
 
-        if state == "BULL":
-            score += 0.03
+    confidence = confidence_bonus(
+        item.get(
+            "confidence",
+            0
+        )
+    )
 
 
-        elif state == "BEAR":
-            score -= 0.03
+    penalty = risk_penalty(
+        item.get(
+            "risks",
+            []
+        )
+    )
 
+
+    final = (
+
+        base_score * 0.65
+
+        +
+
+        ai_score * 0.35
+
+    )
+
+
+    final *= market
+
+    final *= confidence
+
+    final *= penalty
 
 
     return round(
-        score,
+        clamp(final),
         6
     )

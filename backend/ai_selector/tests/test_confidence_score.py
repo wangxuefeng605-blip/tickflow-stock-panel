@@ -1,7 +1,10 @@
-from core.intelligence.ai_score import calculate_ai_score
+from core.intelligence.ai_score import AIScoreEngine
 
 
 def test_confidence_changes_score():
+
+    engine = AIScoreEngine()
+
 
     factors = {
         "momentum": 1.0,
@@ -15,18 +18,26 @@ def test_confidence_changes_score():
     }
 
 
-    high_confidence = calculate_ai_score(
+    class Context:
+
+        confidence = 1.0
+
+
+    high = engine.calculate(
         factors,
         weights,
-        confidence=1.0
+        Context()
     )
 
 
-    low_confidence = calculate_ai_score(
+    Context.confidence = 0.5
+
+
+    low = engine.calculate(
         factors,
         weights,
-        confidence=0.5
+        Context()
     )
 
 
-    assert low_confidence < high_confidence
+    assert low < high
