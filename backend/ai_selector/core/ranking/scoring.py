@@ -218,6 +218,10 @@ def calculate_rank_score(
 
     final *= penalty
 
+    return round(
+        clamp(final),
+        6
+    )
 
 def build_ranking_reason(item):
 
