@@ -4,14 +4,17 @@ from dataclasses import dataclass, field
 @dataclass
 class AIFlowContext:
 
+    ranking = None
 
-    ranking: object = None
+    decision = None
 
+    strategy = None
 
-    decision: object = None
+    execution = None
 
+    portfolio = None
 
-    strategy: object = None
+    backtest = None
 
 
     orders: object = field(

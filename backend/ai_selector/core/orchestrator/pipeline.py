@@ -30,11 +30,14 @@ class AIOrchestrator:
         self.portfolio = resolve("portfolio")
         self.strategy = resolve("strategy")
         self.execution = resolve("execution")
-
+        self.backtest = resolve("backtest")
+        
 
 
     def default_dependencies(self):
 
+        from core.backtest.engine import BacktestEngine
+        from core.orchestrator.adapters.backtest_adapter import BacktestAdapter
         from core.ranking.pipeline import RankingPipeline
         from core.orchestrator.adapters.ranking_adapter import RankingAdapter
         from core.orchestrator.adapters.decision_adapter import DecisionAdapter
@@ -66,7 +69,10 @@ class AIOrchestrator:
         deps.execution = ExecutionAdapter(
             ExecutionEngine()
         )
-
+        deps.backtest = BacktestAdapter(
+            BacktestEngine()
+        )
+        
         return deps
 
 
@@ -113,5 +119,15 @@ class AIOrchestrator:
             context.decision
         )
 
+
+        if self.backtest:
+
+           context.backtest = self.backtest.run(
+                context.orders
+            )
+
+        else:
+
+            context.backtest = None
 
         return context
