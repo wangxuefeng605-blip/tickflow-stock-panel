@@ -4,19 +4,23 @@ from dataclasses import dataclass, field
 @dataclass
 class AIFlowContext:
 
-    ranking = None
 
-    decision = None
+    def __init__(self):
 
-    strategy = None
+        self.ranking = None
 
-    execution = None
+        self.decision = None
 
-    portfolio = None
+        self.portfolio = None
 
-    backtest = None
+        self.strategy = None
 
+        self.orders = None
 
+        self.backtest = None
+
+        self.learning = None
+    
     orders: object = field(
         default_factory=list
     )
