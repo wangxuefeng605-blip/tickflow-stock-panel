@@ -4,13 +4,13 @@ from dataclasses import dataclass, field
 @dataclass
 class BacktestRequest:
 
-    strategy: str = "default"
+    strategy: str = "AI"
 
-    start_date: str = "20200101"
+    start_date: str = ""
 
-    end_date: str = "20201231"
+    end_date: str = ""
 
-    capital: float = 100000
+    capital: float = 0
 
 
 
@@ -37,6 +37,8 @@ class BacktestResult:
     trades: list = field(
         default_factory=list
     )
+
+    strategy: str = "AI"
 
     equity_curve: list = field(
         default_factory=list
