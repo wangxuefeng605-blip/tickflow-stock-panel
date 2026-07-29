@@ -1,6 +1,14 @@
-result = engine.run(
-    market="BULL",
-    mode="BACKTEST"
-)
+from core.orchestrator.pipeline import AIOrchestrator
 
-assert result.backtest.total_return is not None
+
+def test_orchestrator_backtest():
+
+    engine = AIOrchestrator()
+
+
+    result = engine.run(
+        "BULL"
+    )
+
+
+    assert result.backtest is not None
