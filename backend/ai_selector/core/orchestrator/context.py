@@ -1,17 +1,19 @@
+from dataclasses import dataclass, field
+
+
+@dataclass
 class AIFlowContext:
 
-    def __init__(self):
 
-        self.market_state = None
+    ranking: object = None
 
-        self.ranking = None
 
-        self.decision = None
+    decision: object = None
 
-        self.portfolio = None
 
-        self.strategy = None
+    strategy: object = None
 
-        self.orders = None
 
-        self.feedback = None
+    orders: object = field(
+        default_factory=list
+    )
