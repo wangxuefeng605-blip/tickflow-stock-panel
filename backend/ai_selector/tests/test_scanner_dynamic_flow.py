@@ -1,3 +1,7 @@
+from core.intelligence.context_builder import ContextBuilder
+from core.scanner.engine import ScannerEngine
+
+
 def test_scanner_dynamic_ai_flow():
 
     context = ContextBuilder().build()

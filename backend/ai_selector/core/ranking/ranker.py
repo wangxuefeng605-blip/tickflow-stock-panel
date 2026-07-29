@@ -1,8 +1,6 @@
 from .types import RankingResult
 from .scoring import build_ranking_reason
 
-from .scoring import build_ranking_reason
-
 
 class Ranker:
 
@@ -36,13 +34,19 @@ class Ranker:
 
 
             ai = item
-                
-            
+
 
             print(
                 "RANKER AI:",
                 ai
             )
+
+
+            explanation = item.get(
+                "explanation",
+                {}
+            )
+
 
             ranked.append(
                 RankingResult(
@@ -50,16 +54,17 @@ class Ranker:
                     code=item["code"],
 
                     score=item.get(
-
                         "score",
                         0
                     ),
 
                     rank=idx,
 
+
                     ranking_reason=build_ranking_reason(
                         item
                     ),
+
 
                     factors=item.get(
                         "factors",
@@ -67,71 +72,31 @@ class Ranker:
                     ),
 
 
-                    signals=ai.get(
-                         0
-                          "signals",
+                    signals=item.get(
+                        "signals",
                         []
                     ),
 
 
-                   confidence = item.get(
-                       "confidence",
-                       item.get(
-                           "explanation",
-                           {}
-                       ).get(
-                           "confidence",
-                           0
+                    confidence=item.get(
+                        "confidence",
+                        explanation.get(
+                            "confidence",
+                            0
                         )
-                    )
-
-                    market_state=ai.get(
-                       "market_state",
-                       "UNKNOWN"
                     ),
 
-                    explanation=ai.get(
-                        "explanation",
-                        {}
-                    )
+
+                    market_state=item.get(
+                        "market_state",
+                        "UNKNOWN"
+                    ),
+
+
+                    explanation=explanation
 
                 )
             )
+
+
         return ranked
-    
-    def ai_rank_score(item):
-
-        score = item.get(
-            "score",
-            0
-        )
-
-
-        confidence = item.get(
-            "confidence",
-            0
-        )
-
-
-        signals = item.get(
-            "signals",
-            []
-        )
-
-
-        bonus = 0
-
-
-        # AI 信心奖励
-        bonus += confidence * 0.05
-
-
-        # 信号奖励
-        if signals:
-            bonus += min(
-                len(signals) * 0.01,
-                0.05
-            )
-
-
-        return score + bonus

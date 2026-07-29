@@ -11,9 +11,9 @@ from core.failed_stock import record_failed
 from core.history_quality import validate_history
 
 from core.scanner.performance import perf
-from core.intelligence.context import AIContext
 
 from core.intelligence.explainer import AIExplainer
+from core.intelligence.confidence import calculate_confidence
 
 class ScanWorker:
 
@@ -24,6 +24,11 @@ class ScanWorker:
         context=None
     ):
 
+        print(
+            "INIT WORKER CONTEXT:",
+            context
+        )
+        
         self.code=str(code).zfill(6)
 
         self.context=context
@@ -36,6 +41,11 @@ class ScanWorker:
 
     def scan(self):
 
+        print(
+            "WORKER CONTEXT:",
+            self.context
+        )
+        
         with perf.timer("history"):
 
             history = get_history(self.code)
@@ -58,7 +68,16 @@ class ScanWorker:
 
         with perf.timer("factor"):
 
-            factors = calculate_factors(history)
+             factors = calculate_factors(history)
+
+
+        confidence = calculate_confidence(
+            factors
+        )
+
+        if self.context:
+
+           self.context.confidence = confidence
 
 
         if self.context:
@@ -86,18 +105,45 @@ class ScanWorker:
             )
        )
 
+        print(
+            "WORKER AI:",
+            {
+               "market_state": explanation.get(
+                    "market_state"
+                ),
+                "confidence": explanation.get(
+                    "confidence"
+                ),
+                "signals": explanation.get(
+                    "signals"
+                )
+            }
+        )
+
+        
         return {
 
+            "code": self.code,
 
-        "code":self.code,
+            "score": score,
 
+            "factors": factors,
 
-        "score":score,
+            "signals": explanation.get(
+                "signals",
+                 []
+          ),
 
+           "market_state": explanation.get(
+               "market_state",
+               "UNKNOWN"
+            ),
 
-        "factors":factors,
+            "confidence": explanation.get(
+                "confidence",
+                0
+            ),
 
+            "explanation": explanation
 
-        "ai":explanation
-
-    }
+        }

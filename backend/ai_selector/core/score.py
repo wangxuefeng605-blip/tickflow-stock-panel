@@ -28,10 +28,20 @@ DEFAULT_WEIGHTS = {
 
 def alpha_score(
     factors,
-    weights=None
+    context=None
 ):
 
-    if weights is None:
+    if isinstance(context, dict):
+
+        weights = context
+
+
+    elif context:
+
+        weights = context.weights
+
+
+    else:
 
         weights = DEFAULT_WEIGHTS
 
@@ -39,22 +49,22 @@ def alpha_score(
     score = 0
 
 
-    for name, weight in weights.items():
-
-        value = factors.get(
-            name,
-            0
-        )
-
+    for key, weight in weights.items():
 
         score += (
-            value
+            factors.get(
+                key,
+                0
+            )
             *
             weight
         )
 
 
-    return score
+    return round(
+        score,
+        6
+    )
 
 
 

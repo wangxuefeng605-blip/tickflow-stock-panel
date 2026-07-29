@@ -7,7 +7,8 @@ from core.scanner.engine import ScannerEngine
 from core.report_writer import write_report
 
 from core.intelligence.context_builder import ContextBuilder
-from core.intelligence.market_provider import get_market_data
+from core.intelligence.market_provider import MarketDataProvider
+
 
 
 def run_fast_scan():
@@ -36,42 +37,18 @@ def run_fast_scan():
             market_data
         )
     )
+
+
     print(
-    "AI Context:",
-    ai_context.market_state
-)
+        "AI Context:",
+        ai_context.market_state
+    )
 
 
-print(
-    "AI Weights:",
-    ai_context.weights
-)
-
-    def run_fast_scan():
-
-        stocks = get_stock_pool()
-
-        print(
-            f"Stock Pool Size: {len(stocks)}"
-        )
-
-
-        market_data = get_market_data()
-
-
-        ai_context = ContextBuilder().build(
-            market_data
-        )
-
-
-        engine = ScannerEngine(
-            stocks,
-            workers=8,
-            context=ai_context
-        )
-
-
-        results = engine.run()
+    print(
+        "AI Weights:",
+        ai_context.weights
+    )
 
 
     # ==========================
@@ -86,6 +63,7 @@ print(
 
 
     results = engine.run()
+
 
 
     # ==========================

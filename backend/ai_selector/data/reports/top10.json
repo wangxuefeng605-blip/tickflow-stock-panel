@@ -1,59 +1,429 @@
 {
-    "version": "v17.3.1",
+    "version": "v17.4",
     "market": "A-share",
-    "update_time": "2026-07-23 20:00:07",
+    "update_time": "2026-07-29 11:56:22",
     "scan": {},
     "count": 10,
     "data": [
         {
-            "code": "600664",
-            "score": 1.078,
-            "rank": 1
-        },
-        {
-            "code": "603137",
-            "score": 1.0322,
-            "rank": 2
-        },
-        {
-            "code": "300795",
-            "score": 0.9811,
-            "rank": 3
+            "code": "603580",
+            "score": 0.41353,
+            "rank": 1,
+            "ranking_score": 0.0,
+            "ai_score": 0.0,
+            "confidence": 1.0,
+            "market_state": "BEAR",
+            "signals": [
+                "Strong momentum",
+                "Trend confirmed"
+            ],
+            "risks": [],
+            "factors": {
+                "momentum": 1.1353,
+                "trend": 1,
+                "volume_factor": 1.915,
+                "volatility": 0.0695,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "ranking_reason": [],
+            "explanation": {
+                "signals": [
+                    "Strong momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BEAR",
+                "confidence": 1.0,
+                "score": 0.41353,
+                "explanation": {
+                    "summary": "\n\nMarket State:\nBEAR\n\n\nConfidence:\n1.0\n\n\nScore:\n0.41353\n\n\nSignals:\nStrong momentum, Trend confirmed\n\n",
+                    "signals": [
+                        "Strong momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BEAR",
+                    "confidence": 1.0,
+                    "score": 0.41353
+                }
+            }
         },
         {
             "code": "300534",
-            "score": 0.9407,
-            "rank": 4
-        },
-        {
-            "code": "603580",
-            "score": 0.8343,
-            "rank": 5
+            "score": 0.39231,
+            "rank": 2,
+            "ranking_score": 0.0,
+            "ai_score": 0.0,
+            "confidence": 0.85,
+            "market_state": "BEAR",
+            "signals": [
+                "Strong momentum",
+                "Trend confirmed"
+            ],
+            "risks": [],
+            "factors": {
+                "momentum": 0.9231,
+                "trend": 1,
+                "volume_factor": 1.3593,
+                "volatility": 0.0997,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "ranking_reason": [],
+            "explanation": {
+                "signals": [
+                    "Strong momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BEAR",
+                "confidence": 0.85,
+                "score": 0.39231,
+                "explanation": {
+                    "summary": "\n\nMarket State:\nBEAR\n\n\nConfidence:\n0.85\n\n\nScore:\n0.39231\n\n\nSignals:\nStrong momentum, Trend confirmed\n\n",
+                    "signals": [
+                        "Strong momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BEAR",
+                    "confidence": 0.85,
+                    "score": 0.39231
+                }
+            }
         },
         {
             "code": "001258",
-            "score": 0.8008,
-            "rank": 6
+            "score": 0.38195,
+            "rank": 3,
+            "ranking_score": 0.0,
+            "ai_score": 0.0,
+            "confidence": 0.85,
+            "market_state": "BEAR",
+            "signals": [
+                "Strong momentum",
+                "Trend confirmed"
+            ],
+            "risks": [],
+            "factors": {
+                "momentum": 0.8195,
+                "trend": 1,
+                "volume_factor": 1.8038,
+                "volatility": 0.061,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "ranking_reason": [],
+            "explanation": {
+                "signals": [
+                    "Strong momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BEAR",
+                "confidence": 0.85,
+                "score": 0.38195,
+                "explanation": {
+                    "summary": "\n\nMarket State:\nBEAR\n\n\nConfidence:\n0.85\n\n\nScore:\n0.38195\n\n\nSignals:\nStrong momentum, Trend confirmed\n\n",
+                    "signals": [
+                        "Strong momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BEAR",
+                    "confidence": 0.85,
+                    "score": 0.38195
+                }
+            }
         },
         {
-            "code": "002396",
-            "score": 0.7943,
-            "rank": 7
+            "code": "603137",
+            "score": 0.37913,
+            "rank": 4,
+            "ranking_score": 0.0,
+            "ai_score": 0.0,
+            "confidence": 0.85,
+            "market_state": "BEAR",
+            "signals": [
+                "Strong momentum",
+                "Trend confirmed"
+            ],
+            "risks": [],
+            "factors": {
+                "momentum": 0.7913,
+                "trend": 1,
+                "volume_factor": 1.4285,
+                "volatility": 0.0843,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "ranking_reason": [],
+            "explanation": {
+                "signals": [
+                    "Strong momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BEAR",
+                "confidence": 0.85,
+                "score": 0.37913,
+                "explanation": {
+                    "summary": "\n\nMarket State:\nBEAR\n\n\nConfidence:\n0.85\n\n\nScore:\n0.37913\n\n\nSignals:\nStrong momentum, Trend confirmed\n\n",
+                    "signals": [
+                        "Strong momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BEAR",
+                    "confidence": 0.85,
+                    "score": 0.37913
+                }
+            }
         },
         {
-            "code": "000676",
-            "score": 0.7899,
-            "rank": 8
+            "code": "603221",
+            "score": 0.3694,
+            "rank": 5,
+            "ranking_score": 0.0,
+            "ai_score": 0.0,
+            "confidence": 0.45,
+            "market_state": "BEAR",
+            "signals": [
+                "Positive momentum",
+                "Trend confirmed"
+            ],
+            "risks": [],
+            "factors": {
+                "momentum": 0.694,
+                "trend": 1,
+                "volume_factor": 0.1222,
+                "volatility": 0.0617,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "ranking_reason": [],
+            "explanation": {
+                "signals": [
+                    "Positive momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BEAR",
+                "confidence": 0.45,
+                "score": 0.3694,
+                "explanation": {
+                    "summary": "\n\nMarket State:\nBEAR\n\n\nConfidence:\n0.45\n\n\nScore:\n0.3694\n\n\nSignals:\nPositive momentum, Trend confirmed\n\n",
+                    "signals": [
+                        "Positive momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BEAR",
+                    "confidence": 0.45,
+                    "score": 0.3694
+                }
+            }
         },
         {
-            "code": "600644",
-            "score": 0.7653,
-            "rank": 9
+            "code": "300214",
+            "score": 0.36746,
+            "rank": 6,
+            "ranking_score": 0.0,
+            "ai_score": 0.0,
+            "confidence": 0.5,
+            "market_state": "BEAR",
+            "signals": [
+                "Positive momentum",
+                "Trend confirmed"
+            ],
+            "risks": [],
+            "factors": {
+                "momentum": 0.6746,
+                "trend": 1,
+                "volume_factor": 1.2559,
+                "volatility": 0.104,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "ranking_reason": [],
+            "explanation": {
+                "signals": [
+                    "Positive momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BEAR",
+                "confidence": 0.5,
+                "score": 0.36746,
+                "explanation": {
+                    "summary": "\n\nMarket State:\nBEAR\n\n\nConfidence:\n0.5\n\n\nScore:\n0.36746\n\n\nSignals:\nPositive momentum, Trend confirmed\n\n",
+                    "signals": [
+                        "Positive momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BEAR",
+                    "confidence": 0.5,
+                    "score": 0.36746
+                }
+            }
         },
         {
-            "code": "300968",
-            "score": 0.7608,
-            "rank": 10
+            "code": "300795",
+            "score": 0.35545,
+            "rank": 7,
+            "ranking_score": 0.0,
+            "ai_score": 0.0,
+            "confidence": 0.65,
+            "market_state": "BEAR",
+            "signals": [
+                "Positive momentum",
+                "Trend confirmed"
+            ],
+            "risks": [],
+            "factors": {
+                "momentum": 0.5545,
+                "trend": 1,
+                "volume_factor": 2.1476,
+                "volatility": 0.0901,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "ranking_reason": [],
+            "explanation": {
+                "signals": [
+                    "Positive momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BEAR",
+                "confidence": 0.65,
+                "score": 0.35545,
+                "explanation": {
+                    "summary": "\n\nMarket State:\nBEAR\n\n\nConfidence:\n0.65\n\n\nScore:\n0.35545\n\n\nSignals:\nPositive momentum, Trend confirmed\n\n",
+                    "signals": [
+                        "Positive momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BEAR",
+                    "confidence": 0.65,
+                    "score": 0.35545
+                }
+            }
+        },
+        {
+            "code": "002726",
+            "score": 0.35492,
+            "rank": 8,
+            "ranking_score": 0.0,
+            "ai_score": 0.0,
+            "confidence": 0.45,
+            "market_state": "BEAR",
+            "signals": [
+                "Positive momentum",
+                "Trend confirmed"
+            ],
+            "risks": [],
+            "factors": {
+                "momentum": 0.5492,
+                "trend": 1,
+                "volume_factor": 0.6844,
+                "volatility": 0.055,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "ranking_reason": [],
+            "explanation": {
+                "signals": [
+                    "Positive momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BEAR",
+                "confidence": 0.45,
+                "score": 0.35492,
+                "explanation": {
+                    "summary": "\n\nMarket State:\nBEAR\n\n\nConfidence:\n0.45\n\n\nScore:\n0.35492\n\n\nSignals:\nPositive momentum, Trend confirmed\n\n",
+                    "signals": [
+                        "Positive momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BEAR",
+                    "confidence": 0.45,
+                    "score": 0.35492
+                }
+            }
+        },
+        {
+            "code": "300779",
+            "score": 0.35438,
+            "rank": 9,
+            "ranking_score": 0.0,
+            "ai_score": 0.0,
+            "confidence": 0.65,
+            "market_state": "BEAR",
+            "signals": [
+                "Positive momentum",
+                "Trend confirmed"
+            ],
+            "risks": [],
+            "factors": {
+                "momentum": 0.5438,
+                "trend": 1,
+                "volume_factor": 1.4279,
+                "volatility": 0.0775,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "ranking_reason": [],
+            "explanation": {
+                "signals": [
+                    "Positive momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BEAR",
+                "confidence": 0.65,
+                "score": 0.35438,
+                "explanation": {
+                    "summary": "\n\nMarket State:\nBEAR\n\n\nConfidence:\n0.65\n\n\nScore:\n0.35438\n\n\nSignals:\nPositive momentum, Trend confirmed\n\n",
+                    "signals": [
+                        "Positive momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BEAR",
+                    "confidence": 0.65,
+                    "score": 0.35438
+                }
+            }
+        },
+        {
+            "code": "000838",
+            "score": 0.34845,
+            "rank": 10,
+            "ranking_score": 0.0,
+            "ai_score": 0.0,
+            "confidence": 0.45,
+            "market_state": "BEAR",
+            "signals": [
+                "Positive momentum",
+                "Trend confirmed"
+            ],
+            "risks": [],
+            "factors": {
+                "momentum": 0.4845,
+                "trend": 1,
+                "volume_factor": 0.5825,
+                "volatility": 0.0614,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "ranking_reason": [],
+            "explanation": {
+                "signals": [
+                    "Positive momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BEAR",
+                "confidence": 0.45,
+                "score": 0.34845,
+                "explanation": {
+                    "summary": "\n\nMarket State:\nBEAR\n\n\nConfidence:\n0.45\n\n\nScore:\n0.34845\n\n\nSignals:\nPositive momentum, Trend confirmed\n\n",
+                    "signals": [
+                        "Positive momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BEAR",
+                    "confidence": 0.45,
+                    "score": 0.34845
+                }
+            }
         }
     ]
 }

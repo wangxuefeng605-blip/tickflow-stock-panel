@@ -1,3 +1,6 @@
+from .confidence import calculate_confidence
+
+
 class AIScoreEngine:
 
 
@@ -37,22 +40,43 @@ class AIScoreEngine:
             )
 
 
-        confidence = 1.0
+        # 基础因子置信度
+        confidence = calculate_confidence(
+            factors
+        )
 
 
+        # 市场环境置信度
         if context:
 
-            confidence = (
-                getattr(
-                    context,
-                    "confidence",
-                    1.0
-                )
+            context_confidence = getattr(
+                context,
+                "confidence",
+                1.0
             )
+
+            confidence *= context_confidence
 
 
         return (
             score
             *
             confidence
+        )
+
+
+
+    @staticmethod
+    def calculate_ai_score(
+        factors,
+        weights=None,
+        context=None
+    ):
+
+        engine = AIScoreEngine()
+
+        return engine.calculate(
+            factors,
+            weights,
+            context
         )
