@@ -1,4 +1,15 @@
 from dataclasses import dataclass
+from enum import Enum
+
+
+class StrategyType(Enum):
+
+    MOMENTUM = "momentum"
+
+    DEFENSIVE = "defensive"
+
+    BALANCED = "balanced"
+
 
 
 @dataclass
@@ -11,6 +22,7 @@ class StrategyConfig:
     max_positions: int
 
     risk_level: float
+
 
 
 @dataclass

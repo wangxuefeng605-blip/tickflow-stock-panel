@@ -3,18 +3,13 @@ class StrategySelector:
 
     def select(
         self,
-        context
+        state
     ):
 
-
-        if context.state=="BULL":
-
+        if state == "BULL":
             return "momentum"
 
-
-        if context.state=="BEAR":
-
+        if state == "BEAR":
             return "defensive"
 
-
-        return "neutral"
+        return "balanced"

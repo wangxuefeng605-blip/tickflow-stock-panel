@@ -1,13 +1,14 @@
+from core.strategy.selector import StrategySelector
+
+
 def test_selector():
 
-    selector=StrategySelector()
+    selector = StrategySelector()
 
 
-    strategy=selector.select(
-        Context(
-            state="BULL"
-        )
+    strategy = selector.select(
+        "BULL"
     )
 
 
-    assert strategy=="momentum"
+    assert strategy == "momentum"
