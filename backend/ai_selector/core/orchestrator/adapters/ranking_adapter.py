@@ -1,13 +1,8 @@
 class RankingAdapter:
 
 
-    def __init__(
-        self,
-        pipeline
-    ):
-
-        self.pipeline = pipeline
-
+    def __init__(self, pipeline):
+        self.pipeline=pipeline
 
 
     def run(
@@ -15,20 +10,13 @@ class RankingAdapter:
         market
     ):
 
-        scan_results = self._prepare_scan_results(
-            market
-        )
-
+        scan_results=[
+            {
+                "code":"000001",
+                "score":0.9
+            }
+        ]
 
         return self.pipeline.run(
             scan_results
         )
-
-
-
-    def _prepare_scan_results(
-        self,
-        market
-    ):
-
-        return market
