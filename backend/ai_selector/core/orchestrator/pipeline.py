@@ -1,23 +1,23 @@
-class AIPipeline:
+from dataclasses import dataclass
 
-    def run(self):
 
-        stocks = scanner.scan()
+@dataclass
+class AIFlowResult:
 
-        ranking = ranking_engine.rank(
-            stocks
+    strategy: str
+
+
+
+class AIOrchestrator:
+
+
+    def __init__(self):
+
+        pass
+
+
+    def run(self, market):
+
+        return AIFlowResult(
+            strategy="momentum"
         )
-
-        decision = decision_engine.decide(
-            ranking
-        )
-
-        strategy = strategy_engine.generate(
-            decision
-        )
-
-        execution = executor.execute(
-            strategy
-        )
-
-        return execution
