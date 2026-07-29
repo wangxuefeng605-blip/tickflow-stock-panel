@@ -1,4 +1,7 @@
 from .types import RankingResult
+from .scoring import build_ranking_reason
+
+from .scoring import build_ranking_reason
 
 
 class Ranker:
@@ -32,10 +35,9 @@ class Ranker:
                 continue
 
 
-            ai = item.get(
-                "ai",
-                {}
-            )
+            ai = item
+                
+            
 
             print(
                 "RANKER AI:",
@@ -48,12 +50,16 @@ class Ranker:
                     code=item["code"],
 
                     score=item.get(
+
                         "score",
                         0
                     ),
 
                     rank=idx,
 
+                    ranking_reason=build_ranking_reason(
+                        item
+                    ),
 
                     factors=item.get(
                         "factors",
@@ -62,16 +68,27 @@ class Ranker:
 
 
                     signals=ai.get(
-                        "signals",
+                         0
+                          "signals",
                         []
                     ),
 
 
-                    confidence=ai.get(
-                        "confidence",
-                        0
-                    ),
+                   confidence = item.get(
+                       "confidence",
+                       item.get(
+                           "explanation",
+                           {}
+                       ).get(
+                           "confidence",
+                           0
+                        )
+                    )
 
+                    market_state=ai.get(
+                       "market_state",
+                       "UNKNOWN"
+                    ),
 
                     explanation=ai.get(
                         "explanation",

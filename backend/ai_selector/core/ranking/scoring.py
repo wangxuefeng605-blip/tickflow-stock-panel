@@ -227,12 +227,10 @@ def build_ranking_reason(item):
 
     reasons = []
 
-
     confidence = item.get(
         "confidence",
         0
     )
-
 
     if confidence >= 0.8:
         reasons.append(
@@ -246,26 +244,40 @@ def build_ranking_reason(item):
     )
 
 
-    if "Positive momentum" in signals:
-        reasons.append(
-            "Positive momentum"
-        )
+    for signal in signals:
+
+        text = signal.lower()
 
 
-    if "Trend confirmed" in signals:
-        reasons.append(
-            "Trend confirmed"
-        )
+        if "momentum" in text:
+            reasons.append(
+                "Momentum strength confirmed"
+            )
+
+
+        if "trend" in text:
+            reasons.append(
+                "Trend confirmed"
+            )
 
 
     market = item.get(
-        "market_state"
+        "market_state",
+        "UNKNOWN"
     )
 
 
     if market == "BULL":
+
         reasons.append(
             "Bull market environment"
+        )
+
+
+    elif market == "BEAR":
+
+        reasons.append(
+            "Bear market risk detected"
         )
 
 
