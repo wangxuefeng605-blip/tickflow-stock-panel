@@ -1,9 +1,20 @@
-feedback = FeedbackEngine()
+from core.learning import FeedbackEngine
 
-result = feedback.record(
-    "000001",
-    0.8,
-    0.1
-)
 
-assert result.success
+
+def test_learning_engine():
+
+    feedback = FeedbackEngine()
+
+    feedback.record(
+        {
+            "score":1.2,
+            "profit":0.05
+        }
+    )
+
+
+    result = feedback.learn()
+
+
+    assert result["samples"] == 1
