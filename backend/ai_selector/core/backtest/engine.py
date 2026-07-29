@@ -1,28 +1,19 @@
-from .simulator import Simulator
-from .metrics import calculate_metrics
+from .models import (
+    BacktestRequest,
+    BacktestResult
+)
 
 
 class BacktestEngine:
 
 
-    def __init__(self):
-
-        self.simulator=Simulator()
-
-
     def run(
         self,
-        signals
+        request
     ):
 
-        trades=self.simulator.simulate(
-            signals
+        return BacktestResult(
+            trades=[],
+            equity_curve=[],
+            return_rate=0
         )
-
-
-        metrics=calculate_metrics(
-            trades
-        )
-
-
-        return metrics
