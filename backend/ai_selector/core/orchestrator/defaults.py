@@ -4,6 +4,7 @@ def build_default_dependencies():
     from core.intelligence.decision_engine import AIDecisionEngine
     from core.intelligence.portfolio_engine import PortfolioEngine
     from core.strategy.selector import StrategySelector
+    from .adapters.backtest_adapter import BacktestAdapter
 
 
     return {
