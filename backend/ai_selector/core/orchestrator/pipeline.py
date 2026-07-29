@@ -31,6 +31,7 @@ class AIOrchestrator:
         self.strategy = resolve("strategy")
         self.execution = resolve("execution")
         self.backtest = resolve("backtest")
+        self.learning = resolve("learning")
         
 
 
@@ -130,4 +131,12 @@ class AIOrchestrator:
 
             context.backtest = None
 
+        if self.learning:
+
+           context.learning = self.learning.analyze(
+               context.backtest
+            )
+   
         return context
+
+        
