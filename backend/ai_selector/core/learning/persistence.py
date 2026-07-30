@@ -1,8 +1,23 @@
 class LearningPersistence:
 
-    def save(self, state):
-        pass
+
+    def __init__(self):
+
+        self._state = None
 
 
-    def load(self):
-        pass
+
+    def save(
+        self,
+        state
+    ):
+
+        self._state = state
+
+
+
+    def load(
+        self
+    ):
+
+        return self._state
