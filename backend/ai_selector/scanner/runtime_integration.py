@@ -1,9 +1,10 @@
-﻿from .runtime_bootstrap import ScannerRuntimeBootstrap
+from .runtime_bootstrap import ScannerRuntimeBootstrap
 
 
 class ScannerRuntimeIntegration:
 
     def __init__(self):
+
         self.bootstrap = ScannerRuntimeBootstrap()
 
 
@@ -22,13 +23,14 @@ class ScannerRuntimeIntegration:
 
         result["status"] = status
 
-        result.update(payload)
+        if isinstance(payload, dict):
+            result.update(payload)
 
         result["runtime_integration_completed"] = True
-
         result["scanner_runtime_completed"] = True
 
         return result
+
 
     def run(self):
 
@@ -41,4 +43,3 @@ class ScannerRuntimeIntegration:
         result["scanner_runtime_integration_completed"] = True
 
         return result
-

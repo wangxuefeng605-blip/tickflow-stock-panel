@@ -1,3 +1,6 @@
+from .runtime_integration import ScannerRuntimeIntegration
+
+
 class ScannerRuntimeHook:
 
     def __init__(self):
