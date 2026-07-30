@@ -1,6 +1,16 @@
 from dataclasses import dataclass
 
 
+
+@dataclass
+class LearningFeedback:
+
+    source: str
+
+    signal: dict
+
+
+
 @dataclass
 class FeedbackEvent:
 
@@ -10,22 +20,44 @@ class FeedbackEvent:
 
     adjustment: float
 
+    return_rate: float = 0
+
+    max_drawdown: float = 0
+
+    win_rate: float = 0
+
+    source: str = "learning"
+
 
 
 class FeedbackEngine:
 
 
-    def generate(
-        self,
-        signal
-    ):
+    def __init__(self):
 
-        adjustment = (
-            signal.score
-        )
+        self.events = []
 
-        return FeedbackEvent(
+
+
+    def generate(self, signal):
+
+        event = FeedbackEvent(
+
             strategy=signal.strategy,
+
             score=signal.score,
-            adjustment=adjustment
+
+            adjustment=signal.score,
+
+            return_rate=signal.return_rate,
+
+            max_drawdown=signal.max_drawdown,
+
+            win_rate=signal.win_rate
+
         )
+
+
+        self.events.append(event)
+
+        return event
