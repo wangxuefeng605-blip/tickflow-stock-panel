@@ -4,65 +4,37 @@ class AdaptiveWeightEngine:
     def __init__(self):
 
         self.weights = {
-            "momentum": 0.2,
-            "trend": 0.3,
-            "quality": 0.5
+            "momentum":0.3,
+            "trend":0.3,
+            "value":0.2,
+            "quality":0.2
         }
 
 
-    def calculate_delta(
-        self,
-        reward
-    ):
 
-        if reward > 0:
-            return 0.05
+    def adjust(self,factor,reward):
+
+        if factor not in self.weights:
+            self.weights[factor]=0.2
+
 
         if reward < 0:
-            return -0.05
 
-        return 0
-
+            self.weights[factor] *= 0.5
 
 
-    def adjust(
-        self,
-        factor,
-        reward
-    ):
+        elif reward > 0:
 
-        delta = self.calculate_delta(
-            reward
-        )
+            self.weights[factor] *= 1.1
 
 
-        current = self.weights.get(
-            factor,
-            0
-        )
-
-
-        new_weight = current + delta
-
-
-        new_weight = max(
-            0,
+        self.weights[factor]=max(
+            0.05,
             min(
-                1,
-                new_weight
+                self.weights[factor],
+                1.0
             )
         )
 
-
-        self.weights[factor] = new_weight
-
-
-        return {
-            factor: new_weight
-        }
-
-
-
-    def get_weights(self):
 
         return self.weights
