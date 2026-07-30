@@ -1,3 +1,4 @@
+from .persistence import LearningPersistence
 class LearningEngine:
 
     def __init__(
