@@ -64,10 +64,6 @@ class RankingPipeline:
 
         return output
 
-
-
-
-
     def _inject_weight(
         self,
         item
@@ -78,12 +74,25 @@ class RankingPipeline:
             return item
 
 
-        weight = self.weight_provider.get_weight(
-            item
+        factors = item.get(
+            "factors",
+            {}
         )
 
 
-        item["weight"] = weight
+        weights = {}
+
+
+        for factor in factors:
+
+            weights[factor] = (
+                self.weight_provider.get_weight(
+                    factor
+                )
+            )
+
+
+        item["weights"] = weights
 
 
         return item
