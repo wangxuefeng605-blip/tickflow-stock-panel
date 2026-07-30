@@ -25,10 +25,9 @@ class RuntimeExecutor:
         )
 
 
-        result = self.pipeline.run(
-            request
+        result = self.pipeline.execute(
+             stock
         )
-
 
         response = RuntimeResponse(
             request.code,
