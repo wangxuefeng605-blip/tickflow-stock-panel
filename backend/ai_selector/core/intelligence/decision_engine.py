@@ -11,7 +11,6 @@ class AIDecisionEngine:
         context
     ):
 
-
         score = item.get(
             "score",
             0
@@ -21,6 +20,12 @@ class AIDecisionEngine:
         confidence = item.get(
             "confidence",
             0
+        )
+
+
+        weight = item.get(
+            "weight",
+            1.0
         )
 
 
@@ -41,5 +46,7 @@ class AIDecisionEngine:
 
             score=score,
 
-            reason=f"{context.market_state} market decision"
+            reason=f"{context.market_state} market decision",
+
+            weight=weight
         )

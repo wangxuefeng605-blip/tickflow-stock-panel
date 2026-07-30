@@ -13,3 +13,5 @@ class AIDecision:
     score: float
 
     reason: str
+
+    weight: float = 1.0

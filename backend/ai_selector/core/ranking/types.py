@@ -20,6 +20,8 @@ class RankingResult:
 
     confidence: float = 0.0
 
+    weight: float = 1.0
+
     market_state: str = "UNKNOWN"
 
 
