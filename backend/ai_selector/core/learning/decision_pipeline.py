@@ -1,4 +1,25 @@
+from .decision_loop import LearningDecisionLoop
+
+
 class LearningDecisionPipeline:
+
+
+    def __init__(self):
+
+        self.loop = LearningDecisionLoop()
+
+
+
+    def process(
+        self,
+        result
+    ):
+
+        return self.loop.process(
+            result
+        )
+
+
 
     def run(
         self,
@@ -7,11 +28,6 @@ class LearningDecisionPipeline:
         context
     ):
 
-        adjusted = apply_learning()
-
-        decision = engine.decide(
-            adjusted,
-            context
+        return self.process(
+            stock
         )
-
-        return decision
