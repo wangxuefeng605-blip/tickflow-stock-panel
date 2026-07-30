@@ -1,28 +1,20 @@
-def allow_execution(
-    decision
-):
-
-    confidence = decision.get(
-        "confidence",
-        0
-    )
+def allow_execution(decision):
 
 
-    action = decision.get(
-        "decision",
-        "HOLD"
-    )
+    if hasattr(
+        decision,
+        "confidence"
+    ):
+
+        confidence = decision.confidence
 
 
-    if confidence < 0.5:
-        return False
+    else:
+
+        confidence = decision.get(
+            "confidence",
+            0
+        )
 
 
-    if action not in [
-        "BUY",
-        "SELL"
-    ]:
-        return False
-
-
-    return True
+    return confidence > 0.5

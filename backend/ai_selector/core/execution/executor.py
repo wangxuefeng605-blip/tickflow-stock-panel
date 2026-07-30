@@ -3,6 +3,7 @@ from .execution_policy import allow_execution
 from .risk_guard import risk_check
 
 
+
 class Executor:
 
 
@@ -13,25 +14,54 @@ class Executor:
 
 
         if not allow_execution(decision):
+
             return None
 
 
         if not risk_check(decision):
+
             return None
+
+
+
+        if hasattr(
+            decision,
+            "code"
+        ):
+
+            code = decision.code
+
+            action = decision.action
+
+            confidence = decision.confidence
+
+
+        else:
+
+            code = decision["code"]
+
+            action = decision.get(
+                "decision",
+                decision.get(
+                    "action"
+                )
+            )
+
+            confidence = decision.get(
+                "confidence",
+                0
+            )
 
 
         return ExecutionOrder(
 
-            code=decision["code"],
+            code=code,
 
-            action=decision["decision"],
+            action=action,
 
             quantity=100,
 
-            confidence=decision.get(
-                "confidence",
-                0
-            ),
+            confidence=confidence,
 
             reason="AI execution approved"
 

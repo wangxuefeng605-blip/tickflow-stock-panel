@@ -2,14 +2,19 @@ def risk_check(
     decision
 ):
 
-    confidence = decision.get(
-        "confidence",
-        0
-    )
+    if hasattr(
+        decision,
+        "confidence"
+    ):
+
+        confidence = decision.confidence
+
+    else:
+
+        confidence = decision.get(
+            "confidence",
+            0
+        )
 
 
-    if confidence < 0.4:
-        return False
-
-
-    return True
+    return confidence > 0.5
