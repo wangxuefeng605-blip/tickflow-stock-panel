@@ -12,3 +12,12 @@ class RuntimeService:
         result["runtime_service_completed"] = True
 
         return result
+
+    def run(self):
+        return {
+            "status": "running"
+        }
+
+
+# Stage41 compatibility alias
+ScannerRuntimeService = RuntimeService
