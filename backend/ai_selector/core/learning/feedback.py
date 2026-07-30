@@ -61,3 +61,17 @@ class FeedbackEngine:
         self.events.append(event)
 
         return event
+
+class Feedback:
+
+    def __init__(
+        self,
+        reward,
+        factor
+    ):
+
+        self.reward = reward
+
+        self.factor = factor
+
+        self.adjustment = reward * 0.1
