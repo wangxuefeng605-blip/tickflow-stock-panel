@@ -1,35 +1,29 @@
 class WeightProvider:
 
-
     def __init__(self):
 
         self.weights = {
-
-            "momentum":0.2,
-
-            "trend":0.3,
-
-            "volatility":0.1,
-
-            "liquidity":0.2,
-
-            "value":0.2
-
+            "momentum":0.2
         }
 
+
+    def get_weight(self, name):
+
+        return self.weights.get(
+            name,
+            0
+        )
 
 
     def get_weights(self):
 
-        return self.weights.copy()
+        return self.weights
 
 
-
-    def update(
-        self,
-        weights
-    ):
+    def update(self, weights):
 
         self.weights.update(
             weights
         )
+
+        return self.weights
