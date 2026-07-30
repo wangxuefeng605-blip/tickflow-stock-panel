@@ -12,7 +12,12 @@ class AdaptiveWeightEngine:
 
 
 
-    def adjust(self,factor,reward):
+    def adjust(
+        self,
+        factor,
+        reward
+    ):
+
 
         if factor not in self.weights:
             self.weights[factor]=0.2
@@ -28,12 +33,13 @@ class AdaptiveWeightEngine:
             self.weights[factor] *= 1.1
 
 
-        self.weights[factor]=max(
-            0.05,
-            min(
+
+        self.weights[factor] = min(
+            max(
                 self.weights[factor],
-                1.0
-            )
+                0.05
+            ),
+            1.0
         )
 
 
