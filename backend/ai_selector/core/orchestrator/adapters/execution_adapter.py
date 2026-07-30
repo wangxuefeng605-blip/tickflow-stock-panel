@@ -14,6 +14,15 @@ class ExecutionAdapter:
         decision
     ):
 
+        if not isinstance(
+            decision,
+            list
+        ):
+            decision = [
+                decision
+            ]
+
+
         return self.engine.execute(
             decision
         )
