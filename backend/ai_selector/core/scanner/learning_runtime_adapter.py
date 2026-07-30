@@ -1,3 +1,6 @@
+from core.learning.pipeline_assembly import LearningPipelineAssembly
+
+
 class ScannerLearningRuntimeAdapter:
 
 
@@ -6,7 +9,22 @@ class ScannerLearningRuntimeAdapter:
         self.pipeline = LearningPipelineAssembly()
 
 
+    def process(
+        self,
+        scanner_result,
+        learning_state=None
+    ):
 
-    def process(self, stock):
+        return self.pipeline.execute(
+            scanner_result
+        )
 
-        return self.pipeline.execute(stock)
+
+    def run(
+        self,
+        scanner_result
+    ):
+
+        return self.process(
+            scanner_result
+        )

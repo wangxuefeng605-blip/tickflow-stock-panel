@@ -1,3 +1,5 @@
+from core.scanner.learning_runtime_adapter import ScannerLearningRuntimeAdapter
+
 def test_scanner_runtime_integration():
 
     adapter = ScannerLearningRuntimeAdapter()
