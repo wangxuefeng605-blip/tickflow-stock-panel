@@ -1,6 +1,11 @@
 from .context import AIFlowContext
 
 
+class Dependencies:
+
+    pass
+
+
 class AIOrchestrator:
 
 
@@ -30,30 +35,35 @@ class AIOrchestrator:
         self.portfolio = resolve("portfolio")
         self.strategy = resolve("strategy")
         self.execution = resolve("execution")
+
+
         self.backtest = resolve("backtest")
         self.learning = resolve("learning")
         
 
-
     def default_dependencies(self):
 
-        from core.backtest.engine import BacktestEngine
-        from core.orchestrator.adapters.backtest_adapter import BacktestAdapter
         from core.ranking.pipeline import RankingPipeline
         from core.orchestrator.adapters.ranking_adapter import RankingAdapter
         from core.orchestrator.adapters.decision_adapter import DecisionAdapter
+
         from core.intelligence.decision_engine import AIDecisionEngine
         from core.strategy.selector import StrategySelector
+
         from core.orchestrator.adapters.execution_adapter import ExecutionAdapter
         from core.execution.engine import ExecutionEngine
+
         from core.intelligence.portfolio_engine import PortfolioEngine
 
+        from core.orchestrator.adapters.backtest_adapter import BacktestAdapter
+        from core.backtest.engine import BacktestEngine
 
-        class Dependencies:
-            pass
+        from core.learning.orchestrator_hook import LearningOrchestratorHook
 
 
         deps = Dependencies()
+    
+
 
         deps.ranking = RankingAdapter(
             RankingPipeline()
@@ -73,7 +83,9 @@ class AIOrchestrator:
         deps.backtest = BacktestAdapter(
             BacktestEngine()
         )
-        
+
+        deps.learning = LearningOrchestratorHook()
+
         return deps
 
 
@@ -133,9 +145,17 @@ class AIOrchestrator:
 
         if self.learning:
 
-           context.learning = self.learning.analyze(
-               context.backtest
+            context.learning = self.learning.after_backtest(
+                {
+                    "backtest": context.backtest
+                }
             )
+
+            context.learning_updated = True
+
+        else:
+
+            context.learning_updated = False
    
         return context
 
