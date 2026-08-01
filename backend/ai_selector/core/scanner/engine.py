@@ -93,39 +93,48 @@ class ScannerEngine:
 
             for future in as_completed(futures):
 
-                try:
+                    try:
 
-                  result = future.result()
+                        result = future.result()
 
-                  if result is not None:
+                        if isinstance(result, dict):
 
-                      print(
-                          "ENGINE RESULT:",
-                          result
+                            print(
+                                "ENGINE RESULT:",
+                                result
+                            )
+
+                            results.append(result)
+
+                        else:
+
+                            print(
+                                 "INVALID RESULT:",
+                                  type(result),
+                                  repr(result)
+                            )
+
+                    except Exception as e:
+
+                        code = futures[future]
+
+                        print(
+                            f"{code} worker failed: {e}"
                         )
-
-                      results.append(result)
-
-                except Exception as e:
-
-                    code = futures[future]
-
-                    print(f"{code} worker failed: {e}")
-
         print()
         print(f"Finished: {len(results)}")
         print()
 
         print("Results:")
 
-        for item in results[:3]:
+        for item in results:
 
-            print(item)
+                      if isinstance(item, dict):
 
-            print(
-                "AI FIELD:",
-                item.get("ai")
-            )
+                         print(
+                             "AI FIELD:",
+                             item.get("ai")
+                        )
 
         print()
 

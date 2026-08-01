@@ -9,7 +9,6 @@ def rank_stocks(results, top_n=10):
 
     return ranked[:top_n]
 
-    return RankingPipeline().run(results)
 
 
 
@@ -64,7 +63,10 @@ def print_top10(results):
         )
 
         print(
-            confidence
+            round(
+                confidence,
+                2
+            )
         )
 
 
@@ -90,6 +92,19 @@ def print_top10(results):
                 ""
             )
 
+            if not summary:
+
+                nested = item.explanation.get(
+                    "explanation",
+                    {}
+                )
+
+                summary = nested.get(
+                    "summary",
+                    ""
+                )
+
+
             print(
                 summary.strip()
             )
@@ -99,6 +114,7 @@ def print_top10(results):
             print(
                 "None"
             )
+
 
 
     print("=" * 50)

@@ -9,15 +9,9 @@ class WorkerExecutionPipeline:
         self.adapter = WorkerExecutionAdapter()
 
 
+    def execute(self, stock):
 
-    def execute(
-        self,
-        stock
-    ):
-
-        result = self.adapter.execute(
-            stock
-        )
+        result = self.adapter.execute(stock)
 
         return {
             **result,

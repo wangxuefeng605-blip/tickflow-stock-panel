@@ -5,6 +5,9 @@ from dataclasses import dataclass, field
 from dataclasses import dataclass, field
 
 
+from dataclasses import dataclass
+
+
 @dataclass
 class RankingResult:
 
@@ -12,39 +15,15 @@ class RankingResult:
 
     score: float
 
-    rank: int = 0
+    rank: int
 
-    ranking_score: float = 0.0
+    factors: dict
 
-    ai_score: float = 0.0
 
-    confidence: float = 0.0
-
-    weight: float = 1.0
+    signals: list = None
 
     market_state: str = "UNKNOWN"
 
+    confidence: float = 0
 
-    signals: list[str] = field(
-        default_factory=list
-    )
-
-
-    risks: list[str] = field(
-        default_factory=list
-    )
-
-
-    factors: dict = field(
-        default_factory=dict
-    )
-
-
-    ranking_reason: list[str] = field(
-        default_factory=list
-    )
-
-
-    explanation: dict = field(
-        default_factory=dict
-    )
+    explanation: dict = None

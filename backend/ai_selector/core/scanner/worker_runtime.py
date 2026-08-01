@@ -9,15 +9,9 @@ class WorkerRuntimeInjection:
         self.runtime = ScannerRuntimeHook()
 
 
+    def execute(self, stock):
 
-    def execute(
-        self,
-        stock
-    ):
-
-        result = self.runtime.execute(
-            stock
-        )
+        result = self.runtime.execute(stock)
 
         return {
             **result,

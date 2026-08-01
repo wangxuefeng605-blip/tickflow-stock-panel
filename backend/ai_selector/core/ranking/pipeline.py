@@ -56,11 +56,30 @@ class RankingPipeline:
                     factors=item.get(
                         "factors",
                         {}
+                    ),
+
+                    signals=item.get(
+                        "signals",
+                        []
+                    ),
+
+                    market_state=item.get(
+                        "market_state",
+                        "UNKNOWN"
+                    ),
+
+                    confidence=item.get(
+                        "confidence",
+                        0
+                    ),
+
+                    explanation=item.get(
+                        "explanation",
+                        {}
                     )
 
                 )
             )
-
 
         return output
 

@@ -36,114 +36,104 @@ class ScanWorker:
         self.explainer = AIExplainer()
 
 
-    
-
-
     def scan(self):
 
-        print(
-            "WORKER CONTEXT:",
-            self.context
-        )
-        
-        with perf.timer("history"):
+        try:
 
-            history = get_history(self.code)
+            with perf.timer("history"):
+
+                history = get_history(self.code)
 
 
-        quality = validate_history(history)
+            quality = validate_history(history)
 
 
-        if not quality["valid"]:
+            if not quality["valid"]:
+
+                record_failed(
+                    self.code,
+                    "history",
+                    quality["reason"],
+                    quality.get("days", 0)
+                )
+
+                return None
+
+
+            with perf.timer("factor"):
+
+                factors = calculate_factors(history)
+
+
+            confidence = calculate_confidence(
+                factors
+            )
+
+
+            if self.context:
+
+                self.context.confidence = confidence
+
+
+            with perf.timer("score"):
+
+                score = alpha_score(
+                    factors,
+                    context=self.context
+                )
+
+
+            explanation = self.explainer.explain(
+                factors,
+                self.context,
+                score
+            )
+
+
+            return {
+
+                "code": self.code,
+
+                "score": score,
+
+                "factors": factors,
+
+                "signals": explanation.get(
+                    "signals",
+                    []
+                ),
+
+                "market_state": explanation.get(
+                    "market_state",
+                    "UNKNOWN"
+                ),
+
+                "confidence": explanation.get(
+                    "confidence",
+                    0
+                ),
+
+                "explanation": explanation
+
+            }
+
+        except Exception as e:
+
+            print(
+                f"[WorkerError] {self.code}: {e}"
+            )
 
             record_failed(
-               self.code,
-                "history",
-                quality["reason"],
-                quality.get("days",0)
+                self.code,
+                "worker",
+                str(e),
+                0
             )
 
             return None
 
 
-        with perf.timer("factor"):
+     
 
-             factors = calculate_factors(history)
-
-
-        confidence = calculate_confidence(
-            factors
-        )
-
-        if self.context:
-
-           self.context.confidence = confidence
-
-
-        if self.context:
-
-            weights = self.context.weights
-
-        else:
-
-            weights = None
-
-
-        with perf.timer("score"):
-
-            score = alpha_score(
-                factors,
-                context=self.context
-            )
-
-
-        explanation = (
-            self.explainer.explain(
-                factors,
-                self.context,
-                score
-            )
-       )
-
-        print(
-            "WORKER AI:",
-            {
-               "market_state": explanation.get(
-                    "market_state"
-                ),
-                "confidence": explanation.get(
-                    "confidence"
-                ),
-                "signals": explanation.get(
-                    "signals"
-                )
-            }
-        )
-
+            
         
-        return {
-
-            "code": self.code,
-
-            "score": score,
-
-            "factors": factors,
-
-            "signals": explanation.get(
-                "signals",
-                 []
-          ),
-
-           "market_state": explanation.get(
-               "market_state",
-               "UNKNOWN"
-            ),
-
-            "confidence": explanation.get(
-                "confidence",
-                0
-            ),
-
-            "explanation": explanation
-
-        }
