@@ -38,7 +38,6 @@ class FeedbackEngine:
         self.events = []
 
 
-
     def generate(self, signal):
 
         event = FeedbackEvent(
@@ -62,6 +61,8 @@ class FeedbackEngine:
 
         return event
 
+
+
 class Feedback:
 
     def __init__(
@@ -75,3 +76,46 @@ class Feedback:
         self.factor = factor
 
         self.adjustment = reward * 0.1
+
+
+
+def evaluate_prediction(
+    entry,
+    future
+):
+    """
+    Evaluate prediction result.
+    """
+
+    if entry == 0:
+
+        return {
+            "entry": entry,
+            "future": future,
+            "return": 0,
+            "success": False,
+            "direction": "UNKNOWN"
+        }
+
+
+    change = (
+        future - entry
+    ) / entry
+
+
+    return {
+
+        "entry": entry,
+
+        "future": future,
+
+        "return": change,
+
+        "success": change > 0,
+
+        "direction":
+            "UP"
+            if change > 0
+            else "DOWN"
+
+    }
