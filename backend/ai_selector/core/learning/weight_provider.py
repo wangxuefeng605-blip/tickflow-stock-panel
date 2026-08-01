@@ -1,21 +1,23 @@
 class WeightProvider:
 
 
-    DEFAULT_WEIGHTS = {
-        "momentum": 0.2
-    }
+    def __init__(
+        self,
+        weights=None
+    ):
+
+        self.weights = weights or {
+            "momentum": 0.2,
+            "trend": 0.2,
+            "value": 0.2,
+            "quality": 0.2
+        }
 
 
-    def __init__(self, weights=None):
-
-        self.weights = (
-            weights.copy()
-            if weights
-            else self.DEFAULT_WEIGHTS.copy()
-        )
-
-
-    def get_weight(self, factor):
+    def get_weight(
+        self,
+        factor
+    ):
 
         return self.weights.get(
             factor,
@@ -23,38 +25,55 @@ class WeightProvider:
         )
 
 
-    def get_weights(self):
+    def get_weights(
+        self
+    ):
 
         return self.weights.copy()
 
 
-    def update(self, weights):
+    def update(
+        self,
+        weights
+    ):
 
         self.weights.update(
             weights
         )
 
+        return self.weights
 
 
-def inject_weights(base_weights, learned_weights):
 
-    result = base_weights.copy()
+class LearningWeightProvider(
+    WeightProvider
+):
+
+    pass
+
+
+
+def inject_weights(
+    base,
+    learned
+):
+
+    result = base.copy()
 
     result.update(
-        learned_weights
+        learned
     )
 
     return result
 
 
 
-def inject_learning_weight(weights, learning_result):
+def inject_learning_weight(
+    base,
+    learned
+):
 
     return inject_weights(
-        weights,
-        learning_result
+        base,
+        learned
     )
-
-
-
-LearningWeightProvider = WeightProvider
