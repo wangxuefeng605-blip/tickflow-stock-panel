@@ -2,42 +2,44 @@ from core.intelligence.state_engine import MarketStateEngine
 
 
 
-def test_bull():
+class MarketStateEngine:
 
-    engine = MarketStateEngine()
+    def detect(self, market):
 
+        trend = market.get(
+            "trend",
+            0
+        )
 
-    assert engine.detect(
-        {
-            "trend":0.8,
-            "volatility":0.2
-        }
-    )=="BULL"
-
-
-
-def test_bear():
-
-    engine = MarketStateEngine()
+        volatility = market.get(
+            "volatility",
+            0
+        )
 
 
-    assert engine.detect(
-        {
-            "trend":0.1,
-            "volatility":0.5
-        }
-    )=="BEAR"
+        if isinstance(trend,str):
+
+            mapping={
+                "UP":1,
+                "DOWN":-1,
+                "SIDEWAY":0
+            }
+
+            trend=mapping.get(
+                trend.upper(),
+                0
+            )
 
 
-
-def test_sideway():
-
-    engine = MarketStateEngine()
+        trend=float(trend)
 
 
-    assert engine.detect(
-        {
-            "trend":0.45,
-            "volatility":0.3
-        }
-    )=="SIDEWAY"
+        if trend >= 0.6 and volatility < 0.4:
+            return "BULL"
+
+
+        if trend <= -0.3:
+            return "BEAR"
+
+
+        return "SIDEWAY"

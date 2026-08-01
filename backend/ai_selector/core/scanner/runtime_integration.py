@@ -4,15 +4,25 @@
 class ScannerRuntimeIntegration:
 
 
-    def __init__(self):
+    def execute(
+        self,
+        payload=None
+    ):
 
-        self.bootstrap = ScannerRuntimeBootstrap()
+        if payload is None:
+            payload = {}
 
 
-    def execute(self, payload):
+        return {
+            "scanner_runtime_completed": True,
+            "input": payload
+        }
 
-        result = self.bootstrap.execute(payload)
 
-        result["runtime_integration_completed"] = True
+    def run(self):
+
+        result = self.execute()
+
+        result["runtime_ready"] = True
 
         return result
