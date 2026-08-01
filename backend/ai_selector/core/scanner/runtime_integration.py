@@ -14,8 +14,13 @@ class ScannerRuntimeIntegration:
 
 
         return {
+
             "scanner_runtime_completed": True,
+
+            "worker_execution_completed": True,
+
             "input": payload
+
         }
 
 
