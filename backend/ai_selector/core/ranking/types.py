@@ -19,7 +19,6 @@ class RankingResult:
 
     factors: dict
 
-
     signals: list = None
 
     market_state: str = "UNKNOWN"
@@ -27,3 +26,5 @@ class RankingResult:
     confidence: float = 0
 
     explanation: dict = None
+
+    reason: str = ""

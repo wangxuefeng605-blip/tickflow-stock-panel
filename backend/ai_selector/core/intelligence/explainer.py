@@ -85,28 +85,82 @@ Signals:
 """
 
 
+        reason = []
+
+        if market_state == "BULL":
+
+            reason.append(
+                "Market environment is bullish."
+            )
+
+        elif market_state == "BEAR":
+
+            reason.append(
+                "Market environment is weak."
+            )
+
+        else:
+
+            reason.append(
+                "Market direction is uncertain."
+            )
+
+
+        if "Strong momentum" in signals:
+
+            reason.append(
+                "Stock shows strong momentum."
+            )
+
+        elif "Positive momentum" in signals:
+
+            reason.append(
+                "Stock maintains positive momentum."
+            )
+
+
+        if "Trend confirmed" in signals:
+
+            reason.append(
+                "Trend confirmation is positive."
+            )
+
+
+        reason.append(
+            f"Confidence level: {confidence:.0%}."
+        )
+
+
+        reason.append(
+            f"Alpha score: {score:.4f}."
+        )
+
+
+        summary = "\n".join(reason)
+
+
         return {
 
-    "signals": signals,
+           "signals": signals,
 
-    "market_state": market_state,
+            "market_state": market_state,
 
-    "confidence": confidence,
+            "confidence": confidence,
 
-    "score": score,
+            "score": score,
 
-    "explanation": {
+            "reason": summary,
 
-        "summary": explanation,
+            "explanation": {
 
-        "signals": signals,
+                "summary": summary,
 
-        "market_state": market_state,
+                "reason": summary,
 
-        "confidence": confidence,
+                "signals": signals,
 
-        "score": score
+                "market_state": market_state
 
-    }
+            }
 
-}
+        }
