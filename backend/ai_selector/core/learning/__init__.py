@@ -2,6 +2,7 @@ from .feedback_engine import FeedbackEngine
 from .optimizer import LearningOptimizer
 from .runtime import LearningRuntime
 from .feedback import evaluate_prediction
+from .feedback_analyzer import FeedbackAnalyzer
 
 from .weight_provider import (
     WeightProvider,
