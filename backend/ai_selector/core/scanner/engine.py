@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from threading import Lock
 
 from tqdm import tqdm
-
+from core.scanner.worker import ScanWorker
 
 from core.stock_pool import get_stock_pool
 
@@ -124,12 +124,13 @@ class ScannerEngine:
             futures = {
 
                 executor.submit(
-                    self.scan_one,
-                    code
+                    ScanWorker(
+                        code,
+                        self.context
+                    ).scan
                 ): code
 
                 for code in codes
-
             }
 
 
@@ -141,10 +142,14 @@ class ScannerEngine:
 
                     result = future.result()
 
+                    if result:
+
+                       if "score" in result and "alpha_score" not in result:
+                           result["alpha_score"] = result["score"]
+
                     results.append(
                         result
                     )
-
 
                 except Exception as e:
 
@@ -163,15 +168,26 @@ class ScannerEngine:
 
         try:
 
-            results = self.learning_runtime.after_scan(
+            learned_results = self.learning_runtime.after_scan(
                 results
-          )
+            )
+
+            if learned_results is not None:
+               results = learned_results
+
 
         except Exception as e:
 
             print(
-                 f"Learning runtime failed: {e}"
+                f"Learning runtime failed: {e}"
             )
 
-
         return results, failed_items
+         
+    def run(self):
+
+        results, failed_items = self.scan_batch(
+            self.stocks
+        )
+
+        return results
