@@ -23,19 +23,36 @@ from core.factor_cache import (
 )
 from stock_factor import get_stock_factor
 from score import stock_score
+from core.learning.learning_runtime_orchestrator import (
+    LearningRuntimeOrchestrator
+)
+
 
 class ScannerEngine:
 
 
     def __init__(
         self,
-        max_workers=16
+        stocks,
+        workers=8,
+        context=None
     ):
-        self.max_workers = max_workers
 
+        self.context = context
+
+        self.stocks = list(stocks)
+
+        self.workers = workers
+
+        self.start_time = None
 
         self.performance = PerformanceTracker()
 
+        self.learning_runtime = (
+            LearningRuntimeOrchestrator()
+        )
+
+        
     def scan_one(self, code):
      
      
@@ -90,57 +107,30 @@ class ScannerEngine:
             **factor,
         }
 
-
-
     def scan_batch(self, codes):
 
         results = []
 
-        failed_items = []
+        for code in codes:
+
+            result = self.scan_one(code)
+
+            if result is None:
+                continue
 
 
-        with ThreadPoolExecutor(
-    max_workers=self.max_workers
-) as executor:
+            # 过滤错误返回
+            if isinstance(result, tuple):
+                continue
 
 
-            futures = {
-
-                executor.submit(
-                    self.scan_one,
-                    code
-                ): code
-
-                for code in codes
-
-            }
+            if isinstance(result, list):
+                continue
 
 
-            for future in as_completed(futures):
-
-                code = futures[future]
-
-                try:
-
-                    result = future.result()
-
-                    results.append(
-                        result
-                    )
+            results.append(result)
 
 
-                except Exception as e:
+        return results
 
-                    failed_items.append(
-                        (
-                            code,
-                            str(e)
-                        )
-                    )
-
-
-        self.performance.report()
-
-        factor_cache_report()
-
-        return results, failed_items
+    

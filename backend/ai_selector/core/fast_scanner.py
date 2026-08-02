@@ -62,8 +62,22 @@ def run_fast_scan():
     )
 
 
-    results = engine.run()
+    results, failed_items = engine.scan_batch(
+        stocks
+    )
 
+
+    print(
+        f"Scan Success: {len(results)}"
+    )
+
+    print(
+        f"Scan Failed: {len(failed_items)}"
+    )
+
+    print("RESULT TYPE:", type(results))
+    print("RESULT LENGTH:", len(results))
+    print("RESULT FIRST 10:", results[:10])
 
 
     # ==========================

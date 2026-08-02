@@ -1,30 +1,35 @@
-"""
-AI Scanner v17.3 Stage 2 Quality Layer
-"""
-
-from __future__ import annotations
-
+import os
+import csv
 import time
+from scanner.performance import PerformanceTracker
 
-from concurrent.futures import (
-    ThreadPoolExecutor,
-    as_completed
-)
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from threading import Lock
+
+from tqdm import tqdm
+
+
+from core.stock_pool import get_stock_pool
+
+from checkpoint import CheckpointManager
+from retry_manager import RetryManager
+
+
+from history_cache import load_history
 from core.factor_cache import (
     get_factor,
     save_factor,
     factor_cache_report
 )
-
-from core.history_quality import validate_history
-
-from typing import Iterable
-
-from core.scanner.worker import ScanWorker
-from core.scanner.performance import perf
+from stock_factor import get_stock_factor
+from score import stock_score
+from core.learning.learning_runtime_orchestrator import (
+    LearningRuntimeOrchestrator
+)
 
 
 class ScannerEngine:
+
 
     def __init__(
         self,
@@ -41,121 +46,132 @@ class ScannerEngine:
 
         self.start_time = None
 
-    # ---------------------------------
+        self.performance = PerformanceTracker()
 
-    def initialize(self):
+        self.learning_runtime = (
+            LearningRuntimeOrchestrator()
+        )
 
-        self.start_time = time.time()
+        
+    def scan_one(self, code):
+     
+     
+        code = str(code)
 
-        print("=" * 40)
-        print(" AI Scanner v17.2 Stage 1 ")
-        print("=" * 40)
 
-        print(f"Stocks : {len(self.stocks)}")
-        print(f"Workers: {self.workers}")
+        start = time.time()
 
-        print("=" * 40)
-        print()
+        history = load_history(code)
 
-    # ---------------------------------
+        self.performance.record(
+            "history",
+            time.time() - start
+        )     
 
-    def run(self):
+        if history is None or len(history) < 30:
+            raise Exception(
+                "历史行情不足"
+            )
 
-        self.initialize()
 
-        perf.reset()
+        start = time.time()
 
-        print("ScannerEngine initialized.")
-        print()
-        print("Start scanning...")
-        print()
+        factor = get_stock_factor(code)
+
+        self.performance.record(
+            "factor",
+            time.time() - start
+        )
+
+        if factor is None:
+            raise Exception(
+                "因子计算失败"
+            )
+
+
+        start = time.time()
+
+        score = stock_score(
+             factor
+        )
+
+        self.performance.record(
+            "score",
+            time.time() - start
+        )
+
+
+        return {
+            "code": code,
+            "alpha_score": score,
+            **factor,
+        }
+
+
+
+    def scan_batch(self, codes):
 
         results = []
+
+        failed_items = []
+
 
         with ThreadPoolExecutor(
             max_workers=self.workers
         ) as executor:
 
+
             futures = {
 
-                 executor.submit(
-
-                    ScanWorker(
-                       code,
-                        context=self.context
-                    ).scan
-
+                executor.submit(
+                    self.scan_one,
+                    code
                 ): code
 
-                for code in self.stocks
+                for code in codes
 
             }
 
+
             for future in as_completed(futures):
 
-                    try:
+                code = futures[future]
 
-                        result = future.result()
+                try:
 
-                        if isinstance(result, dict):
+                    result = future.result()
 
-                            print(
-                                "ENGINE RESULT:",
-                                result
-                            )
+                    results.append(
+                        result
+                    )
 
-                            results.append(result)
 
-                        else:
+                except Exception as e:
 
-                            print(
-                                 "INVALID RESULT:",
-                                  type(result),
-                                  repr(result)
-                            )
-
-                    except Exception as e:
-
-                        code = futures[future]
-
-                        print(
-                            f"{code} worker failed: {e}"
+                    failed_items.append(
+                        (
+                            code,
+                            str(e)
                         )
-        print()
-        print(f"Finished: {len(results)}")
-        print()
+                    )
 
-        print("Results:")
 
-        for item in results:
+        self.performance.report()
 
-                      if isinstance(item, dict):
+        factor_cache_report()
 
-                         print(
-                             "AI FIELD:",
-                             item.get("ai")
-                        )
 
-        print()
+        try:
 
-        perf.report()
+            results = self.learning_runtime.after_scan(
+                results
+          )
 
-        self.shutdown()
+        except Exception as e:
 
-        return results
+            print(
+                 f"Learning runtime failed: {e}"
+            )
 
-    # ---------------------------------
 
-    def shutdown(self):
-
-        elapsed = 0
-
-        if self.start_time is not None:
-
-            elapsed = time.time() - self.start_time
-
-        print()
-        print("=" * 40)
-        print("ScannerEngine shutdown")
-        print(f"Elapsed : {elapsed:.2f}s")
-        print("=" * 40)
+        return results, failed_items

@@ -21,11 +21,15 @@ class RankingPipeline:
         ranked
     ):
 
-        ranked = sorted(
+            
+        ranked = sorted (
             ranked,
             key=lambda x: x.get(
                 "score",
-                0
+                x.get(
+                    "alpha_score",
+                    0
+                )
             ),
             reverse=True
         )
@@ -49,7 +53,13 @@ class RankingPipeline:
 
                     code=item["code"],
 
-                    score=item["score"],
+                    score=item.get(
+                        "score",
+                        item.get(
+                            "alpha_score",
+                            0
+                        )
+                    ),
 
                     rank=index,
 
