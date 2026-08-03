@@ -1,32 +1,106 @@
+from pathlib import Path
+from core.learning.prediction.prediction_store import (
+    PredictionStore
+)
+from core.learning.outcome.outcome_tracker import (
+    OutcomeTracker
+)
+
+
 class FeedbackAnalyzer:
 
 
-    def analyze(
-        self,
-        feedback
-    ):
+    def __init__(self):
 
-        future_return = feedback.get(
-            "future_return",
-            0
+        self.prediction_store = PredictionStore()
+
+        self.outcome_tracker = OutcomeTracker()
+
+
+
+    def analyze(self):
+
+        predictions = (
+            self.prediction_store.load_all()
         )
 
-        momentum = feedback.get(
-            "momentum",
-            0
+        outcomes = (
+            self.outcome_tracker.load_all()
         )
 
 
-        return {
+        outcome_map = {}
 
-            "momentum": momentum,
+        for item in outcomes:
 
-            "future_return": future_return,
+            code = item.get(
+                "code"
+            )
 
-            "reward":
-                future_return,
+            outcome_map[code] = (
+                item.get(
+                    "result",
+                    {}
+                )
+            )
 
-            "positive":
-                future_return > 0
+
+        result = {
+
+            "total": 0,
+
+            "success": 0,
+
+            "failure": 0,
+
+            "success_rate": 0,
+
+            "signals": {}
 
         }
+
+
+        for prediction in predictions:
+
+            for stock in prediction.get(
+                "stocks",
+                []
+            ):
+
+                code = stock.get(
+                    "code"
+                )
+
+                if code not in outcome_map:
+                    continue
+
+
+                result["total"] += 1
+
+
+                outcome = outcome_map[code]
+
+
+                if outcome.get(
+                    "success",
+                    False
+                ):
+
+                    result["success"] += 1
+
+                else:
+
+                    result["failure"] += 1
+
+
+
+        if result["total"]:
+
+            result["success_rate"] = (
+                result["success"]
+                /
+                result["total"]
+            )
+
+
+        return result

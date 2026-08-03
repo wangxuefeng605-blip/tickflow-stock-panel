@@ -1,15 +1,22 @@
-from core.learning import FeedbackAnalyzer
+from core.learning.feedback_analyzer import (
+    FeedbackAnalyzer
+)
 
 
 def test_feedback_analyzer():
 
     analyzer = FeedbackAnalyzer()
 
-    result = analyzer.analyze(
-        {
-            "future_return": 0.1,
-            "momentum": 0.8
-        }
+
+    result = analyzer.analyze()
+
+
+    assert (
+        "success_rate"
+        in result
     )
 
-    assert result["momentum"] > 0
+    assert (
+        "total"
+        in result
+    )
