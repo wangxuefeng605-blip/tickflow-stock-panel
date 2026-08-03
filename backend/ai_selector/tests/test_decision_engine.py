@@ -1,28 +1,35 @@
-from core.intelligence.decision_engine import AIDecisionEngine
+from core.decision import DecisionEngine
+from core.ranking.types import RankingResult
 
 
-class Context:
-
-    market_state="BEAR"
+def test_decision_engine():
 
 
+    ranking = RankingResult(
 
-def test_ai_decision():
+        code="603580",
 
-    engine=AIDecisionEngine()
+        score=0.72,
 
+        confidence=0.85,
 
-    result=engine.decide(
+        market_state="BULL",
 
-        {
-            "code":"603580",
-            "score":0.8,
-            "confidence":0.9
-        },
-
-        Context()
+        signals=[
+            "Strong momentum"
+        ]
 
     )
 
 
-    assert result.action=="BUY"
+    engine = DecisionEngine()
+
+
+    decision = engine.decide(
+        ranking
+    )
+
+
+    assert decision.action=="BUY"
+
+    assert decision.code=="603580"
