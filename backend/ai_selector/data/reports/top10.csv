@@ -1,11 +1,11 @@
 ﻿rank,code,score,confidence,signals
-1,000779,103.44,0,[]
-2,003020,96.31,0,[]
-3,002841,95.21,0,[]
-4,300534,94.6,0,[]
-5,001395,86.37,0,[]
-6,000989,85.85,0,[]
-7,300369,84.77,0,[]
-8,002864,83.93,0,[]
-9,000948,83.42,0,[]
-10,000566,81.95,0,[]
+1,603580,0.726995,0.9999999999999999,"['Strong momentum', 'Trend confirmed']"
+2,600664,0.707885,0.65,"['Strong momentum', 'Trend confirmed']"
+3,603221,0.69469,0.65,"['Strong momentum', 'Trend confirmed']"
+4,001258,0.688005,0.85,"['Strong momentum', 'Trend confirmed']"
+5,003032,0.678485,0.85,"['Strong momentum', 'Trend confirmed']"
+6,300534,0.629975,0.7,"['Strong momentum', 'Trend confirmed']"
+7,300795,0.62378,0.7,"['Strong momentum', 'Trend confirmed']"
+8,605179,0.60138,0.65,"['Positive momentum', 'Trend confirmed']"
+9,300663,0.6011,0.65,"['Positive momentum', 'Trend confirmed']"
+10,003001,0.600435,0.44999999999999996,"['Positive momentum', 'Trend confirmed']"

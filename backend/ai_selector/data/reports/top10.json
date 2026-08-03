@@ -1,127 +1,407 @@
 {
     "version": "v17.4",
     "market": "A-share",
-    "update_time": "2026-08-02 16:19:46",
+    "update_time": "2026-08-03 20:59:00",
     "scan": {},
     "count": 10,
     "data": [
         {
-            "code": "000779",
-            "score": 103.44,
+            "code": "603580",
+            "score": 0.726995,
             "rank": 1,
-            "factors": {},
-            "signals": [],
-            "market_state": "UNKNOWN",
-            "confidence": 0,
-            "explanation": {},
+            "factors": {
+                "momentum": 1.0057,
+                "trend": 1,
+                "volume_factor": 1.2609,
+                "volatility": 0.0741,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "signals": [
+                "Strong momentum",
+                "Trend confirmed"
+            ],
+            "market_state": "BULL",
+            "confidence": 0.9999999999999999,
+            "explanation": {
+                "signals": [
+                    "Strong momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BULL",
+                "confidence": 0.9999999999999999,
+                "score": 0.726995,
+                "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 100%.\nAlpha score: 0.7270.",
+                "explanation": {
+                    "summary": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 100%.\nAlpha score: 0.7270.",
+                    "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 100%.\nAlpha score: 0.7270.",
+                    "signals": [
+                        "Strong momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BULL"
+                }
+            },
             "reason": "",
             "ranking_reason": ""
         },
         {
-            "code": "003020",
-            "score": 96.31,
+            "code": "600664",
+            "score": 0.707885,
             "rank": 2,
-            "factors": {},
-            "signals": [],
-            "market_state": "UNKNOWN",
-            "confidence": 0,
-            "explanation": {},
+            "factors": {
+                "momentum": 0.9511,
+                "trend": 1,
+                "volume_factor": 0.9949,
+                "volatility": 0.0597,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "signals": [
+                "Strong momentum",
+                "Trend confirmed"
+            ],
+            "market_state": "BULL",
+            "confidence": 0.65,
+            "explanation": {
+                "signals": [
+                    "Strong momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BULL",
+                "confidence": 0.65,
+                "score": 0.707885,
+                "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 65%.\nAlpha score: 0.7079.",
+                "explanation": {
+                    "summary": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 65%.\nAlpha score: 0.7079.",
+                    "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 65%.\nAlpha score: 0.7079.",
+                    "signals": [
+                        "Strong momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BULL"
+                }
+            },
             "reason": "",
             "ranking_reason": ""
         },
         {
-            "code": "002841",
-            "score": 95.21,
+            "code": "603221",
+            "score": 0.69469,
             "rank": 3,
-            "factors": {},
-            "signals": [],
-            "market_state": "UNKNOWN",
-            "confidence": 0,
-            "explanation": {},
+            "factors": {
+                "momentum": 0.9134,
+                "trend": 1,
+                "volume_factor": 0.8083,
+                "volatility": 0.0661,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "signals": [
+                "Strong momentum",
+                "Trend confirmed"
+            ],
+            "market_state": "BULL",
+            "confidence": 0.65,
+            "explanation": {
+                "signals": [
+                    "Strong momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BULL",
+                "confidence": 0.65,
+                "score": 0.69469,
+                "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 65%.\nAlpha score: 0.6947.",
+                "explanation": {
+                    "summary": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 65%.\nAlpha score: 0.6947.",
+                    "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 65%.\nAlpha score: 0.6947.",
+                    "signals": [
+                        "Strong momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BULL"
+                }
+            },
+            "reason": "",
+            "ranking_reason": ""
+        },
+        {
+            "code": "001258",
+            "score": 0.688005,
+            "rank": 4,
+            "factors": {
+                "momentum": 0.8943,
+                "trend": 1,
+                "volume_factor": 1.7648,
+                "volatility": 0.067,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "signals": [
+                "Strong momentum",
+                "Trend confirmed"
+            ],
+            "market_state": "BULL",
+            "confidence": 0.85,
+            "explanation": {
+                "signals": [
+                    "Strong momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BULL",
+                "confidence": 0.85,
+                "score": 0.688005,
+                "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 85%.\nAlpha score: 0.6880.",
+                "explanation": {
+                    "summary": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 85%.\nAlpha score: 0.6880.",
+                    "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 85%.\nAlpha score: 0.6880.",
+                    "signals": [
+                        "Strong momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BULL"
+                }
+            },
+            "reason": "",
+            "ranking_reason": ""
+        },
+        {
+            "code": "003032",
+            "score": 0.678485,
+            "rank": 5,
+            "factors": {
+                "momentum": 0.8671,
+                "trend": 1,
+                "volume_factor": 1.0197,
+                "volatility": 0.0534,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "signals": [
+                "Strong momentum",
+                "Trend confirmed"
+            ],
+            "market_state": "BULL",
+            "confidence": 0.85,
+            "explanation": {
+                "signals": [
+                    "Strong momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BULL",
+                "confidence": 0.85,
+                "score": 0.678485,
+                "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 85%.\nAlpha score: 0.6785.",
+                "explanation": {
+                    "summary": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 85%.\nAlpha score: 0.6785.",
+                    "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 85%.\nAlpha score: 0.6785.",
+                    "signals": [
+                        "Strong momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BULL"
+                }
+            },
             "reason": "",
             "ranking_reason": ""
         },
         {
             "code": "300534",
-            "score": 94.6,
-            "rank": 4,
-            "factors": {},
-            "signals": [],
-            "market_state": "UNKNOWN",
-            "confidence": 0,
-            "explanation": {},
-            "reason": "",
-            "ranking_reason": ""
-        },
-        {
-            "code": "001395",
-            "score": 86.37,
-            "rank": 5,
-            "factors": {},
-            "signals": [],
-            "market_state": "UNKNOWN",
-            "confidence": 0,
-            "explanation": {},
-            "reason": "",
-            "ranking_reason": ""
-        },
-        {
-            "code": "000989",
-            "score": 85.85,
+            "score": 0.629975,
             "rank": 6,
-            "factors": {},
-            "signals": [],
-            "market_state": "UNKNOWN",
-            "confidence": 0,
-            "explanation": {},
+            "factors": {
+                "momentum": 0.7285,
+                "trend": 1,
+                "volume_factor": 1.1299,
+                "volatility": 0.1055,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "signals": [
+                "Strong momentum",
+                "Trend confirmed"
+            ],
+            "market_state": "BULL",
+            "confidence": 0.7,
+            "explanation": {
+                "signals": [
+                    "Strong momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BULL",
+                "confidence": 0.7,
+                "score": 0.629975,
+                "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 70%.\nAlpha score: 0.6300.",
+                "explanation": {
+                    "summary": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 70%.\nAlpha score: 0.6300.",
+                    "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 70%.\nAlpha score: 0.6300.",
+                    "signals": [
+                        "Strong momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BULL"
+                }
+            },
             "reason": "",
             "ranking_reason": ""
         },
         {
-            "code": "300369",
-            "score": 84.77,
+            "code": "300795",
+            "score": 0.62378,
             "rank": 7,
-            "factors": {},
-            "signals": [],
-            "market_state": "UNKNOWN",
-            "confidence": 0,
-            "explanation": {},
+            "factors": {
+                "momentum": 0.7108,
+                "trend": 1,
+                "volume_factor": 1.5782,
+                "volatility": 0.1059,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "signals": [
+                "Strong momentum",
+                "Trend confirmed"
+            ],
+            "market_state": "BULL",
+            "confidence": 0.7,
+            "explanation": {
+                "signals": [
+                    "Strong momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BULL",
+                "confidence": 0.7,
+                "score": 0.62378,
+                "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 70%.\nAlpha score: 0.6238.",
+                "explanation": {
+                    "summary": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 70%.\nAlpha score: 0.6238.",
+                    "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 70%.\nAlpha score: 0.6238.",
+                    "signals": [
+                        "Strong momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BULL"
+                }
+            },
             "reason": "",
             "ranking_reason": ""
         },
         {
-            "code": "002864",
-            "score": 83.93,
+            "code": "605179",
+            "score": 0.60138,
             "rank": 8,
-            "factors": {},
-            "signals": [],
-            "market_state": "UNKNOWN",
-            "confidence": 0,
-            "explanation": {},
+            "factors": {
+                "momentum": 0.6468,
+                "trend": 1,
+                "volume_factor": 1.4358,
+                "volatility": 0.0574,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "signals": [
+                "Positive momentum",
+                "Trend confirmed"
+            ],
+            "market_state": "BULL",
+            "confidence": 0.65,
+            "explanation": {
+                "signals": [
+                    "Positive momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BULL",
+                "confidence": 0.65,
+                "score": 0.60138,
+                "reason": "Market environment is bullish.\nStock maintains positive momentum.\nTrend confirmation is positive.\nConfidence level: 65%.\nAlpha score: 0.6014.",
+                "explanation": {
+                    "summary": "Market environment is bullish.\nStock maintains positive momentum.\nTrend confirmation is positive.\nConfidence level: 65%.\nAlpha score: 0.6014.",
+                    "reason": "Market environment is bullish.\nStock maintains positive momentum.\nTrend confirmation is positive.\nConfidence level: 65%.\nAlpha score: 0.6014.",
+                    "signals": [
+                        "Positive momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BULL"
+                }
+            },
             "reason": "",
             "ranking_reason": ""
         },
         {
-            "code": "000948",
-            "score": 83.42,
+            "code": "300663",
+            "score": 0.6011,
             "rank": 9,
-            "factors": {},
-            "signals": [],
-            "market_state": "UNKNOWN",
-            "confidence": 0,
-            "explanation": {},
+            "factors": {
+                "momentum": 0.646,
+                "trend": 1,
+                "volume_factor": 1.5748,
+                "volatility": 0.0697,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "signals": [
+                "Positive momentum",
+                "Trend confirmed"
+            ],
+            "market_state": "BULL",
+            "confidence": 0.65,
+            "explanation": {
+                "signals": [
+                    "Positive momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BULL",
+                "confidence": 0.65,
+                "score": 0.6011,
+                "reason": "Market environment is bullish.\nStock maintains positive momentum.\nTrend confirmation is positive.\nConfidence level: 65%.\nAlpha score: 0.6011.",
+                "explanation": {
+                    "summary": "Market environment is bullish.\nStock maintains positive momentum.\nTrend confirmation is positive.\nConfidence level: 65%.\nAlpha score: 0.6011.",
+                    "reason": "Market environment is bullish.\nStock maintains positive momentum.\nTrend confirmation is positive.\nConfidence level: 65%.\nAlpha score: 0.6011.",
+                    "signals": [
+                        "Positive momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BULL"
+                }
+            },
             "reason": "",
             "ranking_reason": ""
         },
         {
-            "code": "000566",
-            "score": 81.95,
+            "code": "003001",
+            "score": 0.600435,
             "rank": 10,
-            "factors": {},
-            "signals": [],
-            "market_state": "UNKNOWN",
-            "confidence": 0,
-            "explanation": {},
+            "factors": {
+                "momentum": 0.6441,
+                "trend": 1,
+                "volume_factor": 0.9563,
+                "volatility": 0.0795,
+                "quality": 0.5,
+                "growth": 0.5
+            },
+            "signals": [
+                "Positive momentum",
+                "Trend confirmed"
+            ],
+            "market_state": "BULL",
+            "confidence": 0.44999999999999996,
+            "explanation": {
+                "signals": [
+                    "Positive momentum",
+                    "Trend confirmed"
+                ],
+                "market_state": "BULL",
+                "confidence": 0.44999999999999996,
+                "score": 0.600435,
+                "reason": "Market environment is bullish.\nStock maintains positive momentum.\nTrend confirmation is positive.\nConfidence level: 45%.\nAlpha score: 0.6004.",
+                "explanation": {
+                    "summary": "Market environment is bullish.\nStock maintains positive momentum.\nTrend confirmation is positive.\nConfidence level: 45%.\nAlpha score: 0.6004.",
+                    "reason": "Market environment is bullish.\nStock maintains positive momentum.\nTrend confirmation is positive.\nConfidence level: 45%.\nAlpha score: 0.6004.",
+                    "signals": [
+                        "Positive momentum",
+                        "Trend confirmed"
+                    ],
+                    "market_state": "BULL"
+                }
+            },
             "reason": "",
             "ranking_reason": ""
         }

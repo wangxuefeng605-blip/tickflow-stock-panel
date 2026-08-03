@@ -50,12 +50,12 @@ class ContextBuilder:
 
         return AIContext(
 
-            market_state=state,
+    market_state=state,
 
-            weights=weights,
+    weights=weights,
 
-            confidence=calculate_confidence(
-                market_data
-            )
+    confidence=calculate_confidence(
+        market_data
+    )
 
-        )
+)

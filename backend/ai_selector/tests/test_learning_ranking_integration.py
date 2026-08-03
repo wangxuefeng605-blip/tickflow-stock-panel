@@ -1,32 +1,50 @@
 from core.ranking.pipeline import RankingPipeline
-from core.learning.weight_provider import WeightProvider
+from core.learning.weight_provider import (
+    LearningWeightProvider
+)
 
 
-def test_ranking_pipeline_uses_learning_weight():
+def test_learning_weight_changes_ranking():
 
-    provider = WeightProvider(
+
+    provider = LearningWeightProvider(
         {
-            "momentum":0.6
+            "momentum":2,
+            "trend":1
         }
     )
 
 
     pipeline = RankingPipeline(
-        weight_provider=provider
+        provider
     )
 
 
-    result = pipeline.run(
-        [
-            {
-                "code":"000001",
-                "score":0.8,
-                "factors":{
-                    "momentum":1
-                }
+    results=[
+
+        {
+            "code":"000001",
+            "score":1,
+            "factors":{
+                "momentum":1
             }
-        ]
+        },
+
+
+        {
+            "code":"000002",
+            "score":1.2,
+            "factors":{
+                "trend":1
+            }
+        }
+
+    ]
+
+
+    ranked = pipeline.run(
+        results
     )
 
 
-    assert result[0].rank == 1
+    assert ranked[0].code=="000001"
