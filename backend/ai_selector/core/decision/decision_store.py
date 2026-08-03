@@ -55,12 +55,17 @@ class DecisionStore:
 
     def load_all(self):
 
-        records = []
+        records=[]
 
 
-        for file in self.base_dir.glob(
-            "*.json"
-        ):
+        files = sorted(
+            self.base_dir.glob("*.json"),
+            key=lambda x: x.stat().st_mtime,
+            reverse=True
+        )
+
+
+        for file in files:
 
             with open(
                 file,
@@ -73,3 +78,5 @@ class DecisionStore:
 
 
         return records
+
+            

@@ -1,4 +1,5 @@
 import json
+
 from pathlib import Path
 from datetime import datetime
 
@@ -30,6 +31,7 @@ class OutcomeTracker:
         result=None
     ):
 
+
         record = {
 
             "timestamp":
@@ -51,14 +53,22 @@ class OutcomeTracker:
 
 
         filename = (
+
             str(code)
+
             +
+
             "_"
+
             +
+
             datetime.now()
             .strftime("%Y%m%d_%H%M%S")
+
             +
+
             ".json"
+
         )
 
 
@@ -87,14 +97,20 @@ class OutcomeTracker:
 
 
 
-    def load_all(self):
+    def load_all(
+        self
+    ):
+
 
         records = []
 
 
-        for file in sorted(
+        files = sorted(
             self.base_dir.glob("*.json")
-        ):
+        )
+
+
+        for file in files:
 
             with open(
                 file,
@@ -116,36 +132,45 @@ class OutcomeTracker:
         result
     ):
 
-        for file in self.base_dir.glob(
-            f"{code}_*.json"
-        ):
 
-            with open(
-                file,
-                encoding="utf-8"
-            ) as f:
-
-                data = json.load(f)
+        files = sorted(
+            self.base_dir.glob(
+                f"{code}_*.json"
+            ),
+            reverse=True
+        )
 
 
-            data["result"] = result
+        if not files:
+            return None
 
 
-            with open(
-                file,
-                "w",
-                encoding="utf-8"
-            ) as f:
-
-                json.dump(
-                    data,
-                    f,
-                    ensure_ascii=False,
-                    indent=2
-                )
+        file = files[0]
 
 
-            return file
+        with open(
+            file,
+            encoding="utf-8"
+        ) as f:
+
+            data = json.load(f)
 
 
-        return None
+        data["result"] = result
+
+
+        with open(
+            file,
+            "w",
+            encoding="utf-8"
+        ) as f:
+
+            json.dump(
+                data,
+                f,
+                ensure_ascii=False,
+                indent=2
+            )
+
+
+        return file
