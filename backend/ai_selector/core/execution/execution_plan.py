@@ -3,9 +3,17 @@ class ExecutionPlan:
     def __init__(
         self,
         code,
-        side,
+        action=None,
+        confidence=0,
+        side=None,
         status="CREATED"
     ):
+
         self.code = code
-        self.side = side
+
+        # 兼容 action / side 两套命名
+        self.action = action or side
+        self.side = self.action
+
+        self.confidence = confidence
         self.status = status

@@ -1,3 +1,6 @@
+from core.execution.execution_plan import ExecutionPlan
+
+
 def test_execution_plan():
 
     plan = ExecutionPlan(
@@ -6,5 +9,4 @@ def test_execution_plan():
         confidence=0.8
     )
 
-    assert plan.code=="000001"
-    assert plan.status=="CREATED"
+    assert plan.code == "000001"

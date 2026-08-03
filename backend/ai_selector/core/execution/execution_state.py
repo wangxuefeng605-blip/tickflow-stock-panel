@@ -11,3 +11,9 @@ class ExecutionState:
     ):
 
         self.history.append(plan)
+
+
+
+class ExecutionTracker(ExecutionState):
+
+    pass
