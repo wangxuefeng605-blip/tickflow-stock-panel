@@ -3,11 +3,8 @@ from .position import Position
 
 class Portfolio:
 
-
     def __init__(self):
-
         self.cash = 100000
-
         self.positions = {}
 
 
@@ -20,56 +17,19 @@ class Portfolio:
 
         cost = price * qty
 
-
-        if cost > self.cash:
-            return False
-
-
         self.cash -= cost
 
-
-        self.positions[code] = Position(
-            code,
-            qty,
-            price
-        )
-
+        self.positions[code] = {
+            "qty": qty,
+            "price": price
+        }
 
         return True
 
 
+    def apply(self, order):
 
-    def sell(
-        self,
-        code
-    ):
-
-        if code not in self.positions:
-            return False
-
-
-        position = self.positions.pop(code)
-
-
-        self.cash += position.value()
-
-
-        return True
-
-
-
-    def apply(
-        self,
-        order
-    ):
-
-
-        action = order.get(
-            "action"
-        )
-
-
-        if action == "BUY":
+        if order["action"] == "BUY":
 
             return self.buy(
                 order["code"],
@@ -77,12 +37,12 @@ class Portfolio:
                 order["qty"]
             )
 
-
-        if action == "SELL":
-
-            return self.sell(
-                order["code"]
-            )
-
-
         return False
+
+
+    def state(self):
+
+        return {
+            "cash": self.cash,
+            "positions": self.positions
+        }

@@ -76,3 +76,11 @@ class RiskEngine:
                 allowed
 
         }
+    def check(
+        self,
+        order
+    ):
+
+        result = self.evaluate(order)
+
+        return result
