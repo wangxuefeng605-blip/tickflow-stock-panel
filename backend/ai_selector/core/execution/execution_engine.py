@@ -8,6 +8,7 @@ class ExecutionEngine:
         pass
 
 
+
     def create_plan(
         self,
         decision
@@ -17,9 +18,17 @@ class ExecutionEngine:
 
             code=decision["code"],
 
-            side=decision.get(
+            action=decision.get(
                 "action",
-                "HOLD"
+                decision.get(
+                    "side",
+                    "HOLD"
+                )
+            ),
+
+            confidence=decision.get(
+                "confidence",
+                0
             ),
 
             status="CREATED"
