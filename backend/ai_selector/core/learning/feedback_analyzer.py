@@ -18,7 +18,10 @@ class FeedbackAnalyzer:
 
 
 
-    def analyze(self):
+    def analyze(
+    self,
+    result
+    ):
 
         predictions = (
             self.prediction_store.load_all()
