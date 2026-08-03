@@ -1,6 +1,5 @@
 from .ranker import Ranker
 from .explain import explain
-from types import SimpleNamespace
 from core.ranking.types import RankingResult
 
 
@@ -9,18 +8,21 @@ class RankingPipeline:
 
     def __init__(
         self,
-        weight_provider=None
+        weight_provider=None,
+        stock_weight_provider=None
     ):
 
         self.weight_provider = weight_provider
 
+        self.stock_weight_provider = (
+            stock_weight_provider
+        )
 
 
-    from .types import RankingResult
-
-
-    def run(self, results):
-
+    def run(
+        self,
+        results
+    ):
 
         ranked = [
             item
@@ -33,12 +35,38 @@ class RankingPipeline:
             self._inject_weight(item)
 
 
+        print(
+            "BEFORE SORT"
+        )
+
+
+        for item in ranked[:5]:
+
+            print(
+                item.get("code"),
+                item.get("score"),
+                item.get("alpha_score")
+            )
+
+
         ranked = sorted(
             ranked,
             key=lambda x: self._adaptive_score(x),
             reverse=True
         )
-        
+
+
+        print(
+            "AFTER SORT"
+        )
+
+
+        for item in ranked[:10]:
+
+            print(
+                item.get("code"),
+                self._adaptive_score(item)
+            )
 
 
         output = []
@@ -55,15 +83,17 @@ class RankingPipeline:
 
                     code=item["code"],
 
-                    score=item.get(
+                    score=self._adaptive_score(item),
+
+                    rank=index,
+
+                    alpha_score=item.get(
                         "score",
                         item.get(
                             "alpha_score",
                             0
                         )
                     ),
-
-                    rank=index,
 
                     factors=item.get(
                         "factors",
@@ -87,24 +117,26 @@ class RankingPipeline:
 
                     explanation=item.get(
                         "explanation",
-                       {}
+                        {}
                     ),
 
                     reason=item.get(
                         "reason",
                         ""
                     )
-
                 )
             )
 
 
         return output
 
+
+
     def _adaptive_score(
         self,
         item
     ):
+
 
         base_score = item.get(
             "score",
@@ -115,8 +147,21 @@ class RankingPipeline:
         )
 
 
+        learning_weight = item.get(
+            "learning_weight",
+            1.0
+        )
+
+
+        base_score *= learning_weight
+
+
         if self.weight_provider is None:
+
             return base_score
+
+
+        total = base_score
 
 
         factors = item.get(
@@ -125,40 +170,40 @@ class RankingPipeline:
         )
 
 
-        total = base_score
-
-
         for factor, value in factors.items():
 
-            weight = self.weight_provider.get_weight(
-                factor
+            weight = (
+                self.weight_provider.get_weight(
+                    factor
+                )
             )
 
-            total += value * weight
+
+            total += (
+                value * weight
+            )
 
 
         return total
-    
+
+
 
     def _inject_weight(
         self,
         item
-    ):  
+    ):
+
 
         print(
             "INJECT:",
             item["code"]
         )
 
+
         if self.weight_provider is None:
 
-
-            print(
-                "FINAL WEIGHT:",
-                item["code"],
-                item.get("learning_weight")
-            )
             return item
+
 
 
         factors = item.get(
@@ -172,28 +217,39 @@ class RankingPipeline:
 
         for factor in factors:
 
-
             weights[factor] = (
-
                 self.weight_provider.get_weight(
                     factor
                 )
-
             )
 
 
         item["weights"] = weights
 
 
-        learning_weight = 1
+
+        learning_weight = 1.0
 
 
-        for factor, weight in weights.items():
+        if self.stock_weight_provider:
 
-            learning_weight *= weight
+            learning_weight = (
+                self.stock_weight_provider.get_weight(
+                    item["code"]
+                )
+            )
 
 
-        item["learning_weight"] = learning_weight
+        item["learning_weight"] = (
+            learning_weight
+        )
+
+
+        print(
+            "FINAL WEIGHT:",
+            item["code"],
+            learning_weight
+        )
 
 
         return item

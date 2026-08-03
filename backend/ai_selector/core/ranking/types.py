@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass
@@ -10,23 +10,18 @@ class RankingResult:
 
     rank: int = 0
 
-    factors: dict = field(
-        default_factory=dict
-    )
+    ranking_reason: str = ""
 
+    alpha_score: float = 0
 
-    signals: list = field(
-        default_factory=list
-    )
+    factors: dict = None
+
+    signals: list = None
 
     market_state: str = "UNKNOWN"
 
     confidence: float = 0
 
-    explanation: dict = field(
-        default_factory=dict
-    )
+    explanation: dict = None
 
     reason: str = ""
-
-    ranking_reason: str = ""
