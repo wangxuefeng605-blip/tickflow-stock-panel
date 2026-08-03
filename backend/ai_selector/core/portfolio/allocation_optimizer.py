@@ -13,7 +13,6 @@ class AllocationOptimizer:
         if total == 0:
             return 0
 
-
         return min(
             1.0,
             total

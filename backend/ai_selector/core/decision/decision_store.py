@@ -21,6 +21,8 @@ class DecisionStore:
 
         self.base_dir = BASE_DIR
 
+        self.latest = None
+
 
 
     def save(
@@ -49,6 +51,8 @@ class DecisionStore:
             )
 
 
+        self.latest = path
+
         return path
 
 
@@ -58,11 +62,19 @@ class DecisionStore:
         records=[]
 
 
-        files = sorted(
-            self.base_dir.glob("*.json"),
-            key=lambda x: x.stat().st_mtime,
-            reverse=True
+        files = list(
+            self.base_dir.glob("*.json")
         )
+
+
+        if self.latest and self.latest.exists():
+
+            files.remove(self.latest)
+
+            files.insert(
+                0,
+                self.latest
+            )
 
 
         for file in files:
@@ -78,5 +90,3 @@ class DecisionStore:
 
 
         return records
-
-            

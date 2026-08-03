@@ -6,7 +6,7 @@ class PortfolioRiskEngine:
         allocation
     ):
 
-        if allocation <= 0.8:
+        if allocation <= 1.0:
             return True
 
         return False
