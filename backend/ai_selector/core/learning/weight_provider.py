@@ -49,7 +49,69 @@ class LearningWeightProvider(
     WeightProvider
 ):
 
-    pass
+
+    def apply_adjustment(
+        self,
+        adjustments
+    ):
+
+        for factor, delta in adjustments.items():
+
+            current = self.weights.get(
+                factor,
+                0
+            )
+
+
+            new_value = (
+                current
+                +
+                delta
+            )
+
+
+            # clamp
+            new_value = max(
+                0,
+                min(
+                    1,
+                    new_value
+                )
+            )
+
+
+            self.weights[factor] = (
+                new_value
+            )
+
+
+        self._normalize()
+
+
+        return self.weights.copy()
+
+
+
+    def _normalize(
+        self
+    ):
+
+        total = sum(
+            self.weights.values()
+        )
+
+
+        if total <= 0:
+            return
+
+
+        for key in self.weights:
+
+            self.weights[key] = (
+                self.weights[key]
+                /
+                total
+            )
 
 
 
