@@ -1,14 +1,25 @@
 from .ranker import Ranker
 from .pipeline import RankingPipeline
 from .types import RankingResult
+from core.learning.weight_provider import LearningWeightProvider
 
 
-def rank_stocks(results, top_n=10):
 
-    ranked = RankingPipeline().run(results)
+def rank_stocks(
+    results,
+    top_n=10,
+    weight_provider=None
+):
+
+    pipeline = RankingPipeline(
+        weight_provider
+    )
+
+    ranked = pipeline.run(
+        results
+    )
 
     return ranked[:top_n]
-
 
 
 
@@ -118,3 +129,15 @@ def print_top10(results):
 
 
     print("=" * 50)
+
+def rank_stocks(
+    results,
+    top_n=10,
+    weight_provider=None
+):
+
+    ranked = RankingPipeline(
+        weight_provider=weight_provider
+    ).run(results)
+
+    return ranked[:top_n]

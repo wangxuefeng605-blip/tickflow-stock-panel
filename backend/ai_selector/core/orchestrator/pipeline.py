@@ -59,6 +59,7 @@ class AIOrchestrator:
         from core.backtest.engine import BacktestEngine
 
         from core.learning.orchestrator_hook import LearningOrchestratorHook
+        from core.learning.weight_provider import LearningWeightProvider
 
 
         deps = Dependencies()
@@ -66,7 +67,9 @@ class AIOrchestrator:
 
 
         deps.ranking = RankingAdapter(
-            RankingPipeline()
+            RankingPipeline(
+                LearningWeightProvider()
+            )
         )
 
         deps.decision = DecisionAdapter(

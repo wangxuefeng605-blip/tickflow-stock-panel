@@ -8,7 +8,7 @@ from core.report_writer import write_report
 
 from core.intelligence.context_builder import ContextBuilder
 from core.intelligence.market_provider import MarketDataProvider
-
+from core.learning.weight_provider import LearningWeightProvider
 
 
 def run_fast_scan():
@@ -84,9 +84,12 @@ def run_fast_scan():
     # Ranking
     # ==========================
 
+    weight_provider = LearningWeightProvider()
+
+
     top10 = rank_stocks(
         results,
-        top_n=10
+        weight_provider=weight_provider
     )
 
 
