@@ -1,14 +1,19 @@
+from core.portfolio.intelligence_runtime import PortfolioIntelligenceRuntime
+
+
 class PortfolioRuntimeBridge:
 
+
     def __init__(self):
+
         self.intelligence = PortfolioIntelligenceRuntime()
 
 
     def process(
         self,
-        portfolio_event
+        event
     ):
 
         return self.intelligence.run(
-            portfolio_event
+            event
         )

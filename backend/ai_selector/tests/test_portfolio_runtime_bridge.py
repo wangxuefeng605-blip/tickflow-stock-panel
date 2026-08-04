@@ -1,12 +1,17 @@
-bridge = PortfolioRuntimeBridge()
+from core.runtime.portfolio_runtime_bridge import PortfolioRuntimeBridge
 
-result = bridge.process(
-    {
-        "reward":1,
-        "performance":{
-            "return":0.2
+
+def test_portfolio_runtime_bridge():
+
+    bridge = PortfolioRuntimeBridge()
+
+    result = bridge.process(
+        {
+            "reward":1,
+            "performance":{
+                "return":0.2
+            }
         }
-    }
-)
+    )
 
-assert result["adjustment"]=="increase"
+    assert result["adjustment"] == "increase"
