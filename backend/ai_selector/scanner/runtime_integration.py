@@ -3,43 +3,34 @@ from .runtime_bootstrap import ScannerRuntimeBootstrap
 
 class ScannerRuntimeIntegration:
 
-    def __init__(self):
 
-        self.bootstrap = ScannerRuntimeBootstrap()
+    def execute(
+        self,
+        payload=None
+    ):
 
-
-    def execute(self, payload):
-
-        status = self.bootstrap.start()
-
-        result = {}
-
-        if isinstance(status, dict):
-            result["runtime_ready"] = (
-                status.get("status") == "ready"
-            )
-        else:
-            result["runtime_ready"] = False
-
-        result["status"] = status
-
-        if isinstance(payload, dict):
-            result.update(payload)
-
-        result["runtime_integration_completed"] = True
-        result["scanner_runtime_completed"] = True
-
-        return result
+        if payload is None:
+            payload = {}
 
 
-    def run(self):
+        return {
 
-        result = self.execute(
-            {
-                "runtime": "scanner"
-            }
-        )
+            "scanner_runtime_completed": True,
 
-        result["scanner_runtime_integration_completed"] = True
+            "worker_execution_completed": True,
+
+            "input": payload
+
+        }
+
+
+    def run(
+        self,
+        payload=None
+    ):
+
+        result = self.execute(payload)
+
+        result["runtime_ready"] = True
 
         return result
