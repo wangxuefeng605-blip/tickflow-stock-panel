@@ -4,7 +4,8 @@ from .portfolio_feedback import PortfolioFeedback
 from .runtime_state import PortfolioRuntimeState
 from .allocation_optimizer import AllocationOptimizer
 from .risk_engine import PortfolioRiskEngine
-
+from core.portfolio.intelligence import PortfolioIntelligence
+from core.learning.portfolio_adapter import PortfolioLearningAdapter
 
 
 class PortfolioIntelligenceRuntime:
@@ -25,6 +26,49 @@ class PortfolioIntelligenceRuntime:
             risk=PortfolioRiskEngine()
         )
 
+        self.learning = PortfolioLearningAdapter()
+
+
+
+    def run(
+        self,
+        feedback
+    ):
+
+        result = self.feedback.process(
+            feedback
+        )
+
+
+        learning_result = self.learning.update(
+            feedback
+        )
+
+
+        reward = feedback.get(
+            "reward",
+            0
+        )
+
+
+        if reward > 0:
+            adjustment = "increase"
+        elif reward < 0:
+            adjustment = "decrease"
+        else:
+            adjustment = "hold"
+
+
+
+        return {
+
+            "feedback": result,
+
+            "learning": learning_result,
+
+            "adjustment": adjustment
+
+        }
 
 
     def execute(

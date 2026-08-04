@@ -6,15 +6,47 @@ class PortfolioFeedback:
         outcome
     ):
 
-        profit = outcome["profit"]
+        profit = outcome.get(
+            "profit",
+            0
+        )
+
+        return {
+
+            "reward": profit,
+
+            "source":
+                "portfolio"
+
+        }
+
+
+
+    def process(
+        self,
+        feedback
+    ):
+
+        reward = feedback.get(
+            "reward",
+            0
+        )
+
+        performance = feedback.get(
+            "performance",
+            {}
+        )
 
 
         return {
 
             "reward":
-                profit,
+                reward,
+
+            "performance":
+                performance,
 
             "source":
-                "portfolio"
+                "portfolio_feedback"
 
         }
