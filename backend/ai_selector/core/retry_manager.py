@@ -14,34 +14,84 @@ class RetryManager:
                 writer.writerow(["code", "error", "retry_count", "last_time"])
 
     def add_failed(self, code, error, retry_count=1):
+
         rows = []
-        found = False
 
         if os.path.exists(FAILED_FILE):
-            with open(FAILED_FILE, "r", encoding="utf-8") as f:
+            with open(
+                FAILED_FILE,
+                "r",
+                encoding="utf-8"
+            ) as f:
+
                 reader = csv.DictReader(f)
-                rows = list(reader)
+
+                for row in reader:
+                    if None in row:
+                        row.pop(None)
+
+                    rows.append(row)
+
+
+        found = False
 
         for row in rows:
+
             if row["code"] == str(code):
+
                 row["error"] = str(error)
-                row["retry_count"] = str(int(row["retry_count"]) + 1)
-                row["last_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                row["retry_count"] = str(
+                    int(row["retry_count"]) + 1
+                )
+                row["last_time"] = datetime.now().strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                )
+
                 found = True
                 break
 
-        if not found:
-            rows.append({
-                "code": str(code),
-                "error": str(error),
-                "retry_count": str(retry_count),
-                "last_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            })
 
-        with open(FAILED_FILE, "w", encoding="utf-8", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=["code", "error", "retry_count", "last_time"])
+        if not found:
+
+            rows.append(
+                {
+                    "code": str(code),
+                    "error": str(error),
+                    "retry_count": str(retry_count),
+                    "last_time": datetime.now().strftime(
+                        "%Y-%m-%d %H:%M:%S"
+                    )
+                }
+            )
+
+
+        with open(
+            FAILED_FILE,
+            "w",
+            encoding="utf-8",
+            newline=""
+        ) as f:
+
+            writer = csv.DictWriter(
+                f,
+                fieldnames=[
+                    "code",
+                    "error",
+                    "retry_count",
+                    "last_time"
+                ],
+                extrasaction="ignore"
+            )
+
             writer.writeheader()
             writer.writerows(rows)
+
+
+        return [
+            row["code"]
+            for row in rows
+        ]
+            
 
     def get_failed_codes(self):
         if not os.path.exists(FAILED_FILE):
