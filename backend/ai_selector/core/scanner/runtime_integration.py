@@ -1,4 +1,4 @@
-﻿from .runtime_bootstrap import ScannerRuntimeBootstrap
+from .runtime_bootstrap import ScannerRuntimeBootstrap
 
 
 class ScannerRuntimeIntegration:
@@ -12,21 +12,19 @@ class ScannerRuntimeIntegration:
         if payload is None:
             payload = {}
 
-
         return {
-
             "scanner_runtime_completed": True,
-
             "worker_execution_completed": True,
-
             "input": payload
-
         }
 
 
-    def run(self):
+    def run(
+        self,
+        payload=None
+    ):
 
-        result = self.execute()
+        result = self.execute(payload)
 
         result["runtime_ready"] = True
 
