@@ -46,14 +46,14 @@ class PortfolioIntelligence:
 
 
         return {
+          "portfolio_score": score,
 
-            "portfolio_score":score,
+          # compatibility
+          "risk": risk_level,
 
-            "risk_level":risk_level,
+          # new field
+          "risk_level": risk_level,
 
-            "top_drivers":list(
-                set(drivers)
-            ),
-
-            "learning_signal":learning_signal
-        }
+          "top_drivers": drivers,
+          "learning_signal": learning_signal
+       }

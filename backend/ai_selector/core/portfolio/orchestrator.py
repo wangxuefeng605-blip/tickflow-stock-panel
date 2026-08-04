@@ -1,6 +1,6 @@
 from .intelligence import PortfolioIntelligence
 from .intelligence_runtime import PortfolioIntelligenceRuntime
-
+from .optimizer import PortfolioOptimizer
 
 class PortfolioOrchestrator:
 
@@ -8,7 +8,8 @@ class PortfolioOrchestrator:
     def __init__(self):
 
         self.intelligence = PortfolioIntelligence()
-        self.runtime = PortfolioIntelligenceRuntime()
+
+        self.optimizer = PortfolioOptimizer()
 
 
 
@@ -17,58 +18,53 @@ class PortfolioOrchestrator:
         data
     ):
 
-        performance = data.get(
-            "performance",
-            {}
+
+        intelligence = self.intelligence.analyze(
+
+            data.get(
+                "performance",
+                {}
+            ),
+
+            data.get(
+                "risk",
+                {}
+            ),
+
+            data.get(
+                "attribution",
+                []
+            )
+
         )
 
-        risk = data.get(
-            "risk",
-            {}
-        )
 
-        attribution = data.get(
-            "attribution",
-            []
-        )
+        optimization = self.optimizer.optimize(
 
+            data,
 
-        result = self.intelligence.analyze(
-            performance,
-            risk,
-            attribution
-        )
+            intelligence.get(
+                "risk",
+                {}
+            ),
 
-
-        # backward compatibility
-        if "risk" not in result:
-
-            result["risk"] = result.get(
-                "risk_level",
+            data.get(
+                "market_state",
                 "UNKNOWN"
             )
 
-
-        # backward compatibility
-        if "intelligence" not in result:
-
-            result["intelligence"] = {
-                "portfolio_score": result.get(
-                    "portfolio_score",
-                    0
-                ),
-                "risk": result.get(
-                    "risk",
-                    "UNKNOWN"
-                ),
-                "drivers": result.get(
-                    "top_drivers",
-                    []
-                )
-            }
+        )
 
 
-        return result
+        intelligence["optimization"] = optimization
+
+
+        return {
+            **intelligence,
+
+            # backward compatibility
+            "intelligence": intelligence
+        }
 
 
        
