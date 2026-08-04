@@ -34,3 +34,33 @@ class AdaptiveScannerController:
             "allow_retry": True
 
         }
+    def adjust(self, decision):
+
+        if decision.get("decision") == "AGGRESSIVE":
+
+            return {
+
+                "scanner_mode": "NORMAL",
+
+                "workers": decision.get(
+                    "workers",
+                    8
+                ),
+
+                "allow_retry": True
+
+            }
+
+
+        return {
+
+            "scanner_mode": "SAFE",
+
+            "workers": decision.get(
+                "workers",
+                2
+            ),
+
+            "allow_retry": True
+
+        }
