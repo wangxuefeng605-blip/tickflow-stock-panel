@@ -93,10 +93,24 @@ class RetryManager:
         ]
             
 
-    def get_failed_codes(self):
+    def get_failed(self):
+
         if not os.path.exists(FAILED_FILE):
             return []
 
-        with open(FAILED_FILE, "r", encoding="utf-8") as f:
+        with open(
+            FAILED_FILE,
+            "r",
+            encoding="utf-8"
+        ) as f:
+
             reader = csv.DictReader(f)
-            return [row["code"] for row in reader]
+
+            result = []
+
+            for row in reader:
+
+                if row.get("code"):
+                    result.append(row["code"])
+
+            return result
