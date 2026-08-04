@@ -9,9 +9,7 @@ class RuntimeAPI:
 
     def execute(self, stock):
 
-        result = self.service.execute(
-            stock
-        )
+        result = self.service.execute(stock)
 
         return {
             **result,
