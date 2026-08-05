@@ -6,7 +6,7 @@ import time
 import runpy
 
 from datetime import datetime
-
+from core.report_generator import generate_report
 
 
 def print_header():
@@ -42,6 +42,11 @@ def run_daily_selector():
         run_name="__main__"
     )
 
+    print("Generating AI TOP10 Report...")
+
+    reports = generate_report()
+
+    print(reports)
 
     elapsed = time.time() - start
 
