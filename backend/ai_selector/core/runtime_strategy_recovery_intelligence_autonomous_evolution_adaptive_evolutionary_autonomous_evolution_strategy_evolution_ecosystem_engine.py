@@ -198,12 +198,24 @@ class RuntimeStrategyRecoveryIntelligenceAutonomousEvolutionAdaptiveEvolutionary
 
 
 
-    def get_population(self):
+    def get_population(
+        self
+    ):
 
-        return self.population
+         return self.population
 
 
 
-    def get_history(self):
+    def get_relationships(
+        self
+    ):
 
-        return self.history
+         return self.relationships
+
+
+
+    def get_history(
+        self
+    ):
+
+         return self.history
