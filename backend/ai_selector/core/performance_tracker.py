@@ -7,7 +7,62 @@ Track historical AI TOP10 performance.
 import json
 from pathlib import Path
 from datetime import datetime
+from core.history_cache import get_history
 
+def calculate_stock_return(code):
+
+    try:
+
+        df = get_history(code)
+
+        if df is None:
+            return None
+
+
+        if len(df) < 2:
+            return None
+
+
+        yesterday = df.iloc[-2]["close"]
+
+        today = df.iloc[-1]["close"]
+
+
+        if yesterday == 0:
+            return None
+
+
+        return {
+
+            "buy_price": float(yesterday),
+
+            "current_price": float(today),
+
+            "return_1d":
+                float(
+                    round(
+                        (today - yesterday)
+                        /
+                        yesterday,
+                        4
+                    )
+                ),
+
+            "win":
+                bool(today > yesterday)
+
+        }
+
+
+    except Exception as e:
+
+        print(
+            "[Performance Error]",
+            code,
+            e
+        )
+
+        return None
 
 HISTORY_DIR = Path(
     "data/history/ai_recommendations"
@@ -141,24 +196,36 @@ def run_tracker():
 
     for item in recommendations:
 
-        results.append(
-
-            {
-
-                "code":
-                    item.get("code"),
+        code = item.get("code")
 
 
-                "score":
-                    item.get("score"),
-
-
-                "return_1d":
-                    None
-
-            }
-
+        performance = calculate_stock_return(
+            code
         )
+
+
+        result = {
+
+            "code": code,
+
+            "score":
+                item.get("score")
+
+        }
+
+
+        if performance:
+
+           result.update(
+                performance
+            )
+
+        else:
+
+            result["return_1d"] = None
+
+
+        results.append(result)
 
 
     return generate_performance_report(

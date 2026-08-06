@@ -88,21 +88,26 @@ def generate_summary():
     )
 
 
+    valid_results = [
+
+        x for x in results
+
+        if x.get("return_1d") is not None
+
+    ]
+
+
     best = max(
-        results,
-        key=lambda x:x.get(
-            "return_1d",
-            -999
-        )
+        valid_results,
+        key=lambda x:
+            x["return_1d"]
     )
 
 
     worst = min(
-        results,
-        key=lambda x:x.get(
-            "return_1d",
-            999
-        )
+        valid_results,
+        key=lambda x:
+            x["return_1d"]
     )
 
 

@@ -2,6 +2,7 @@ from .context import AIContext
 from .state_engine import MarketStateEngine
 from .weight_engine import WeightEngine
 from .confidence import calculate_confidence
+from core.ai_weight_provider import get_ai_weights
 
 
 class ContextBuilder:
@@ -12,6 +13,8 @@ class ContextBuilder:
         self.state_engine = MarketStateEngine()
 
         self.weight_engine = WeightEngine()
+
+        
 
 
 
@@ -47,6 +50,13 @@ class ContextBuilder:
             state
         )
 
+
+        learning_weights = get_ai_weights()
+
+
+        weights.update(
+            learning_weights
+        )
 
         return AIContext(
 
