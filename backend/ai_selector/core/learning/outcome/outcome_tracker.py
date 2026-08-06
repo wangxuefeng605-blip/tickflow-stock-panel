@@ -97,16 +97,15 @@ class OutcomeTracker:
 
 
 
-    def load_all(
-        self
-    ):
+    def load_all(self):
 
 
         records = []
 
 
         files = sorted(
-            self.base_dir.glob("*.json")
+            self.base_dir.glob("*.json"),
+            key=lambda x: x.stat().st_mtime
         )
 
 
@@ -117,9 +116,16 @@ class OutcomeTracker:
                 encoding="utf-8"
             ) as f:
 
-                records.append(
-                    json.load(f)
-                )
+                data = json.load(f)
+
+
+            if isinstance(data, list):
+
+                records.extend(data)
+
+            else:
+
+                records.append(data)
 
 
         return records

@@ -7,6 +7,7 @@ Learning package exports
 # Stage21 Portfolio Feedback
 # =========================
 
+from .prediction_lifecycle import PredictionLifecycle
 from .portfolio_feedback import *
 from .performance_evaluator import *
 from .learning_signal import *
@@ -50,7 +51,7 @@ except ImportError:
 
 
 try:
-    from .prediction_feedback import *
+    from .prediction_feedback import evaluate_prediction
 except ImportError:
     pass
 
