@@ -7,6 +7,9 @@ import runpy
 
 from datetime import datetime
 from core.report_generator import generate_report
+from core.recommendation_history import (
+    save_daily_recommendation
+)
 
 
 def print_header():
