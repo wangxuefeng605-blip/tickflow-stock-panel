@@ -9,6 +9,7 @@ Alpha Score Engine
 
 
 from __future__ import annotations
+from core.ai_weight_provider import get_ai_weights
 
 
 DEFAULT_WEIGHTS = {
@@ -43,7 +44,7 @@ def alpha_score(
 
     else:
 
-        weights = DEFAULT_WEIGHTS
+        weights = get_ai_weights()
 
 
     score = 0
