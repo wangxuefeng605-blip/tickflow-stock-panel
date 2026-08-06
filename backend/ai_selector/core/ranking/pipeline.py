@@ -1,7 +1,7 @@
 from .ranker import Ranker
 from .explain import explain
 from core.ranking.types import RankingResult
-
+from core.learning.weight_provider import LearningWeightProvider
 
 class RankingPipeline:
 
@@ -9,20 +9,36 @@ class RankingPipeline:
     def __init__(
         self,
         weight_provider=None,
-        stock_weight_provider=None
+        stock_weight_provider=None,
+        learning_pipeline=None
     ):
 
+
         self.weight_provider = weight_provider
+
 
         self.stock_weight_provider = (
             stock_weight_provider
         )
 
 
+        self.learning_pipeline = learning_pipeline
+
+
     def run(
         self,
         results
     ):
+
+
+        if self.learning_pipeline:
+
+            results = (
+                self.learning_pipeline.run(
+                    results
+                )
+            )
+
 
         ranked = [
             item
