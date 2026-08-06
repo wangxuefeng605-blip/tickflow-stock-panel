@@ -4,13 +4,49 @@ Daily AI Selector Runner
 
 import time
 import runpy
+import json
 
+from pathlib import Path
 from datetime import datetime
 from core.report_generator import generate_report
 from core.recommendation_history import (
     save_daily_recommendation
 )
 
+def load_top10_result():
+
+    path = Path(
+        "data/reports/top10.json"
+    )
+
+
+    if not path.exists():
+
+        print(
+            "TOP10 file not found"
+        )
+
+        return []
+
+
+    with open(
+        path,
+        "r",
+        encoding="utf-8"
+    ) as f:
+
+        data = json.load(f)
+
+
+    if isinstance(data, dict):
+
+        return data.get(
+            "data",
+            []
+        )
+
+
+    return data
 
 def print_header():
 
@@ -43,6 +79,24 @@ def run_daily_selector():
     runpy.run_module(
         "core.fast_scanner",
         run_name="__main__"
+    )
+
+    print(
+        "Saving AI Recommendation History..."
+    )
+
+
+    top10 = load_top10_result()
+
+
+    save_daily_recommendation(
+        top10
+    )
+
+
+    print(
+        "Saved recommendations:",
+        len(top10)
     )
 
     print("Generating AI TOP10 Report...")
