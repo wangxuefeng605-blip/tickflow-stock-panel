@@ -12,6 +12,9 @@ from core.report_generator import generate_report
 from core.recommendation_history import (
     save_daily_recommendation
 )
+from core.performance_tracker import run_tracker
+from core.performance_summary import generate_summary
+from core.learning_engine import run_learning
 
 def load_top10_result():
 
@@ -104,6 +107,26 @@ def run_daily_selector():
     reports = generate_report()
 
     print(reports)
+
+    
+
+
+    print("Generating Performance Report...")
+
+
+    run_tracker()
+
+
+    print("Generating Performance Summary...")
+
+
+    generate_summary()
+
+
+    print("Running AI Learning Engine...")
+
+
+    run_learning()
 
     elapsed = time.time() - start
 
