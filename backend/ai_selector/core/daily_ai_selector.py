@@ -163,9 +163,8 @@ def apply_learning_weights(weights):
         weights,
         feedbacks
     )
-weights = apply_learning_weights(
-    weights
-)
+
+   
 
 if __name__ == "__main__":
 
