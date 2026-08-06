@@ -15,6 +15,9 @@ from core.recommendation_history import (
 from core.performance_tracker import run_tracker
 from core.performance_summary import generate_summary
 from core.learning_engine import run_learning
+from core.learning.daily_feedback_runner import (
+    DailyFeedbackRunner
+)
 
 def load_top10_result():
 
@@ -150,6 +153,19 @@ def run_daily_selector():
     return True
 
 
+def apply_learning_weights(weights):
+
+    runner = DailyFeedbackRunner()
+
+    feedbacks = []
+
+    return runner.update(
+        weights,
+        feedbacks
+    )
+weights = apply_learning_weights(
+    weights
+)
 
 if __name__ == "__main__":
 
