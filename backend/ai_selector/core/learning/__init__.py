@@ -13,6 +13,7 @@ from .performance_evaluator import *
 from .learning_signal import *
 from .weight_adapter import *
 from .outcome.outcome_evaluator import OutcomeEvaluator
+from .learning_pipeline import LearningPipeline
 
 from .feedback_engine import (
     FeedbackLearningEngine
