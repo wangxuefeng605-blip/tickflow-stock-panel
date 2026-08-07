@@ -1,18 +1,34 @@
 import os
 
-os.environ.pop("HTTP_PROXY", None)
-os.environ.pop("HTTPS_PROXY", None)
-os.environ.pop("ALL_PROXY", None)
+
+os.environ.pop(
+    "HTTP_PROXY",
+    None
+)
+
+os.environ.pop(
+    "HTTPS_PROXY",
+    None
+)
+
+os.environ.pop(
+    "ALL_PROXY",
+    None
+)
+
 
 import akshare as ak
 
 
-df = ak.stock_zh_a_daily(
-    symbol="sz000001",
-    adjust="qfq"
-)
+
+def test_quote():
+
+    df = ak.stock_zh_a_daily(
+        symbol="sz000001",
+        adjust="qfq"
+    )
 
 
-print(df.head())
+    assert df is not None
 
-print(df.tail())
+    assert len(df) > 0
