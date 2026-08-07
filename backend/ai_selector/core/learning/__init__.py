@@ -17,6 +17,9 @@ from .learning_pipeline import LearningPipeline
 from .learning_orchestrator import (
     LearningOrchestrator
 )
+from .runtime_weight_provider import (
+    RuntimeWeightProvider
+)
 
 from .runtime_service import (
     LearningRuntimeService
