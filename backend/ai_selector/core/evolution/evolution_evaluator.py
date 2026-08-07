@@ -1,0 +1,56 @@
+"""
+Evolution Evaluator
+
+Stage28 Self Evolution Layer
+"""
+
+
+class EvolutionEvaluator:
+
+
+    def evaluate(
+        self,
+        old_strategy,
+        new_strategy
+    ):
+
+        old_score = old_strategy.get(
+            "score",
+            0
+        )
+
+        new_score = new_strategy.get(
+            "score",
+            0
+        )
+
+
+        if new_score > old_score:
+
+            return {
+                "accepted": True,
+                "improvement":
+                    new_score - old_score
+            }
+
+
+        return {
+            "accepted": False,
+            "improvement": 0
+        }
+
+
+
+    def rank(
+        self,
+        strategies
+    ):
+
+        return sorted(
+            strategies,
+            key=lambda x:x.get(
+                "score",
+                0
+            ),
+            reverse=True
+        )
