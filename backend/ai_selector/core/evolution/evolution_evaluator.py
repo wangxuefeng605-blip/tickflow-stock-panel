@@ -25,18 +25,10 @@ class EvolutionEvaluator:
         )
 
 
-        if new_score > old_score:
-
-            return {
-                "accepted": True,
-                "improvement":
-                    new_score - old_score
-            }
-
-
         return {
-            "accepted": False,
-            "improvement": 0
+            "accepted": new_score > old_score,
+            "improvement": new_score - old_score,
+            "score": new_score
         }
 
 

@@ -15,7 +15,8 @@ class EvolutionMemory:
 
     def save_strategy(
         self,
-        strategy
+        strategy,
+        score=None
     ):
 
         self.history.append(
