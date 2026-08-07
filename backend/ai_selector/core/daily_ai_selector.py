@@ -22,6 +22,8 @@ from core.learning.runtime_service import (
     LearningRuntimeService
 )
 from core.learning import LearningRuntimeService
+from core.runtime.runtime_guard import RuntimeGuard
+
 
 def load_top10_result():
 
@@ -77,6 +79,7 @@ def run_daily_selector():
 
     start = time.time()
 
+    guard = RuntimeGuard()
 
     print_header()
 
