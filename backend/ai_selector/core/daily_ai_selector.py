@@ -21,7 +21,7 @@ from core.learning.daily_feedback_runner import (
 from core.learning.runtime_service import (
     LearningRuntimeService
 )
-
+from core.learning import LearningRuntimeService
 
 def load_top10_result():
 
@@ -98,9 +98,32 @@ def run_daily_selector():
 
     top10 = load_top10_result()
 
-
     save_daily_recommendation(
         top10
+    )
+
+    print(
+        "Recording Learning Prediction..."
+    )
+
+
+    learning_service = LearningRuntimeService()
+
+
+    prediction_paths = (
+        learning_service
+        .record_prediction(
+            top10,
+            datetime.now().strftime(
+                "%Y-%m-%d"
+            )
+        )
+    )
+
+
+    print(
+        "Prediction records:",
+        prediction_paths
     )
 
 

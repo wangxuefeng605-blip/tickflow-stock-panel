@@ -13,6 +13,10 @@ from core.stock_pool import get_stock_pool
 
 from checkpoint import CheckpointManager
 from retry_manager import RetryManager
+from core.learning.runtime_weight_provider import (
+    RuntimeWeightProvider
+)
+
 
 
 from history_cache import load_history
@@ -51,7 +55,9 @@ class ScannerEngine:
         self.learning_runtime = (
             LearningRuntimeOrchestrator()
         )
-
+        self.weight_provider = (
+            RuntimeWeightProvider()
+        )
         
     def scan_one(self, code):
      
@@ -91,8 +97,15 @@ class ScannerEngine:
 
         start = time.time()
 
+        weights = (
+            self.weight_provider
+            .get_weights()
+        )
+
+
         score = stock_score(
-             factor
+            factor,
+            weights
         )
 
         self.performance.record(

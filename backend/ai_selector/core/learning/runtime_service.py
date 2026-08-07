@@ -57,3 +57,14 @@ class LearningRuntimeService:
     ):
 
         return self.weight_provider.get_weights()
+
+    def record_ranking_prediction(
+        self,
+        ranking,
+        date
+    ):
+
+        return self.orchestrator.record_ranking_prediction(
+            ranking,
+            date
+        )

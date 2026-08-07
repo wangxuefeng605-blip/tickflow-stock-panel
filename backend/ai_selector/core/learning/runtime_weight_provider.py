@@ -36,3 +36,14 @@ class RuntimeWeightProvider:
         )
 
         return self.get_weights()
+
+    def update_weights(
+        self,
+        weights
+    ):
+
+        self.weights.update(
+            weights
+        )
+
+        return self.weights

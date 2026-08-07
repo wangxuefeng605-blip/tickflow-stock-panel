@@ -38,6 +38,9 @@ from .daily_feedback_runner import (
     DailyFeedbackRunner
 )
 
+from .adaptive_rank_optimizer import (
+    AdaptiveRankOptimizer
+)
 
 # =========================
 # Legacy Compatibility

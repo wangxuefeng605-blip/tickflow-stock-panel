@@ -1,7 +1,7 @@
 from .learning_pipeline import LearningPipeline
 from .learning_runtime_bridge import LearningRuntimeBridge
 from .prediction_lifecycle import PredictionLifecycle
-
+from .ranking_feedback import RankingFeedback
 
 
 class LearningRuntimeOrchestrator:
@@ -14,6 +14,8 @@ class LearningRuntimeOrchestrator:
         self.bridge = LearningRuntimeBridge()
 
         self.lifecycle = PredictionLifecycle()
+
+        self.ranking_feedback = RankingFeedback()
 
 
 
@@ -76,6 +78,16 @@ class LearningRuntimeOrchestrator:
             future
         )
 
+    def record_ranking_prediction(
+        self,
+        ranking,
+        date
+    ):
+
+        return self.ranking_feedback.record_prediction(
+            ranking,
+            date
+        )
 
 
 class LearningOrchestrator(
