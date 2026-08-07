@@ -14,6 +14,14 @@ from .learning_signal import *
 from .weight_adapter import *
 from .outcome.outcome_evaluator import OutcomeEvaluator
 from .learning_pipeline import LearningPipeline
+from .learning_orchestrator import (
+    LearningOrchestrator
+)
+
+from .runtime_service import (
+    LearningRuntimeService
+)
+
 
 from .feedback_engine import (
     FeedbackLearningEngine
