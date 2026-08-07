@@ -1,43 +1,32 @@
 """
-Meta Learning Memory
+Learning Memory Manager
 
 Stage29 Meta Learning Engine
 """
 
 
-class LearningMemory:
+class LearningMemoryManager:
+
 
     def __init__(self):
+
         self.records = []
+
 
 
     def save(
         self,
-        record
+        data
     ):
+
         self.records.append(
-            record
+            data
         )
 
-        return True
 
 
-    def all(
+    def recent(
         self
     ):
+
         return self.records
-
-
-    def best(
-        self
-    ):
-        if not self.records:
-            return None
-
-        return max(
-            self.records,
-            key=lambda x: x.get(
-                "improvement",
-                0
-            )
-        )
