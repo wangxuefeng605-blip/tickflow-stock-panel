@@ -73,7 +73,21 @@ def print_header():
         datetime.now()
     )
 
+class DailyAISelector:
 
+    def __init__(self):
+
+        self.guard = RuntimeGuard()
+
+
+    def run(self):
+
+        return run_daily_selector()
+
+
+    def health(self):
+
+        return self.guard.report()
 
 def run_daily_selector():
 
