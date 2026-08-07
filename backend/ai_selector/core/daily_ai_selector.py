@@ -18,6 +18,10 @@ from core.learning_engine import run_learning
 from core.learning.daily_feedback_runner import (
     DailyFeedbackRunner
 )
+from core.learning.runtime_service import (
+    LearningRuntimeService
+)
+
 
 def load_top10_result():
 
@@ -129,7 +133,17 @@ def run_daily_selector():
     print("Running AI Learning Engine...")
 
 
-    run_learning()
+    learning_service = (
+        LearningRuntimeService()
+    )
+
+
+    learning_service.process_daily(
+      top10,
+        datetime.now().strftime(
+            "%Y-%m-%d"
+        )
+    )
 
     elapsed = time.time() - start
 
