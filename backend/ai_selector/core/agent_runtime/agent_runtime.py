@@ -14,8 +14,13 @@ class AgentRuntime:
         )
 
 
-    def run(self):
+    def run(self, context=None):
+
+        if context is None:
+            context = {}
 
         return {
-            "agents": self.registry.list_agents()
+            "agents": list(self.registry.agents.keys()),
+            "context": context,
+            "status": "completed"
         }
