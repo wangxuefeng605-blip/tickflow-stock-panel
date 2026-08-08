@@ -19,9 +19,47 @@ from core.learning.weight_adapter import (
 )
 
 
-class FeedbackLearningEngine:
+class FeedbackEngine:
 
+    def evaluate(self, result):
+        """
+        Evaluate single strategy feedback.
 
+        Compatibility interface for AutonomousLearner.
+        """
+
+        if not result:
+            return {
+                "score": 0,
+                "reward": 0,
+                "success": False
+            }
+
+        score = result.get(
+            "score",
+            0
+        )
+
+        ret = result.get(
+            "return",
+            0
+        )
+
+        return {
+            "strategy": result.get(
+                "strategy"
+            ),
+
+            "score": score,
+
+            "return": ret,
+
+            "reward": ret,
+
+            "success": score >= 0.8
+        }
+ 
+    
     def __init__(self):
 
         self.evaluator = PerformanceEvaluator()
@@ -67,3 +105,9 @@ class FeedbackLearningEngine:
             "performance": performance,
             "learning": learning
         }
+class FeedbackLearningEngine(FeedbackEngine):
+    """
+    Backward compatible learning feedback engine.
+    """
+
+    pass
