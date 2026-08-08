@@ -1,79 +1,93 @@
 """
 Runtime Health Monitor
 
-Stage23 Production Reliability Layer
+Stage23 Reliability + Stage34 Autonomous Runtime
 """
-
 from datetime import datetime
 
 
 class RuntimeHealth:
-    """
-    Runtime component health tracker
-    """
+
 
     def __init__(self):
-        self.status = {
-            "scanner": "UNKNOWN",
-            "ranking": "UNKNOWN",
-            "learning": "UNKNOWN",
-            "cache": "UNKNOWN",
-        }
+
+        self.status = {}
+
+        self.errors = {}
+
+        self.run_completed = False
 
         self.last_run = None
-        self.errors = []
 
-    def update(self, component: str, state: str):
-        """
-        Update component status
-        """
 
-        if component in self.status:
-            self.status[component] = state
+    def update(
+        self,
+        component,
+        state
+    ):
 
-    def record_error(self, component: str, error):
-        """
-        Record runtime error
-        """
+        self.status[component] = state
 
-        self.errors.append(
-            {
-                "component": component,
-                "error": str(error),
-                "time": datetime.now().isoformat(),
-            }
-        )
 
-        self.update(component, "ERROR")
+
+    def get(
+        self,
+        component
+    ):
+
+        return self.status.get(component)
+
+
+
+    def snapshot(self):
+
+        return self.status.copy()
+
+
+
+    # Stage23 compatibility
+
+    def record_error(
+        self,
+        component,
+        error
+    ):
+
+        self.status[component] = "ERROR"
+
+        self.errors[component] = str(error)
+
+
 
     def mark_run_complete(self):
+
+        self.run_completed = True
+
         self.last_run = datetime.now().isoformat()
 
-    def is_healthy(self):
-        """
-        Check overall runtime health
-        """
-
-        return (
-            all(
-                value == "OK"
-                for value in self.status.values()
-            )
-            and not self.errors
-        )
 
     def report(self):
-        """
-        Generate health report
-        """
+
+        degraded = (
+            len(self.errors) > 0
+            or any(
+                value == "ERROR"
+                for value in self.status.values()
+            )
+        )
+
+
+        overall = (
+            "DEGRADED"
+            if degraded
+            else "HEALTHY"
+        )
+
 
         return {
-            "status": (
-                "HEALTHY"
-                if self.is_healthy()
-                else "DEGRADED"
-            ),
-            "components": self.status,
-            "last_run": self.last_run,
-            "errors": self.errors,
+            "status": overall,
+            "components": self.status.copy(),
+            "errors": self.errors.copy(),
+            "completed": self.run_completed,
+            "last_run": self.last_run
         }
