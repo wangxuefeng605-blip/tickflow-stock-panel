@@ -1,60 +1,43 @@
 """
-Autonomous Runtime Service
+Autonomous Runtime
 
-Stage25 Autonomous Runtime Intelligence
+Stage34 Autonomous Runtime Integration
 """
 
-from core.runtime.runtime_health import RuntimeHealth
-from core.runtime.decision_engine import (
-    RuntimeDecisionEngine
-)
-from core.runtime.decision_policy import (
-    RuntimeDecisionPolicy
-)
-from core.runtime.recovery_controller import (
-    AutonomousRecoveryController
-)
+
+from .runtime_state import RuntimeState
+
 
 
 class AutonomousRuntime:
 
+
     def __init__(self):
 
-        self.health = RuntimeHealth()
-
-        self.engine = RuntimeDecisionEngine()
-
-        self.policy = RuntimeDecisionPolicy()
-
-        self.recovery = (
-            AutonomousRecoveryController()
-        )
+        self.state = RuntimeState()
 
 
-    def execute(
+
+    def run(
         self,
-        component,
-        func,
-        fallback=None
+        context
     ):
 
-        health_report = (
-            self.health.report()
-        )
+        for key in [
+            "decision",
+            "execution",
+            "portfolio",
+            "strategy",
+            "learning"
+        ]:
+
+            self.state.update(
+                key,
+                context.get(
+                    key,
+                    {}
+                )
+            )
 
 
-        decision = self.engine.decide(
-            health_report
-        )
-
-
-        policy = self.policy.apply(
-            decision
-        )
-
-
-        return self.recovery.execute(
-            policy,
-            func,
-            fallback
-        )
+        return self.state.snapshot()
