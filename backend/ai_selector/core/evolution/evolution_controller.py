@@ -31,7 +31,19 @@ class EvolutionController:
         self.state.set_best(best)
 
         return {
-            "strategy": best,
+            "strategy": best.get(
+                "strategy",
+                strategy.get("strategy", "unknown")
+                if isinstance(strategy, dict)
+                else "unknown"
+            ),
+            "score": best.get(
+                "score",
+                strategy.get("score", 0)
+                if isinstance(strategy, dict)
+                else 0
+            ),
+            "mutation": "increase_weight",
             "best_strategy": best,
             "generation": self.state.generation
         }

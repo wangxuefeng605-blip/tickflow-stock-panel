@@ -12,7 +12,6 @@ class EvolutionRuntime:
         result = self.controller.evolve(strategy)
 
         return {
-            "status": "EVOLVED",
-            "generation": result["generation"],
-            "strategy": result["strategy"]
+            **result,
+            "status": "EVOLVED"
         }
