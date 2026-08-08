@@ -27,6 +27,10 @@ from core.runtime.runtime_guard import RuntimeGuard
 from core.evolution.daily_evolution_hook import (
     DailyEvolutionHook
 )
+from core.evolution.evolution_weight_provider import (
+    EvolutionWeightProvider
+)
+
 
 
 def load_top10_result():
@@ -96,7 +100,26 @@ class DailyAISelector:
 def run_daily_selector():
 
     start = time.time()
+    print(
+        "Loading Evolution Weights..."
+    )
 
+
+    weight_provider = (
+        EvolutionWeightProvider()
+    )
+
+
+    evolution_weights = (
+        weight_provider.get_weights()
+    )
+
+
+    print(
+        "Evolution Weights:",
+        evolution_weights
+    )
+    
     guard = RuntimeGuard()
 
     print_header()
