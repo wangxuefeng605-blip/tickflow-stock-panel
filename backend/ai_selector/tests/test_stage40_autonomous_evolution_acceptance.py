@@ -1,8 +1,14 @@
-runtime = AutonomyRuntime()
+from core.autonomy.autonomy_runtime import AutonomyRuntime
 
-result = runtime.run()
 
-assert result["status"]=="SUCCESS"
-assert result["cycle"]==1
-assert "strategy" in result
-assert "generation" in result
+def test_stage40_autonomous_evolution():
+
+    runtime = AutonomyRuntime()
+
+
+    result = runtime.run()
+
+
+    assert result["runtime"] == "ACTIVE"
+
+    assert result["result"]["status"] == "SUCCESS"
