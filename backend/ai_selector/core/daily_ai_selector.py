@@ -23,6 +23,10 @@ from core.learning.runtime_service import (
 )
 from core.learning import LearningRuntimeService
 from core.runtime.runtime_guard import RuntimeGuard
+from core.runtime.runtime_guard import RuntimeGuard
+from core.evolution.daily_evolution_hook import (
+    DailyEvolutionHook
+)
 
 
 def load_top10_result():
@@ -115,8 +119,38 @@ def run_daily_selector():
 
     top10 = load_top10_result()
 
+
     save_daily_recommendation(
         top10
+    )
+
+
+    print(
+        "Running Evolution Hook..."
+    )
+
+
+    evolution_hook = DailyEvolutionHook()
+
+
+    evolution_result = evolution_hook.evolve(
+        {
+            "strategy": "daily_top10",
+            "score": (
+                top10[0].get(
+                    "score",
+                    0
+                )
+                if top10
+                else 0
+            )
+        }
+    )
+
+
+    print(
+        "Evolution Result:",
+        evolution_result
     )
 
     print(
@@ -217,7 +251,28 @@ def apply_learning_weights(weights):
         weights,
         feedbacks
     )
+def build_evolution_input(top10):
 
+    if not top10:
+        return {
+            "strategy":"empty",
+            "score":0
+        }
+
+
+    avg_score = sum(
+        item.get(
+            "score",
+            0
+        )
+        for item in top10
+    ) / len(top10)
+
+
+    return {
+        "strategy":"daily_top10",
+        "score":avg_score
+    }
    
 
 if __name__ == "__main__":
