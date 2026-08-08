@@ -4,13 +4,8 @@ Evolution Controller
 Stage28 Self Evolution Layer
 """
 
-from core.evolution.evolution_memory import EvolutionMemory
-from core.evolution.strategy_mutation_engine import (
-    StrategyMutationEngine
-)
-from core.evolution.evolution_evaluator import (
-    EvolutionEvaluator
-)
+from core.evolution.evolution_state import EvolutionState
+from core.evolution.strategy_generator import StrategyGenerator
 
 
 class EvolutionController:
@@ -18,54 +13,25 @@ class EvolutionController:
 
     def __init__(self):
 
-        self.memory = EvolutionMemory()
+        self.state = EvolutionState()
 
-        self.mutation = StrategyMutationEngine()
-
-        self.evaluator = EvolutionEvaluator()
-
+        self.generator = StrategyGenerator()
 
 
     def evolve(self, strategy):
 
-        candidates = (
-            self.mutation
-            .generate_candidates(
-                strategy
-            )
-        )
+        candidates = self.generator.generate(strategy)
 
+        best = candidates[-1]
 
-        evaluated = []
+        self.state.add_strategy(best)
 
-        for item in candidates:
+        self.state.evolve_generation()
 
-         evaluation = (
-             self.evaluator
-             .evaluate(
-                 strategy,
-                 item
-             )
-         )
+        self.state.set_best(best)
 
-         evaluated.append(
-            {
-                 "strategy": item,
-                 "score": evaluation["improvement"],
-                 "evaluation": evaluation
-            }
-        ) 
-            
-        best = max(
-            evaluated,
-            key=lambda x:x["score"]
-        )
-
-
-        self.memory.save_strategy(
-            best["strategy"],
-            best["score"]
-        )
-
-
-        return best
+        return {
+            "strategy": best,
+            "best_strategy": best,
+            "generation": self.state.generation
+        }
