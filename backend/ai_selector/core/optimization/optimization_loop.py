@@ -1,49 +1,53 @@
-from core.optimization.strategy_benchmark import (
-    StrategyBenchmark
-)
-
-from core.optimization.strategy_optimizer import (
-    StrategyOptimizer
-)
-
-from core.optimization.strategy_ranker import (
-    StrategyRanker
-)
-
-from core.optimization.auto_promotion_engine import (
-    AutoPromotionEngine
-)
+from core.optimization.strategy_optimizer import StrategyOptimizer
 
 
 class OptimizationLoop:
 
     def __init__(self):
-
-        self.benchmark = StrategyBenchmark()
         self.optimizer = StrategyOptimizer()
-        self.ranker = StrategyRanker()
-        self.promoter = AutoPromotionEngine()
 
 
     def run(self, strategies):
 
-        optimized = []
+        if isinstance(strategies, dict):
+            strategies = [
+                {
+                    "strategy": "default",
+                    "score": strategies.get(
+                        "avg_score",
+                        0
+                    )
+                }
+            ]
+
+
+        results = []
 
         for item in strategies:
 
-            result = self.optimizer.optimize(item)
+            optimized = self.optimizer.optimize(
+                item
+            )
 
-            optimized.append(result)
+            results.append(
+                {
+                    **item,
+                    **optimized
+                }
+            )
 
 
-        ranked = self.ranker.rank(
-            optimized
+        results.sort(
+            key=lambda x:x.get(
+                "score",
+                0
+            ),
+            reverse=True
         )
 
 
-        promoted = self.promoter.promote(
-            ranked
-        )
+        winner = results[0]
 
+        winner["rank"] = 1
 
-        return promoted
+        return winner
