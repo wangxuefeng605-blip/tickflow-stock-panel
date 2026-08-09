@@ -6,20 +6,34 @@ from core.runtime.market_scheduler import (
     MarketScheduler
 )
 
+from core.market.realtime_provider import (
+    RealtimeDataProvider
+)
+
 
 class IntradayScanner:
 
-
     def __init__(self):
 
-        self.session = (
-            MarketSessionManager()
+        self.session = MarketSessionManager()
+
+        self.scheduler = MarketScheduler()
+
+        self.market = RealtimeDataProvider()
+
+
+    def scan(self):
+
+        print(
+            "Realtime market scanning..."
         )
 
-        self.scheduler = (
-            MarketScheduler()
-        )
-
+        return [
+            {
+                "code":"000001",
+                "score":1.0
+            }
+        ]
 
 
     def run_once(self):
@@ -31,12 +45,9 @@ class IntradayScanner:
         return True
 
 
-
     def run(self):
 
-        while (
-            self.session.is_market_open()
-        ):
+        while self.session.is_market_open():
 
             self.run_once()
 

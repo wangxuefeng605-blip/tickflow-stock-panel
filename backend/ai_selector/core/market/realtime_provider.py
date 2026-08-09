@@ -7,7 +7,6 @@ from core.market.market_snapshot import (
 
 class RealtimeDataProvider:
 
-
     def get_quote(
         self,
         code
@@ -20,3 +19,7 @@ class RealtimeDataProvider:
             volume=0,
             timestamp=datetime.now()
         )
+
+
+# compatibility alias
+RealtimeProvider = RealtimeDataProvider
