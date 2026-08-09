@@ -1,7 +1,7 @@
 {
     "version": "v17.4",
     "market": "A-share",
-    "update_time": "2026-08-09 13:23:55",
+    "update_time": "2026-08-09 13:59:53",
     "scan": {},
     "count": 10,
     "data": [
@@ -133,7 +133,7 @@
             "score": 4.0640600000000004,
             "rank": 4,
             "ranking_reason": "",
-            "alpha_score": 0.86192,
+            "alpha_score": 0.8619199999999999,
             "factors": {
                 "momentum": 1.3912,
                 "trend": 1,
@@ -155,7 +155,7 @@
                 ],
                 "market_state": "BULL",
                 "confidence": 0.9999999999999999,
-                "score": 0.86192,
+                "score": 0.8619199999999999,
                 "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 100%.\nAlpha score: 0.8619.",
                 "explanation": {
                     "summary": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 100%.\nAlpha score: 0.8619.",
@@ -215,7 +215,7 @@
             "score": 3.81237,
             "rank": 6,
             "ranking_reason": "",
-            "alpha_score": 0.77519,
+            "alpha_score": 0.7751899999999999,
             "factors": {
                 "momentum": 1.1434,
                 "trend": 1,
@@ -237,7 +237,7 @@
                 ],
                 "market_state": "BULL",
                 "confidence": 0.9999999999999999,
-                "score": 0.77519,
+                "score": 0.7751899999999999,
                 "reason": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 100%.\nAlpha score: 0.7752.",
                 "explanation": {
                     "summary": "Market environment is bullish.\nStock shows strong momentum.\nTrend confirmation is positive.\nConfidence level: 100%.\nAlpha score: 0.7752.",

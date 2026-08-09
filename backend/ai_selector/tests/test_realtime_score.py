@@ -1,3 +1,5 @@
+from core.score.realtime_score import RealtimeScoreEngine
+
 def test_realtime_score():
 
     engine = RealtimeScoreEngine()
