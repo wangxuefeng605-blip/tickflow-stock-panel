@@ -32,14 +32,13 @@ class FeedbackProvider:
 
         # tracker returns file path
 
+        if not result:
+            return []
+
         if isinstance(result, Path):
-
             path = result
-
         else:
-
             path = Path(result)
-
 
         if not path.exists():
 

@@ -1,139 +1,263 @@
+from .types import RankingResult
 from .ranker import Ranker
 from .pipeline import RankingPipeline
-from .types import RankingResult
-from core.learning.weight_provider import LearningWeightProvider
-
 
 
 def rank_stocks(
-    results,
-    top_n=10,
-    weight_provider=None,
-    learning_pipeline=None
+    data,
+    learning_pipeline=None,
+    top_n=None,
+    weights=None,
+    weight_provider=None
 ):
+    """
+    Public ranking entry point.
 
+    Flow:
 
-    pipeline = RankingPipeline(
-        weight_provider=weight_provider,
-        learning_pipeline=learning_pipeline
+        scan results
+            ↓
+        optional learning pipeline
+            ↓
+        resolve weights
+            ↓
+        apply factor weights
+            ↓
+        Ranker
+            ↓
+        RankingResult
+    """
+
+    if not data:
+        return []
+
+    # -------------------------------------------------
+    # 1. Keep dictionary scan results only
+    # -------------------------------------------------
+
+    data = [
+        item
+        for item in data
+        if isinstance(item, dict)
+    ]
+
+    if not data:
+        return []
+
+    # -------------------------------------------------
+    # 2. Learning pipeline
+    # -------------------------------------------------
+
+    if learning_pipeline:
+
+        if hasattr(
+            learning_pipeline,
+            "apply"
+        ):
+
+            data = learning_pipeline.apply(
+                data
+            )
+
+        elif hasattr(
+            learning_pipeline,
+            "run"
+        ):
+
+            data = learning_pipeline.run(
+                data
+            )
+
+        if data is None:
+            return []
+
+    # -------------------------------------------------
+    # 3. Resolve weight provider
+    # -------------------------------------------------
+
+    if weights is None and weight_provider:
+
+        if hasattr(
+            weight_provider,
+            "get_weights"
+        ):
+
+            weights = (
+                weight_provider
+                .get_weights()
+            )
+
+        elif hasattr(
+            weight_provider,
+            "get_weight"
+        ):
+
+            weights = {}
+
+            factors = set()
+
+            for item in data:
+
+                factors.update(
+                    item.get(
+                        "factors",
+                        {}
+                    ).keys()
+                )
+
+            for factor in factors:
+
+                weights[factor] = (
+                    weight_provider
+                    .get_weight(
+                        factor
+                    )
+                )
+
+    if weights is None:
+
+        weights = {}
+
+    # -------------------------------------------------
+    # 4. Apply weights
+    # -------------------------------------------------
+
+    if weights:
+
+        adjusted = []
+
+        for item in data:
+
+            factors = item.get(
+                "factors",
+                {}
+            )
+
+            weighted_score = sum(
+
+                value
+                *
+                weights.get(
+                    name,
+                    0.0
+                )
+
+                for name, value
+                in factors.items()
+            )
+
+            new_item = dict(item)
+
+            # Preserve original scanner / AI score.
+            new_item["alpha_score"] = item.get(
+                "alpha_score",
+                item.get(
+                    "score",
+                    0.0
+                )
+            )
+
+            # Ranking score after learned weights.
+            new_item["score"] = (
+                weighted_score
+            )
+
+            new_item["final_score"] = (
+                weighted_score
+            )
+
+            new_item["weights"] = {
+
+                name: weights.get(
+                    name,
+                    0.0
+                )
+
+                for name in factors
+            }
+
+            adjusted.append(
+                new_item
+            )
+
+        data = adjusted
+
+    else:
+
+        # No ranking weights supplied.
+        # Preserve existing scanner score.
+        for item in data:
+
+            item.setdefault(
+                "alpha_score",
+                item.get(
+                    "score",
+                    0.0
+                )
+            )
+
+            item.setdefault(
+                "final_score",
+                item.get(
+                    "score",
+                    0.0
+                )
+            )
+
+            item["weights"] = {}
+
+    # -------------------------------------------------
+    # 5. Rank
+    # -------------------------------------------------
+
+    ranker = Ranker()
+
+    results = ranker.rank(
+        data
     )
 
-    pipeline = RankingPipeline(
-        weight_provider
-    )
+    if results is None:
+        return []
 
-    ranked = pipeline.run(
-        results
-    )
+    # -------------------------------------------------
+    # 6. Top N
+    # -------------------------------------------------
 
-    return ranked[:top_n]
+    if top_n is not None:
 
+        return results[:top_n]
+
+    return results
 
 
 def print_top10(results):
 
-    print("=" * 50)
-    print(" AI TOP10 INTELLIGENT RANKING ")
-    print("=" * 50)
-
-
     for item in results[:10]:
 
-        print()
-
-        print(
-            f"{item.rank}. {item.code}"
-        )
-
-        print(
-            f"Score: {item.score:.4f}"
-        )
-
-
-        print()
-        print("Market:")
-
-        market = (
-            item.explanation.get(
-                "market_state",
-                "UNKNOWN"
-            )
-            if item.explanation
-            else "UNKNOWN"
-        )
-
-        print(
-            market
-        )
-
-
-        print()
-
-        print("Confidence:")
-
-        confidence = (
-            item.explanation.get(
-                "confidence",
-                0
-            )
-            if item.explanation
-            else 0
-        )
-
-        print(
-            round(
-                confidence,
-                2
-            )
-        )
-
-
-        print()
-
-        print("Signals:")
-
-        for signal in item.signals:
+        if hasattr(
+            item,
+            "rank"
+        ):
 
             print(
-                f" - {signal}"
+                f"{item.rank}. "
+                f"{item.code} "
+                f"{item.score}"
             )
 
-
-        print()
-
-        print("Reason:")
-
-        if item.explanation:
-
-            summary = item.explanation.get(
-                "summary",
-                ""
-            )
-
-            if not summary:
-
-                nested = item.explanation.get(
-                    "explanation",
-                    {}
-                )
-
-                summary = nested.get(
-                    "summary",
-                    ""
-                )
-
+        elif isinstance(
+            item,
+            dict
+        ):
 
             print(
-                summary.strip()
+                f"{item.get('rank')}. "
+                f"{item.get('code')} "
+                f"{item.get('score')}"
             )
 
         else:
 
             print(
-                "None"
+                item
             )
-
-
-
-    print("=" * 50)
-

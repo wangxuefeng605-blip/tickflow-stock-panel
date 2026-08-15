@@ -10,27 +10,6 @@ from core.full_ranking_writer import save_full_ranking
 def run_fast_scan(weights=None):
 
     # =========================
-    # 0. Learning Weights
-    # =========================
-
-    if weights is None:
-
-        learning_provider = (
-            LearningWeightProvider()
-        )
-
-        weights = (
-            learning_provider
-            .get_weights()
-        )
-
-    print(
-        "FAST SCAN LEARNING WEIGHTS:",
-        weights
-    )
-
-
-    # =========================
     # 1. Stock Pool
     # =========================
 
@@ -40,12 +19,12 @@ def run_fast_scan(weights=None):
         f"Stock Pool Size: {len(stocks)}"
     )
 
+    # 沒有股票時，不應該繼續啟動
+    # MarketDataProvider / ScannerEngine
     if not stocks:
-
         print(
             "Stock pool is empty; skipping scanner."
         )
-
         return []
 
 
@@ -65,7 +44,13 @@ def run_fast_scan(weights=None):
         )
     )
 
-    ai_context.weights = weights
+    if weights:
+        print(
+            "Using Learned Weights:",
+            weights
+        )
+
+        ai_context.weights = weights
 
     print(
         "AI Weights:",
@@ -80,14 +65,11 @@ def run_fast_scan(weights=None):
     engine = ScannerEngine(
         stocks,
         workers=8,
-        context=ai_context,
-        weights=weights
+        context=ai_context
     )
 
-    results, failed_items = (
-        engine.scan_batch(
-            stocks
-        )
+    results, failed_items = engine.scan_batch(
+        stocks
     )
 
     print(
@@ -119,23 +101,23 @@ def run_fast_scan(weights=None):
     # =========================
 
     if not results:
-
         print(
             "No scan results; skipping ranking."
         )
-
         return []
 
+
+    weight_provider = LearningWeightProvider()
 
     ranked = rank_stocks(
         results,
         top_n=len(results),
-        weights=weights
+        weight_provider=weight_provider
     )
 
 
     # =========================
-    # 5. Save Full Ranking
+    # 5. Full Ranking Report
     # =========================
 
     save_full_ranking(
@@ -148,11 +130,6 @@ def run_fast_scan(weights=None):
     # =========================
 
     top10 = ranked[:10]
-
-    print(
-        "TOP10:",
-        top10
-    )
 
     return top10
 

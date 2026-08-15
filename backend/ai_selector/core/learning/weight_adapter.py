@@ -63,10 +63,34 @@ class WeightAdapter:
         )
 
 
+        for factor, delta in signals.items():
+
+            if factor not in new_weights:
+                continue
+
+            delta = max(
+                -max_change,
+                min(
+                    max_change,
+                    delta
+                )
+            )
+
+            new_weights[factor] = max(
+                0.0,
+                new_weights[factor] + delta
+            )
+
+        total = sum(
+            new_weights.values()
+        )
+
         if total > 0:
 
             for key in new_weights:
-                new_weights[key] /= total
 
+                new_weights[key] = (
+                    new_weights[key] / total
+                )
 
         return new_weights

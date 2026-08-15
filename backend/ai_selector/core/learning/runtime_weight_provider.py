@@ -1,22 +1,17 @@
 class RuntimeWeightProvider:
 
-
     def __init__(self):
 
         self.weights = {
 
-            "momentum":0.35,
-
-            "trend":0.30,
-
-            "quality":0.15,
-
-            "liquidity":0.10,
-
-            "risk":0.10
+            "momentum": 0.35,
+            "trend": 0.30,
+            "volume_factor": 0.15,
+            "quality": 0.10,
+            "growth": 0.05,
+            "volatility": 0.05,
 
         }
-
 
     def get_weights(
         self
@@ -24,12 +19,26 @@ class RuntimeWeightProvider:
 
         return self.weights.copy()
 
+    def get_weight(
+        self,
+        factor
+    ):
 
+        return self.weights.get(
+            factor,
+            0.0
+        )
 
     def update(
         self,
         weights
     ):
+
+        if not isinstance(
+            weights,
+            dict
+        ):
+            return self.get_weights()
 
         self.weights.update(
             weights
@@ -42,8 +51,6 @@ class RuntimeWeightProvider:
         weights
     ):
 
-        self.weights.update(
+        return self.update(
             weights
         )
-
-        return self.weights

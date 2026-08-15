@@ -30,7 +30,10 @@ from core.evolution.daily_evolution_hook import (
 from core.evolution.evolution_weight_provider import (
     EvolutionWeightProvider
 )
-
+from core.feedback.learning_service import (
+    FeedbackLearningService
+)
+from core.fast_scanner import run_fast_scan
 
 
 def load_top10_result():
@@ -66,7 +69,10 @@ def load_top10_result():
         )
 
 
-    return data
+    return [
+        x for x in data
+        if isinstance(x, dict)
+    ]
 
 def print_header():
 
@@ -119,6 +125,28 @@ def run_daily_selector():
         "Evolution Weights:",
         evolution_weights
     )
+
+    print(
+        "Applying Feedback Learning..."
+    )
+
+
+    feedback_service = (
+        FeedbackLearningService()
+    )
+
+
+    learned_weights = (
+        feedback_service.learn(
+            evolution_weights
+        )
+    )
+
+
+    print(
+        "Feedback Learned Weights:",
+        learned_weights
+    )
     
     guard = RuntimeGuard()
 
@@ -130,9 +158,8 @@ def run_daily_selector():
     print("Starting Scanner...")
 
 
-    runpy.run_module(
-        "core.fast_scanner",
-        run_name="__main__"
+    run_fast_scan(
+        weights=learned_weights
     )
 
     print(
@@ -151,24 +178,25 @@ def run_daily_selector():
     print(
         "Running Evolution Hook..."
     )
+    top_score = 0
 
+    if top10:
+        first = top10[0]
+
+        if isinstance(first, dict):
+            top_score = first.get(
+               "score",
+                0
+            )
 
     evolution_hook = DailyEvolutionHook()
 
-
     evolution_result = evolution_hook.evolve(
-        {
-            "strategy": "daily_top10",
-            "score": (
-                top10[0].get(
-                    "score",
-                    0
-                )
-                if top10
-                else 0
-            )
-        }
-    )
+    {
+        "strategy": "daily_top10",
+        "score": top_score
+    }
+)
 
 
     print(

@@ -9,6 +9,13 @@ class RankingWeightProvider:
         self.provider = LearningWeightProvider()
 
 
+
+    def get_weights(self):
+
+        return self.provider.get_weights()
+
+
+
     def get_weight(
         self,
         factor

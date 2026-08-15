@@ -10,11 +10,12 @@ from core.evolution.evolution_persistence import (
 
 
 DEFAULT_WEIGHTS = {
-    "momentum": 0.35,
-    "trend": 0.30,
-    "quality": 0.15,
-    "liquidity": 0.10,
-    "risk": 0.10
+    "momentum": 0.30,
+    "trend": 0.25,
+    "volume_factor": 0.15,
+    "volatility": 0.10,
+    "quality": 0.10,
+    "growth": 0.10,
 }
 
 
@@ -63,12 +64,34 @@ class EvolutionWeightProvider:
 
 
         # normalize
-        for key in weights:
+        keys = list(weights.keys())
+
+        for key in keys:
 
             weights[key] = round(
                 weights[key] / total,
                 4
             )
 
+        # Correct rounding drift so the final weights
+        # always sum to exactly 1.0000.
+        rounded_total = round(
+            sum(weights.values()),
+            4
+        )
+
+        drift = round(
+            1.0 - rounded_total,
+            4
+        )
+
+        if drift != 0:
+
+            last_key = keys[-1]
+
+            weights[last_key] = round(
+                weights[last_key] + drift,
+                4
+            )
 
         return weights

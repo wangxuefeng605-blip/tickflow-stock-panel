@@ -1,29 +1,52 @@
+"""
+Feedback Collector
+
+Stage54:
+Feedback Learning Integration
+"""
+
+from .schema import FeedbackRecord
+from .storage import FeedbackStorage
+
+
 class FeedbackCollector:
 
-    def __init__(self):
-        self.records = []
+
+    def __init__(self, storage=None):
+
+        self.storage = (
+            storage
+            if storage
+            else FeedbackStorage()
+        )
 
 
-    def record(
+    def collect(
         self,
-        code,
-        score,
-        decision,
-        result
+        stock_code,
+        prediction,
+        actual_result="",
+        score=0.0,
+        source="unknown",
+        metadata=None
     ):
+        """
+        收集一条反馈
+        """
 
-        item = {
-            "code": code,
-            "score": score,
-            "decision": decision,
-            "result": result
-        }
-
-        self.records.append(item)
-
-        return item
+        record = FeedbackRecord(
+            stock_code=stock_code,
+            prediction=prediction,
+            actual_result=actual_result,
+            score=score,
+            source=source,
+            metadata=metadata or {}
+        )
 
 
-    def all(self):
+        self.storage.save(
+            record.to_dict()
+        )
 
-        return self.records
+
+        return record

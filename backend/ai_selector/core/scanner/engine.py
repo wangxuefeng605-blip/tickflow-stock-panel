@@ -39,7 +39,8 @@ class ScannerEngine:
         self,
         stocks,
         workers=8,
-        context=None
+        context=None,
+        weights=None
     ):
 
         self.context = context
@@ -58,6 +59,15 @@ class ScannerEngine:
         self.weight_provider = (
             RuntimeWeightProvider()
         )
+
+        self.weight_provider = (
+            RuntimeWeightProvider()
+        )
+
+        if weights is not None:
+            self.weight_provider.update(
+                weights
+            )
         
     def scan_one(self, code):
      

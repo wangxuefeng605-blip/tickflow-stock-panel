@@ -113,74 +113,127 @@ def save_cache(codes):
 # -------------------------
 
 def fetch_stock_pool():
+    """
+    Fetch A-share stock pool.
 
-    cache_file = "data/cache/stock_pool.csv"
+    Rules:
+    - Valid non-empty cache is preferred.
+    - Never treat an empty cache as a valid stock pool.
+    - Never write an empty remote result into cache.
+    - Try multiple AkShare sources.
+    - Return [] only when all sources fail.
+    """
 
+    cache_file = StockPoolConfig.CACHE_FILE
 
-    # 1. 优先读取缓存
-    if os.path.exists(cache_file):
+    # -------------------------------------------------
+    # 1. Use valid local cache
+    # -------------------------------------------------
 
-        print("股票池缓存命中")
+    if cache_valid():
+        try:
+            codes = load_cache()
 
-        df = pd.read_csv(cache_file)
+            codes = [
+                normalize_code(code)
+                for code in codes
+                if validate_stock_code(code)
+            ]
 
-        return df["code"].tolist()
+            if codes:
+                print(
+                    f"股票池缓存命中: {len(codes)}"
+                )
+                return codes
 
+            print(
+                "股票池缓存为空或无有效代码，忽略缓存"
+            )
 
+        except Exception as exc:
+            print(
+                f"股票池缓存读取失败: {exc}"
+            )
 
-    # 2. 尝试远程获取
+    # -------------------------------------------------
+    # 2. Remote sources
+    # -------------------------------------------------
 
-    sources=[
-        stock_info_a_code_name,
-        stock_zh_a_spot_em
+    sources = [
+        (
+            "stock_info_a_code_name",
+            ak.stock_info_a_code_name,
+        ),
+        (
+            "stock_zh_a_spot_em",
+            ak.stock_zh_a_spot_em,
+        ),
     ]
 
-
-    for source in sources:
+    for source_name, source in sources:
 
         try:
-
-            print("Source:",source.__name__)
+            print(
+                f"Source: {source_name}"
+            )
 
             df = source()
 
-            codes = df["code"].astype(str).tolist()
+            if df is None or df.empty:
+                print(
+                    f"Source returned empty result: {source_name}"
+                )
+                continue
 
+            if "code" not in df.columns:
+                print(
+                    f"Source missing code column: {source_name}"
+                )
+                continue
 
-            # 保存缓存
+            codes = [
+                normalize_code(code)
+                for code in df["code"].astype(str).tolist()
+                if validate_stock_code(code)
+            ]
 
-            os.makedirs(
-                "data/cache",
-                exist_ok=True
+            # Remove duplicates while preserving order.
+            codes = list(
+                dict.fromkeys(codes)
             )
 
-            pd.DataFrame(
-                {"code":codes}
-            ).to_csv(
-                cache_file,
-                index=False
-            )
+            if not codes:
+                print(
+                    f"Source produced no valid stock codes: {source_name}"
+                )
+                continue
 
+            # -------------------------------------------------
+            # 3. Save ONLY non-empty valid cache
+            # -------------------------------------------------
+
+            save_cache(codes)
+
+            print(
+                f"股票池生成完成: {len(codes)}"
+            )
 
             return codes
 
-
-        except Exception as e:
-
+        except Exception as exc:
             print(
-              "[Warning]",
-              source.__name__,
-              e
+                f"Source failed: {source_name}: {exc}"
             )
 
-
-    # 3. 最后备用股票池
+    # -------------------------------------------------
+    # 4. All remote sources failed
+    # -------------------------------------------------
 
     print(
-      "[Fallback] 使用内置A股列表"
+        "所有股票池数据源均失败，返回空股票池"
     )
 
-    return load_builtin_pool()
+    return []
 
 
 # -------------------------

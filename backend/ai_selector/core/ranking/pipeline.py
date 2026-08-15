@@ -153,7 +153,6 @@ class RankingPipeline:
         item
     ):
 
-
         base_score = item.get(
             "score",
             item.get(
@@ -162,29 +161,22 @@ class RankingPipeline:
             )
         )
 
-
         learning_weight = item.get(
             "learning_weight",
             1.0
         )
 
-
         base_score *= learning_weight
-
-
-        if self.weight_provider is None:
-
-            return base_score
-
 
         total = base_score
 
+        if self.weight_provider is None:
+            return total
 
         factors = item.get(
             "factors",
             {}
         )
-
 
         for factor, value in factors.items():
 
@@ -194,11 +186,9 @@ class RankingPipeline:
                 )
             )
 
-
             total += (
                 value * weight
             )
-
 
         return total
 

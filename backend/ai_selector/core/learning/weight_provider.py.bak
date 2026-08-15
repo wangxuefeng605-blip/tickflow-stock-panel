@@ -7,12 +7,10 @@ class WeightProvider:
 
         if weights is None:
             weights = {
-                "momentum": 0.30,
-                "trend": 0.25,
-                "volume_factor": 0.15,
-                "volatility": 0.10,
-                "quality": 0.10,
-                "growth": 0.10,
+                "momentum": 0.2,
+                "trend": 0.2,
+                "value": 0.2,
+                "quality": 0.2,
             }
 
         self.weights = weights.copy()
