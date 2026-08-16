@@ -146,7 +146,10 @@ def run_fast_scan(stocks=None):
     warmup_factors(todo)
 
 
-    engine = ScannerEngine()
+    engine = ScannerEngine(
+        todo,
+        workers=MAX_WORKERS
+    )
 
     results, failed_items = engine.scan_batch(todo)
 

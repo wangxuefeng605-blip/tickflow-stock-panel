@@ -23,7 +23,6 @@ from core.learning.runtime_service import (
 )
 from core.learning import LearningRuntimeService
 from core.runtime.runtime_guard import RuntimeGuard
-from core.runtime.runtime_guard import RuntimeGuard
 from core.evolution.daily_evolution_hook import (
     DailyEvolutionHook
 )

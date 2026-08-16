@@ -102,6 +102,39 @@ def volume_factor(df):
         /
         v.iloc[-20:].mean()
     )
+def liquidity_factor(df):
+
+    if "volume" not in df.columns:
+
+        return 0
+
+    if len(df) < 20:
+
+        return 0
+
+    return safe_value(
+        df["volume"]
+        .tail(20)
+        .mean()
+        /
+        df["volume"]
+        .mean()
+    )
+
+
+
+def risk_factor(df):
+
+    volatility = volatility_factor(df)
+
+    if volatility <= 0:
+
+        return 1
+
+    return max(
+        0,
+        1 - volatility
+    )
 
 
 
@@ -126,6 +159,12 @@ def calculate_factors(df):
 
         "growth":
             0.5,
+
+        "liquidity":
+            round(liquidity_factor(df),4),
+
+        "risk":
+            round(risk_factor(df),4),
 
     }
 
