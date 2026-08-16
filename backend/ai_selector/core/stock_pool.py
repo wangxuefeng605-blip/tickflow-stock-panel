@@ -298,17 +298,22 @@ def get_stock_pool(
 
     if (
         not refresh
-        and
-        cache_valid()
+        and cache_valid()
     ):
 
         codes = load_cache()
 
-        print(
-            f"股票池缓存命中: {len(codes)}"
-        )
+        codes = filter_stock_pool(codes)
 
-        return codes
+        if codes:
+            print(
+                f"股票池缓存命中: {len(codes)}"
+            )
+            return codes
+
+        print(
+            "缓存为空，重新生成股票池"
+        )
 
     return build_pool()
 
