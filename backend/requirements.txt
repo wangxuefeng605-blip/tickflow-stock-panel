@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+pydantic-settings
+sqlalchemy
+polars
+duckdb
+httpx
+pandas
+requests
+redis
+apscheduler
+pyjwt
+python-dotenv
+akshare
+numpy
