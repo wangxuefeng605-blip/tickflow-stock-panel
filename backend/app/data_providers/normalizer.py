@@ -33,8 +33,10 @@ def to_polars(data) -> pl.DataFrame:
 
 def normalize_daily(data, default_symbol: str | None = None, source: str = "tickflow") -> pl.DataFrame:  # noqa: ARG001
     df = to_polars(data)
+
     if df.is_empty():
         return df
+
     rename_map = {
         "ts_code": "symbol",
         "trade_date": "date",
@@ -42,18 +44,30 @@ def normalize_daily(data, default_symbol: str | None = None, source: str = "tick
         "vol": "volume",
         "amt": "amount",
     }
+
     df = df.rename({k: v for k, v in rename_map.items() if k in df.columns})
+
     if "symbol" not in df.columns and default_symbol:
         df = df.with_columns(pl.lit(default_symbol).alias("symbol"))
+
     if "date" in df.columns and df.schema["date"] != pl.Date:
-        df = df.with_columns(pl.col("date").cast(pl.Date, strict=False))
+        df = df.with_columns(
+            pl.col("date")
+            .cast(pl.String, strict=False)
+            .str.to_date(strict=False)
+        )
+
     for col in ("open", "high", "low", "close", "volume", "amount"):
         if col in df.columns:
-            df = df.with_columns(pl.col(col).cast(pl.Float64, strict=False))
-    df = filter_halt_days(df)
-    keep = [c for c in DAILY_COLS if c in df.columns]
-    return df.select(keep) if keep else pl.DataFrame()
+            df = df.with_columns(
+                pl.col(col).cast(pl.Float64, strict=False)
+            )
 
+    df = filter_halt_days(df)
+
+    keep = [c for c in DAILY_COLS if c in df.columns]
+
+    return df.select(keep) if keep else pl.DataFrame()
 
 def normalize_adj_factors(data, source: str = "tickflow") -> pl.DataFrame:  # noqa: ARG001
     df = to_polars(data)
@@ -71,7 +85,12 @@ def normalize_adj_factors(data, source: str = "tickflow") -> pl.DataFrame:  # no
                 pl.from_epoch(pl.col("trade_date").cast(pl.Int64), time_unit="ms").dt.date().alias("trade_date")
             )
         else:
-            df = df.with_columns(pl.col("trade_date").cast(pl.Date, strict=False))
+            df = df.with_columns(
+                pl.col("trade_date")
+               .cast(pl.Utf8, strict=False)
+               .str.to_date(strict=False)
+               .alias("trade_date")
+            )
     if "ex_factor" in df.columns:
         df = df.with_columns(pl.col("ex_factor").cast(pl.Float64, strict=False))
     keep = [c for c in ADJ_FACTOR_COLS if c in df.columns]
