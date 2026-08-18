@@ -1,3 +1,4 @@
+import ScannerPanel from './components/stock-scanner/ScannerPanel'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { Watchlist } from './pages/Watchlist'
@@ -69,6 +70,7 @@ export const router = createBrowserRouter([
       { path: 'concept-analysis', element: <ConceptAnalysis /> },
       { path: 'industry-analysis', element: <IndustryAnalysis /> },
       { path: 'stock-analysis', element: <StockAnalysis /> },
+      { path: 'scanner', element: <ScannerPanel /> },
       { path: 'review', element: <Review /> },
       { path: 'watchlist', element: <Watchlist /> },
       { path: 'screener', element: <Screener /> },
