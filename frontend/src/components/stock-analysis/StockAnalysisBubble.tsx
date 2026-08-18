@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, forwardRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Loader2, Check, AlertCircle } from 'lucide-react'
 import { useBubbleTasks, restoreDialog } from '@/lib/stockAnalysisStore'
@@ -126,15 +126,15 @@ export function StockAnalysisBubble() {
   )
 }
 
-function BubbleItem({ task, isLast, onPointerDown }: {
+const BubbleItem = forwardRef<HTMLDivElement, {
   task: ActiveTask
   isLast: boolean
   onPointerDown: () => void
-}) {
+}>(({ task, isLast, onPointerDown }, ref) => {
+
   const isWorking = task.phase === 'loading' || task.phase === 'streaming'
   const isError = task.phase === 'error'
 
-  // 蓝色系(区别于财务分析的紫色)
   const accent = isWorking
     ? 'from-sky-500/25 to-blue-500/20 text-sky-300 border-sky-300/40 shadow-[0_6px_24px_-10px_rgba(14,165,233,0.5)]'
     : isError
@@ -143,6 +143,7 @@ function BubbleItem({ task, isLast, onPointerDown }: {
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, scale: 0.9, y: -8 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9, y: -8 }}
@@ -153,7 +154,13 @@ function BubbleItem({ task, isLast, onPointerDown }: {
         onPointerDown={onPointerDown}
         role="button"
         tabIndex={0}
-        title={isWorking ? '个股分析中,点击恢复' : isError ? '分析失败,点击重试' : '点击查看个股分析报告'}
+        title={
+          isWorking
+            ? '个股分析中,点击恢复'
+            : isError
+              ? '分析失败,点击重试'
+              : '点击查看个股分析报告'
+        }
         className={`group relative flex w-full cursor-pointer items-center gap-1.5 overflow-hidden rounded-lg border bg-gradient-to-br px-2 py-1.5 backdrop-blur-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.99] ${accent}`}
       >
         {isWorking && (
@@ -161,27 +168,49 @@ function BubbleItem({ task, isLast, onPointerDown }: {
             <div className="h-full w-1/2 bg-gradient-to-r from-transparent via-sky-200 to-transparent animate-sa-bubble-progress" />
           </div>
         )}
+
         <span className="flex h-4 w-4 items-center justify-center shrink-0">
-          {isWorking ? <Loader2 className="h-3 w-3 animate-spin" />
-            : isError ? <AlertCircle className="h-3 w-3" />
-            : <Check className="h-3 w-3" />}
+          {isWorking ? (
+            <Loader2 className="h-3 w-3 animate-spin" />
+          ) : isError ? (
+            <AlertCircle className="h-3 w-3" />
+          ) : (
+            <Check className="h-3 w-3" />
+          )}
         </span>
+
         <span className="flex-1 min-w-0 text-[11px] font-medium text-foreground leading-none truncate">
           {task.name || task.symbol}
         </span>
+
         <span className="shrink-0 text-[9px] leading-none">
-          {isWorking ? <span className="text-sky-300/80">个股分析</span>
-            : isError ? <span className="text-red-300/80">失败</span>
-            : <span className="text-emerald-300/80">点击查看</span>}
+          {isWorking ? (
+            <span className="text-sky-300/80">个股分析</span>
+          ) : isError ? (
+            <span className="text-red-300/80">失败</span>
+          ) : (
+            <span className="text-emerald-300/80">点击查看</span>
+          )}
         </span>
       </div>
+
       <style>{`
-        @keyframes sa-bubble-progress { 0% { transform: translateX(-100%); } 100% { transform: translateX(300%); } }
-        .animate-sa-bubble-progress { animation: sa-bubble-progress 1.6s ease-in-out infinite; }
+        @keyframes sa-bubble-progress {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(300%); }
+        }
+
+        .animate-sa-bubble-progress {
+          animation: sa-bubble-progress 1.6s ease-in-out infinite;
+        }
       `}</style>
     </motion.div>
   )
-}
+})
+
+BubbleItem.displayName = 'BubbleItem'
+
+  
 
 const POS_KEY = 'sa_bubble_pos'
 function loadPos(): { x: number; y: number } {
@@ -203,5 +232,9 @@ function loadPos(): { x: number; y: number } {
   return { x: defaultX, y: defaultY }
 }
 function savePos(p: { x: number; y: number }) {
-  try { localStorage.setItem(POS_KEY, JSON.stringify(p)) } catch { /* ignore */ }
+  try {
+    localStorage.setItem(POS_KEY, JSON.stringify(p))
+  } catch {
+    /* ignore */
+  }
 }
