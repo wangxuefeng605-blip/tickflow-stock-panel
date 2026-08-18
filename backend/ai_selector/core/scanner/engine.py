@@ -1,4 +1,4 @@
-import os
+﻿import os
 import csv
 import time
 from scanner.performance import PerformanceTracker
@@ -19,7 +19,7 @@ from core.learning.runtime_weight_provider import (
 
 
 
-from history_cache import load_history
+from core.history_cache import get_history
 from core.factor_cache import (
     get_factor,
     save_factor,
@@ -70,64 +70,23 @@ class ScannerEngine:
             )
         
     def scan_one(self, code):
-     
-     
-        code = str(code)
 
+        from core.scanner.worker import ScanWorker
 
-        start = time.time()
-
-        history = load_history(code)
-
-        self.performance.record(
-            "history",
-            time.time() - start
-        )     
-
-        if history is None or len(history) < 30:
-            raise Exception(
-                "历史行情不足"
-            )
-
-
-        start = time.time()
-
-        factor = get_stock_factor(code)
-
-        self.performance.record(
-            "factor",
-            time.time() - start
+        worker = ScanWorker(
+            code,
+            self.context
         )
 
-        if factor is None:
-            raise Exception(
-                "因子计算失败"
-            )
+        result = worker.scan()
 
-
-        start = time.time()
-
-        weights = (
-            self.weight_provider
-            .get_weights()
-        )
-
-
-        score = stock_score(
-            factor,
-            weights
-        )
-
-        self.performance.record(
-            "score",
-            time.time() - start
-        )
-
+        if result is None:
+            return None
 
         return {
-            "code": code,
-            "alpha_score": score,
-            **factor,
+            "code": result["code"],
+            "alpha_score": result["score"],
+            **result.get("factors", {})
         }
 
 

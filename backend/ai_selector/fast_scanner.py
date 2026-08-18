@@ -1,36 +1,30 @@
-import os
+﻿import os
 import csv
 import time
-
 from threading import Lock
 
 from core.stock_pool import get_stock_pool
 
-from checkpoint import CheckpointManager
-from retry_manager import RetryManager
-
-
-from scanner.engine import ScannerEngine
+from core.scanner.engine import ScannerEngine
 from scanner.factor_warmup import warmup_factors
+
 
 RESULT_FILE = "tests/acceptance/reports/scanner_result.csv"
 
-MAX_RETRY = 3
-
 MAX_WORKERS = 8
-
 
 lock = Lock()
 
 
-
 def init_result_file():
 
-    os.makedirs(
-        os.path.dirname(RESULT_FILE),
-        exist_ok=True
-    )
+    folder = os.path.dirname(RESULT_FILE)
 
+    if folder:
+        os.makedirs(
+            folder,
+            exist_ok=True
+        )
 
     if not os.path.exists(RESULT_FILE):
 
@@ -59,8 +53,7 @@ def init_result_file():
 
 
 
-
-def append_result(row):
+def append_result(result):
 
     with lock:
 
@@ -73,19 +66,24 @@ def append_result(row):
 
             writer = csv.DictWriter(
                 f,
-                fieldnames=row.keys()
+                fieldnames=result.keys()
             )
 
-            writer.writerow(row)
+            writer.writerow(result)
 
 
 
+def run_fast_scan(
+    stocks=None,
+    limit=None
+):
 
-def run_fast_scan(stocks=None):
+    print("=" * 50)
+    print("AI Scanner v17.2")
+    print("=" * 50)
 
 
     init_result_file()
-
 
 
     if stocks is None:
@@ -93,227 +91,137 @@ def run_fast_scan(stocks=None):
         stocks = get_stock_pool()
 
 
+    if limit:
 
-    total_pool = len(stocks)
-
-
-
-    checkpoint = CheckpointManager(stocks)
-
-    checkpoint.load()
+        stocks = stocks[:limit]
 
 
-    retry_mgr = RetryManager()
-
-
-
-    todo = checkpoint.get_remaining()
-
-
-
-    print("=" * 40)
-
-    print(
-        "AI Scanner v17.2 Stage 1 Stable"
-    )
-
-    print("=" * 40)
-
+    total = len(stocks)
 
 
     print(
-        f"股票池总数：{total_pool}"
+        f"股票池: {total}"
     )
 
-    print(
-        f"待扫描数量：{len(todo)}"
-    )
+
+    if total == 0:
+
+        print(
+            "股票池为空"
+        )
+
+        return []
 
 
 
     start = time.time()
 
 
-    success = 0
-
-    failed = 0
-
-
-
-    success_results = []
+    print(
+        "Factor warmup..."
+    )
 
 
-    warmup_factors(todo)
+    warmup_factors(
+        stocks
+    )
+
+
+    print(
+        "Starting scanner..."
+    )
 
 
     engine = ScannerEngine(
-        todo,
+        stocks,
         workers=MAX_WORKERS
     )
 
-    results, failed_items = engine.scan_batch(todo)
 
-    for result in results:
+    results = []
 
-        append_result(result)
-
-        success_results.append(result)
-
-        checkpoint.mark_completed(
-            result["code"]
-        )
-
-        success += 1
-
-
-    for code, error in failed_items:
-
-        checkpoint.mark_failed(code)
-
-        retry_mgr.add_failed(
-            code,
-            error
-        )
-
-        failed += 1
+    failed = []
 
 
 
-    # ==========================
-    # 第二轮失败重试
-    # ==========================
+    try:
 
-    retry_codes = retry_mgr.get_current_failed_codes()
+        results, failed = engine.scan_batch(stocks)
 
 
-    if retry_codes:
+    except Exception as e:
 
         print(
-            f"\n启动失败重试: {len(retry_codes)} 只"
+            "Scanner Error:",
+            e
+        )
+
+        return []
+
+
+
+    success = 0
+
+
+    for item in results:
+
+        try:
+
+            append_result(
+                item
+            )
+
+            success += 1
+
+
+        except Exception as e:
+
+            print(
+                "Write result error:",
+                e
+            )
+
+
+
+    elapsed = time.time() - start
+
+
+    print()
+    print("=" * 50)
+
+    print(
+        "Scanner Finished"
+    )
+
+    print(
+        f"成功: {success}"
+    )
+
+    print(
+        f"失敗: {len(failed)}"
+    )
+
+    print(
+        f"耗時: {elapsed:.2f}s"
+    )
+
+
+    if elapsed > 0:
+
+        print(
+            f"速度: {(success+len(failed))/elapsed:.2f} stocks/s"
         )
 
 
-        for code in retry_codes:
-
-
-            for retry_count in range(MAX_RETRY):
-
-
-                try:
-
-                    retry_results, retry_failed = engine.scan_batch(
-                        [code]
-                    )
-
-
-                    if retry_results:
-
-
-                        for result in retry_results:
-
-                            append_result(
-                                result
-                            )
-
-
-                            success_results.append(
-                                result
-                            )
-
-
-                            checkpoint.mark_completed(
-                                result["code"]
-                            )
-
-
-                            success += 1
-                            failed -= 1
-
-
-
-                    break
-
-
-
-                except Exception as e:
-
-
-                    print(
-                        f"\nSCAN FAILED {code}: {e}"
-                    )
-
-
-                    retry_mgr.add_failed(
-                        code,
-                        str(e),
-                        retry_count + 1
-                    )
-
-
-                    time.sleep(1)
-
-
-
-
-
-    total_time = (
-        time.time()
-        -
-        start
-    )
-
-
-
-    speed = (
-
-        success + failed
-
-    ) / total_time if total_time > 0 else 0
-
-
-
-
-    print("\n" + "=" * 40)
-
     print(
-        "扫描完成"
+        f"結果: {RESULT_FILE}"
     )
 
-    print("=" * 40)
-
-
-    print(
-        f"成功：{success}"
-    )
-
-
-    print(
-        f"失败：{failed}"
-    )
-
-
-    print(
-        f"耗时：{total_time:.2f}s"
-    )
-
-
-    print(
-        f"速度：{speed:.2f} stocks/s"
-    )
-
-
-    print(
-        f"结果文件：{RESULT_FILE}"
-    )
-
-
-    print("=" * 40)
+    print("=" * 50)
 
 
 
-    return success_results
-
-
+    return results
 
 
 
